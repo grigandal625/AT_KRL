@@ -1,0 +1,78 @@
+from xml.etree.ElementTree import Element
+from at_krl.core.kb import KBEntity
+from at_krl.core.non_factor import NonFactor
+
+from typing import Union
+import json
+
+
+class Evaluatable(KBEntity):
+    non_factor: NonFactor = None
+    convert_non_factor: bool = None
+    
+    def __init__(self, non_factor: Union['NonFactor', None] = None):
+        if non_factor is None:
+            non_factor = NonFactor()
+        self.non_factor = non_factor
+
+    def __dict__(self) -> dict:
+        result = super().__dict__()
+        if self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized:
+            result.update({'non_factor': dict(self.non_factor)})
+        return result
+
+    @property
+    def xml(self) -> Element:
+        result = super().xml
+        if self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized:
+            result.append(self.non_factor.xml)
+        return result
+
+    @staticmethod
+    def from_xml(xml: Element) -> 'Evaluatable':
+        if xml.tag == 'value':
+            return KBValue.from_xml(xml)
+        if xml.tag == 'ref':
+            from at_krl.core.kb_reference import KBReference
+            return KBReference.from_xml(xml)
+        from at_krl.core.kb_operation import KBOperation, TAGS_SINGS
+        if xml.tag in TAGS_SINGS:
+            return KBOperation.from_xml(xml)
+        raise Exception("Unknown evaluatable tag: " + xml.tag)
+
+    def evaluate(self, *args, **kwargs) -> 'KBValue':
+        pass
+
+
+class KBValue(Evaluatable):
+    content = None
+
+    def __init__(self, content, non_factor: Union['NonFactor', None] = None):
+        super().__init__(non_factor)
+        self.content = content
+        self.tag = 'value'
+
+    def __dict__(self) -> dict:
+        return dict(content=self.content, **(super().__dict__()))
+    
+    def evaluate(self, *args, **kwargs) -> 'KBValue':
+        return self
+    
+    @staticmethod
+    def from_dict(d: dict) -> 'KBValue':
+        return KBValue(d['content'], d.get('non_factor', None))
+    
+    @property
+    def krl(self) -> str:
+        try:
+            return json.dumps(self.content)
+        except:
+            return json.dumps(str(self.content))
+    
+    @property
+    def inner_xml(self) -> str:
+        return str(self.content)
+    
+    @staticmethod
+    def from_xml(xml: Element) -> 'KBValue':
+        return KBValue(xml.text)
