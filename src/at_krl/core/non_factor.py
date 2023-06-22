@@ -8,7 +8,7 @@ class NonFactor(KBEntity):
     accuracy: float = None
     initialized: bool = None
 
-    def __init__(self, belief: float = None, probability: float = None, accuracy: float = None):
+    def __init__(self, belief: float = None, probability: float = None, accuracy: float = None, *args, **kwargs):
         self.belief = float(belief if belief is not None else 50)
         self.probability = float(probability if probability is not None else 100)
         self.accuracy = float(accuracy if accuracy is not None else 0)

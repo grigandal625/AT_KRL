@@ -16,7 +16,7 @@ class KBReference(Evaluatable):
         return env.get_ref(self.id, recursively=recursively)
     
     def __dict__(self) -> dict:
-        return dict(id=self.id, ref=dict(self.ref), **(super().__dict__())) if self.ref is not None else dict(id=self.id, **(super().__dict__()))
+        return dict(id=self.id, ref=self.ref.__dict__(), **(super().__dict__())) if self.ref is not None else dict(id=self.id, **(super().__dict__()))
 
     @property
     def attrs(self) -> dict:

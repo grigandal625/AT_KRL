@@ -13,6 +13,9 @@ def test_kb_value_from_xml():
     assert kb_value.krl == "\"test\""
     assert kb_value.xml.text == "test"
     assert kb_value.xml.tag == "value"
+    print('\n\n')
+    print('----------------------- TESTS --------------------------------')
+    print('\n')
     print('VALUE KRL:', kb_value.krl)
     print('VALUE XML:', tostring(kb_value.xml).decode("utf-8"))
 
@@ -29,6 +32,7 @@ def test_kb_reference_from_xml():
     assert kb_reference.xml.attrib["id"] == "OBJECT_1"
     assert kb_reference.ref.xml.tag == "ref"
     assert kb_reference.ref.xml.attrib["id"] == "PROPERTY_1"
+    print('\n')
     print('REF KRL:', kb_reference.krl)
     print('REF XML:', tostring(kb_reference.xml).decode("utf-8"))
 
@@ -54,6 +58,15 @@ def test_operation_from_xml():
     kb_operation = KBOperation.from_xml(xml)
 
     assert kb_operation.tag == "or"
-
+    print('\n')
     print('OP KRL:', kb_operation.krl)
     print('OP XML:', tostring(kb_operation.xml).decode("utf-8"))
+    print('OP DICT:', kb_operation.__dict__())
+
+    d = kb_operation.__dict__()
+    o = KBOperation.from_dict(d)
+
+    assert o.sign == kb_operation.sign
+    assert kb_operation.krl == o.krl
+
+    print('OP KRL:', o.krl)

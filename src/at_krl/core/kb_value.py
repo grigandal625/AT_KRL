@@ -18,7 +18,7 @@ class Evaluatable(KBEntity):
     def __dict__(self) -> dict:
         result = super().__dict__()
         if self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized:
-            result.update({'non_factor': dict(self.non_factor)})
+            result.update({'non_factor': self.non_factor.__dict__()})
         return result
 
     @property
@@ -35,10 +35,24 @@ class Evaluatable(KBEntity):
         if xml.tag == 'ref':
             from at_krl.core.kb_reference import KBReference
             return KBReference.from_xml(xml)
-        from at_krl.core.kb_operation import KBOperation, TAGS_SINGS
-        if xml.tag in TAGS_SINGS:
+        from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
+        if xml.tag in TAGS_SIGNS:
             return KBOperation.from_xml(xml)
         raise Exception("Unknown evaluatable tag: " + xml.tag)
+
+    @staticmethod
+    def from_dict(d: dict) -> 'Evaluatable':
+        if d['tag'] == 'value':
+            return KBValue.from_dict(d)
+        if d['tag'] == 'ref':
+            from at_krl.core.kb_reference import KBReference
+            return KBReference.from_dict(d)
+        from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
+        if d['tag'] in TAGS_SIGNS:
+            return KBOperation.from_dict(d)
+        raise Exception("Unknown evaluatable tag: " + d['tag'])
+
+
 
     def evaluate(self, *args, **kwargs) -> 'KBValue':
         pass
