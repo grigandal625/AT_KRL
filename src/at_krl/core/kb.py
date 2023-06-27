@@ -24,6 +24,9 @@ class KBEntity:
     def krl(self) -> str:
         pass
 
+    def getText(self) -> str:
+        return self.krl
+
     @property
     def xml(self) -> Element:
         result = Element(self.tag, self.attrs)

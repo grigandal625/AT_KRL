@@ -9,8 +9,9 @@ import json
 class Evaluatable(KBEntity):
     non_factor: NonFactor = None
     convert_non_factor: bool = None
-    
+
     def __init__(self, non_factor: Union['NonFactor', None] = None):
+        self.convert_non_factor = non_factor is not None
         if non_factor is None:
             non_factor = NonFactor()
         self.non_factor = non_factor
@@ -52,9 +53,18 @@ class Evaluatable(KBEntity):
             return KBOperation.from_dict(d)
         raise Exception("Unknown evaluatable tag: " + d['tag'])
 
-
-
     def evaluate(self, *args, **kwargs) -> 'KBValue':
+        pass
+
+    @property
+    def krl(self):
+        result = self.inner_krl
+        if self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized:
+            result = result + ' ' + self.non_factor.krl
+        return result
+
+    @property
+    def inner_krl(self) -> str:
         pass
 
 
@@ -68,25 +78,26 @@ class KBValue(Evaluatable):
 
     def __dict__(self) -> dict:
         return dict(content=self.content, **(super().__dict__()))
-    
+
     def evaluate(self, *args, **kwargs) -> 'KBValue':
         return self
-    
+
     @staticmethod
     def from_dict(d: dict) -> 'KBValue':
         return KBValue(d['content'], d.get('non_factor', None))
-    
+
     @property
-    def krl(self) -> str:
+    def inner_krl(self) -> str:
         try:
-            return json.dumps(self.content)
+            result = json.dumps(self.content)
         except:
-            return json.dumps(str(self.content))
-    
+            result = json.dumps(str(self.content))
+        return result
+
     @property
     def inner_xml(self) -> str:
         return str(self.content)
-    
+
     @staticmethod
     def from_xml(xml: Element) -> 'KBValue':
         return KBValue(xml.text)

@@ -141,8 +141,8 @@ class KBOperation(Evaluatable):
         return TAGS_SIGNS[self.tag]['values'][0]
 
     @property
-    def krl(self) -> str:
-        return f"({self.left.krl}) {self.sign} ({self.right.krl})" if self.is_binary else f"{self.sign} ({self.left.krl})" 
+    def inner_krl(self) -> str:
+        return f"({self.left.krl}) {self.sign} ({self.right.krl})" if self.is_binary else f"{self.sign} ({self.left.krl})"
 
     def evaluate(self, env, *args, **kwargs) -> KBValue:
         return TAGS_SIGNS[self.tag]["evaluate"](self, env, *args, **kwargs)
