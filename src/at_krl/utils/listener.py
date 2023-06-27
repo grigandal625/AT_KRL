@@ -41,12 +41,16 @@ class ATKRLListener(at_krlListener):
             ctx.content = ctx.children[1].content
             ctx.content.non_factor = ctx.children[2].content
 
-    def exitKb_reference(self, ctx: at_krlParser.Kb_referenceContext | Any):
+    def exitRef_path(self, ctx: at_krlParser.Ref_pathContext | Any):
         if len(ctx.children) == 1:
             ctx.content = KBReference(ctx.getText())
-        elif len(ctx.children) == 3:
+        else:
             ctx.content = KBReference(
                 ctx.children[0].getText(), ctx.children[2].content)
+
+    def exitKb_reference(self, ctx: at_krlParser.Kb_referenceContext | Any):
+        if len(ctx.children) == 1:
+            ctx.content = ctx.children[0].content
         elif isinstance(ctx.children[2], at_krlParser.Non_factorContext):
             ctx.content = ctx.children[1].content
             ctx.content.non_factor = ctx.children[2].content

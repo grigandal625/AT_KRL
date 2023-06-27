@@ -44,6 +44,15 @@ class at_krlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by at_krlParser#ref_path.
+    def enterRef_path(self, ctx:at_krlParser.Ref_pathContext):
+        pass
+
+    # Exit a parse tree produced by at_krlParser#ref_path.
+    def exitRef_path(self, ctx:at_krlParser.Ref_pathContext):
+        pass
+
+
     # Enter a parse tree produced by at_krlParser#kb_reference.
     def enterKb_reference(self, ctx:at_krlParser.Kb_referenceContext):
         pass

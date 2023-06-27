@@ -13,9 +13,9 @@ kb_value:
 	| NUMERIC
 	| FRAC;
 
-kb_reference:
-	L_BR kb_reference non_factor R_BR
-	| (ALPHANUMERIC | ALPHANUMERIC_U) (DOT kb_reference)?;
+ref_path: (ALPHANUMERIC | ALPHANUMERIC_U) (DOT ref_path)?;
+
+kb_reference: L_BR ref_path non_factor R_BR | ref_path;
 
 kb_operation:
 	('-' | '~' | '!' | 'not') kb_operation non_factor?
