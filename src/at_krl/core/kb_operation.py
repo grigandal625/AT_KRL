@@ -32,7 +32,7 @@ TAGS_SIGNS = {
         "convert_non_factor": True,
     },
     "ne": {
-        "values": ["<>", "ne"],
+        "values": ["<>", "!=", "ne"],
         "is_binary": True,
         "convert_non_factor": True,
     },
@@ -45,7 +45,7 @@ TAGS_SIGNS = {
         "is_binary": True,
     },
     "not": {
-        "values": ["!", "~", "not"],
+        "values": ["~", "!", "not"],
         "is_binary": False,
     },
     "xor": {
@@ -82,6 +82,7 @@ TAGS_SIGNS = {
     },
 }
 
+
 class KBOperation(Evaluatable):
     left: 'Evaluatable' = None
     right: Union['Evaluatable', None] = None
@@ -93,7 +94,8 @@ class KBOperation(Evaluatable):
                 self.tag = op
         if self.tag is None:
             raise Exception(f"Unknown operation: {sign}")
-        self.convert_non_factor = TAGS_SIGNS[self.tag].get('convert_non_factor', False)
+        self.convert_non_factor = TAGS_SIGNS[self.tag].get(
+            'convert_non_factor', False)
 
         self.left = left
         if self.is_binary:
@@ -109,16 +111,18 @@ class KBOperation(Evaluatable):
         ) if self.is_binary else dict(
             sign=self.sign, left=self.left.__dict__(), **(super().__dict__())
         )
-    
+
     @staticmethod
     def from_dict(d: dict) -> 'KBOperation':
         return KBOperation(
-            d['sign'], 
-            Evaluatable.from_dict(d['left']), 
-            Evaluatable.from_dict(d['right']) if d.get('right', None) is not None else None,
-            NonFactor.from_dict(d['non_factor']) if d.get('non_factor', None) is not None else None
+            d['sign'],
+            Evaluatable.from_dict(d['left']),
+            Evaluatable.from_dict(d['right']) if d.get(
+                'right', None) is not None else None,
+            NonFactor.from_dict(d['non_factor']) if d.get(
+                'non_factor', None) is not None else None
         )
-    
+
     @property
     def inner_xml(self) -> Element:
         result = [self.left.xml]
@@ -135,7 +139,7 @@ class KBOperation(Evaluatable):
             right = Evaluatable.from_xml(xml[1])
         non_factor = NonFactor.from_xml(xml.find('with'))
         return KBOperation(sign, left, right, non_factor)
-    
+
     @property
     def sign(self):
         return TAGS_SIGNS[self.tag]['values'][0]

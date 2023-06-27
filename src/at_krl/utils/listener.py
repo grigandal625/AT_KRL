@@ -60,7 +60,7 @@ class ATKRLListener(at_krlListener):
                 ctx.content.non_factor = ctx.children[1].content
             else:
                 ctx.content = KBOperation(
-                    ctx.children[1].getText(), ctx.children[0].content)
+                    ctx.children[0].getText(), ctx.children[1].content)
         elif len(ctx.children) == 3:
             if isinstance(ctx.children[2], at_krlParser.Non_factorContext):
                 ctx.content = KBOperation(ctx.children[0].getText(
