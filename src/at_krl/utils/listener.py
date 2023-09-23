@@ -2,6 +2,7 @@ from at_krl.grammar.at_krlListener import at_krlListener
 from at_krl.core.kb_value import KBValue, NonFactor
 from at_krl.core.kb_reference import KBReference
 from at_krl.core.kb_operation import KBOperation
+from at_krl.core.kb_instruction import AssignInstruction
 from at_krl.grammar.at_krlParser import at_krlParser
 from typing import Any, Union
 from antlr4.tree.Tree import TerminalNode
@@ -48,6 +49,16 @@ class ATKRLListener(at_krlListener):
             ctx.content = KBReference(
                 ctx.children[0].getText(), ctx.children[2].content)
 
+    def exitKb_rule(self, ctx: at_krlParser.Kb_ruleContext | Any):
+        pass
+
+    def exitAssign_instruction(self, ctx: at_krlParser.Assign_instructionContext | Any):
+        ref = ctx.children[0].content if isinstance(ctx.children[0], at_krlParser.Ref_pathContext) else ctx.children[1].content
+        value = ctx.children[2].content if isinstance(ctx.children[2], at_krlParser.EvaluatableContext) else ctx.children[0].content
+        ctx.content = AssignInstruction(ref, value)
+        if len(ctx.children) == 4:
+            ctx.content.non_factor = ctx.children[3].content
+
     def exitKb_reference(self, ctx: at_krlParser.Kb_referenceContext | Any):
         if len(ctx.children) == 1:
             ctx.content = ctx.children[0].content
@@ -77,6 +88,8 @@ class ATKRLListener(at_krlListener):
         elif len(ctx.children) == 4:
             ctx.content = KBOperation(ctx.children[1].getText(
             ), ctx.children[0].content, ctx.children[2].content, ctx.children[3].content)
+        else:
+            raise
 
     def exitEvaluatable(self, ctx: at_krlParser.EvaluatableContext | Any):
         ctx.content = ctx.children[0].content
