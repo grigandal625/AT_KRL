@@ -19,6 +19,18 @@ class KBInstruction(KBEntity):
     def perform(self, env, *args, **kwargs):
         pass
 
+    @staticmethod
+    def from_xml(xml: Element) -> 'KBInstruction':
+        if xml.tag == 'assign':
+            return AssignInstruction.from_xml(xml)
+        raise
+
+    @staticmethod
+    def from_dict(d: dict) -> 'KBInstruction':
+        if d['tag'] == 'assign':
+            return KBInstruction.from_dict(d)
+        raise
+
 
 class AssignInstruction(KBInstruction):
 
@@ -45,7 +57,7 @@ class AssignInstruction(KBInstruction):
         return f'{self.ref.krl} = {self.value.krl} {self.non_factor.krl}'
 
     @staticmethod
-    def from_xml(xml: Element) -> KBInstruction:
+    def from_xml(xml: Element) -> 'AssignInstruction':
         ref = KBReference.from_xml(xml.find('ref'))
         value = Evaluatable.from_xml(xml[1])
         non_factor = NonFactor.from_xml(xml.find('with'))

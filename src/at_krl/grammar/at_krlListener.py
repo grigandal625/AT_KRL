@@ -26,6 +26,15 @@ class at_krlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by at_krlParser#kb_rules.
+    def enterKb_rules(self, ctx:at_krlParser.Kb_rulesContext):
+        pass
+
+    # Exit a parse tree produced by at_krlParser#kb_rules.
+    def exitKb_rules(self, ctx:at_krlParser.Kb_rulesContext):
+        pass
+
+
     # Enter a parse tree produced by at_krlParser#kb_rule.
     def enterKb_rule(self, ctx:at_krlParser.Kb_ruleContext):
         pass

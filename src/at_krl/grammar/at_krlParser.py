@@ -10,69 +10,72 @@ else:
 
 def serializedATN():
     return [
-        4,1,43,179,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,43,186,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
-        2,14,7,14,1,0,1,0,1,1,1,1,1,1,1,1,1,1,3,1,38,8,1,1,1,1,1,1,1,1,1,
-        1,1,3,1,45,8,1,3,1,47,8,1,1,2,1,2,1,2,1,2,1,2,3,2,54,8,2,1,2,1,2,
-        1,3,1,3,4,3,60,8,3,11,3,12,3,61,1,4,1,4,1,4,1,5,1,5,4,5,69,8,5,11,
-        5,12,5,70,1,6,1,6,4,6,75,8,6,11,6,12,6,76,1,7,1,7,1,7,1,7,1,7,1,
-        7,1,7,1,8,1,8,1,8,1,9,1,9,1,9,1,9,1,9,3,9,94,8,9,1,10,1,10,1,10,
-        1,10,1,10,1,10,3,10,102,8,10,1,10,1,10,1,10,1,10,1,10,1,10,1,10,
-        1,10,1,10,1,10,3,10,114,8,10,3,10,116,8,10,1,10,1,10,1,10,1,10,1,
-        10,3,10,123,8,10,1,10,1,10,1,10,1,10,1,10,3,10,130,8,10,1,10,1,10,
-        1,10,1,10,1,10,3,10,137,8,10,1,10,1,10,1,10,1,10,1,10,3,10,144,8,
-        10,5,10,146,8,10,10,10,12,10,149,9,10,1,11,1,11,1,11,1,11,1,11,1,
-        11,1,11,1,11,3,11,159,8,11,1,12,1,12,1,12,3,12,164,8,12,1,13,1,13,
-        1,13,1,13,3,13,170,8,13,1,13,1,13,1,13,3,13,175,8,13,1,14,1,14,1,
-        14,1,76,1,20,15,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,0,5,1,0,
-        1,3,1,0,38,39,2,0,37,37,40,40,1,0,5,6,1,0,7,10,192,0,30,1,0,0,0,
-        2,46,1,0,0,0,4,48,1,0,0,0,6,57,1,0,0,0,8,63,1,0,0,0,10,66,1,0,0,
-        0,12,72,1,0,0,0,14,78,1,0,0,0,16,85,1,0,0,0,18,93,1,0,0,0,20,115,
-        1,0,0,0,22,158,1,0,0,0,24,160,1,0,0,0,26,174,1,0,0,0,28,176,1,0,
-        0,0,30,31,3,2,1,0,31,1,1,0,0,0,32,33,3,24,12,0,33,34,7,0,0,0,34,
-        37,3,28,14,0,35,38,3,18,9,0,36,38,1,0,0,0,37,35,1,0,0,0,37,36,1,
-        0,0,0,38,47,1,0,0,0,39,40,3,28,14,0,40,41,5,4,0,0,41,44,3,24,12,
-        0,42,45,3,18,9,0,43,45,1,0,0,0,44,42,1,0,0,0,44,43,1,0,0,0,45,47,
-        1,0,0,0,46,32,1,0,0,0,46,39,1,0,0,0,47,3,1,0,0,0,48,49,5,14,0,0,
-        49,50,7,1,0,0,50,51,3,8,4,0,51,53,3,6,3,0,52,54,3,10,5,0,53,52,1,
-        0,0,0,53,54,1,0,0,0,54,55,1,0,0,0,55,56,3,12,6,0,56,5,1,0,0,0,57,
-        59,5,16,0,0,58,60,3,0,0,0,59,58,1,0,0,0,60,61,1,0,0,0,61,59,1,0,
-        0,0,61,62,1,0,0,0,62,7,1,0,0,0,63,64,5,15,0,0,64,65,3,20,10,0,65,
-        9,1,0,0,0,66,68,5,17,0,0,67,69,3,0,0,0,68,67,1,0,0,0,69,70,1,0,0,
-        0,70,68,1,0,0,0,70,71,1,0,0,0,71,11,1,0,0,0,72,74,5,22,0,0,73,75,
-        9,0,0,0,74,73,1,0,0,0,75,76,1,0,0,0,76,77,1,0,0,0,76,74,1,0,0,0,
-        77,13,1,0,0,0,78,79,5,12,0,0,79,80,5,32,0,0,80,81,7,2,0,0,81,82,
-        7,3,0,0,82,83,7,2,0,0,83,84,5,33,0,0,84,15,1,0,0,0,85,86,5,13,0,
-        0,86,87,7,2,0,0,87,17,1,0,0,0,88,89,3,14,7,0,89,90,3,16,8,0,90,94,
-        1,0,0,0,91,94,3,14,7,0,92,94,3,16,8,0,93,88,1,0,0,0,93,91,1,0,0,
-        0,93,92,1,0,0,0,94,19,1,0,0,0,95,96,6,10,-1,0,96,97,3,24,12,0,97,
-        98,5,1,0,0,98,101,3,28,14,0,99,102,3,18,9,0,100,102,1,0,0,0,101,
-        99,1,0,0,0,101,100,1,0,0,0,102,116,1,0,0,0,103,116,3,26,13,0,104,
-        116,3,22,11,0,105,106,5,30,0,0,106,107,3,20,10,0,107,108,5,31,0,
-        0,108,116,1,0,0,0,109,110,7,4,0,0,110,113,3,20,10,0,111,114,3,18,
-        9,0,112,114,1,0,0,0,113,111,1,0,0,0,113,112,1,0,0,0,114,116,1,0,
-        0,0,115,95,1,0,0,0,115,103,1,0,0,0,115,104,1,0,0,0,115,105,1,0,0,
-        0,115,109,1,0,0,0,116,147,1,0,0,0,117,118,10,6,0,0,118,119,5,28,
-        0,0,119,122,3,20,10,0,120,123,3,18,9,0,121,123,1,0,0,0,122,120,1,
-        0,0,0,122,121,1,0,0,0,123,146,1,0,0,0,124,125,10,5,0,0,125,126,5,
-        27,0,0,126,129,3,20,10,0,127,130,3,18,9,0,128,130,1,0,0,0,129,127,
-        1,0,0,0,129,128,1,0,0,0,130,146,1,0,0,0,131,132,10,4,0,0,132,133,
-        5,26,0,0,133,136,3,20,10,0,134,137,3,18,9,0,135,137,1,0,0,0,136,
-        134,1,0,0,0,136,135,1,0,0,0,137,146,1,0,0,0,138,139,10,3,0,0,139,
-        140,5,25,0,0,140,143,3,20,10,0,141,144,3,18,9,0,142,144,1,0,0,0,
-        143,141,1,0,0,0,143,142,1,0,0,0,144,146,1,0,0,0,145,117,1,0,0,0,
-        145,124,1,0,0,0,145,131,1,0,0,0,145,138,1,0,0,0,146,149,1,0,0,0,
-        147,145,1,0,0,0,147,148,1,0,0,0,148,21,1,0,0,0,149,147,1,0,0,0,150,
-        151,5,30,0,0,151,152,3,22,11,0,152,153,3,18,9,0,153,154,5,31,0,0,
-        154,159,1,0,0,0,155,159,5,43,0,0,156,159,5,37,0,0,157,159,5,40,0,
-        0,158,150,1,0,0,0,158,155,1,0,0,0,158,156,1,0,0,0,158,157,1,0,0,
-        0,159,23,1,0,0,0,160,163,7,1,0,0,161,162,5,29,0,0,162,164,3,24,12,
-        0,163,161,1,0,0,0,163,164,1,0,0,0,164,25,1,0,0,0,165,166,5,30,0,
-        0,166,169,3,24,12,0,167,170,3,18,9,0,168,170,1,0,0,0,169,167,1,0,
-        0,0,169,168,1,0,0,0,170,171,1,0,0,0,171,172,5,31,0,0,172,175,1,0,
-        0,0,173,175,3,24,12,0,174,165,1,0,0,0,174,173,1,0,0,0,175,27,1,0,
-        0,0,176,177,3,20,10,0,177,29,1,0,0,0,21,37,44,46,53,61,70,76,93,
-        101,113,115,122,129,136,143,145,147,158,163,169,174
+        2,14,7,14,2,15,7,15,1,0,1,0,1,1,1,1,1,1,1,1,1,1,3,1,40,8,1,1,1,1,
+        1,1,1,1,1,1,1,3,1,47,8,1,3,1,49,8,1,1,2,4,2,52,8,2,11,2,12,2,53,
+        1,3,1,3,1,3,1,3,1,3,3,3,61,8,3,1,3,1,3,1,4,1,4,4,4,67,8,4,11,4,12,
+        4,68,1,5,1,5,1,5,1,6,1,6,4,6,76,8,6,11,6,12,6,77,1,7,1,7,4,7,82,
+        8,7,11,7,12,7,83,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,9,1,9,1,9,1,10,1,
+        10,1,10,1,10,1,10,3,10,101,8,10,1,11,1,11,1,11,1,11,1,11,1,11,3,
+        11,109,8,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,1,11,3,
+        11,121,8,11,3,11,123,8,11,1,11,1,11,1,11,1,11,1,11,3,11,130,8,11,
+        1,11,1,11,1,11,1,11,1,11,3,11,137,8,11,1,11,1,11,1,11,1,11,1,11,
+        3,11,144,8,11,1,11,1,11,1,11,1,11,1,11,3,11,151,8,11,5,11,153,8,
+        11,10,11,12,11,156,9,11,1,12,1,12,1,12,1,12,1,12,1,12,1,12,1,12,
+        3,12,166,8,12,1,13,1,13,1,13,3,13,171,8,13,1,14,1,14,1,14,1,14,3,
+        14,177,8,14,1,14,1,14,1,14,3,14,182,8,14,1,15,1,15,1,15,1,83,1,22,
+        16,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,0,5,1,0,1,3,1,0,38,
+        39,2,0,37,37,40,40,1,0,5,6,1,0,7,10,199,0,32,1,0,0,0,2,48,1,0,0,
+        0,4,51,1,0,0,0,6,55,1,0,0,0,8,64,1,0,0,0,10,70,1,0,0,0,12,73,1,0,
+        0,0,14,79,1,0,0,0,16,85,1,0,0,0,18,92,1,0,0,0,20,100,1,0,0,0,22,
+        122,1,0,0,0,24,165,1,0,0,0,26,167,1,0,0,0,28,181,1,0,0,0,30,183,
+        1,0,0,0,32,33,3,2,1,0,33,1,1,0,0,0,34,35,3,26,13,0,35,36,7,0,0,0,
+        36,39,3,30,15,0,37,40,3,20,10,0,38,40,1,0,0,0,39,37,1,0,0,0,39,38,
+        1,0,0,0,40,49,1,0,0,0,41,42,3,30,15,0,42,43,5,4,0,0,43,46,3,26,13,
+        0,44,47,3,20,10,0,45,47,1,0,0,0,46,44,1,0,0,0,46,45,1,0,0,0,47,49,
+        1,0,0,0,48,34,1,0,0,0,48,41,1,0,0,0,49,3,1,0,0,0,50,52,3,6,3,0,51,
+        50,1,0,0,0,52,53,1,0,0,0,53,51,1,0,0,0,53,54,1,0,0,0,54,5,1,0,0,
+        0,55,56,5,14,0,0,56,57,7,1,0,0,57,58,3,10,5,0,58,60,3,8,4,0,59,61,
+        3,12,6,0,60,59,1,0,0,0,60,61,1,0,0,0,61,62,1,0,0,0,62,63,3,14,7,
+        0,63,7,1,0,0,0,64,66,5,16,0,0,65,67,3,0,0,0,66,65,1,0,0,0,67,68,
+        1,0,0,0,68,66,1,0,0,0,68,69,1,0,0,0,69,9,1,0,0,0,70,71,5,15,0,0,
+        71,72,3,22,11,0,72,11,1,0,0,0,73,75,5,17,0,0,74,76,3,0,0,0,75,74,
+        1,0,0,0,76,77,1,0,0,0,77,75,1,0,0,0,77,78,1,0,0,0,78,13,1,0,0,0,
+        79,81,5,22,0,0,80,82,9,0,0,0,81,80,1,0,0,0,82,83,1,0,0,0,83,84,1,
+        0,0,0,83,81,1,0,0,0,84,15,1,0,0,0,85,86,5,12,0,0,86,87,5,32,0,0,
+        87,88,7,2,0,0,88,89,7,3,0,0,89,90,7,2,0,0,90,91,5,33,0,0,91,17,1,
+        0,0,0,92,93,5,13,0,0,93,94,7,2,0,0,94,19,1,0,0,0,95,96,3,16,8,0,
+        96,97,3,18,9,0,97,101,1,0,0,0,98,101,3,16,8,0,99,101,3,18,9,0,100,
+        95,1,0,0,0,100,98,1,0,0,0,100,99,1,0,0,0,101,21,1,0,0,0,102,103,
+        6,11,-1,0,103,104,3,26,13,0,104,105,5,1,0,0,105,108,3,30,15,0,106,
+        109,3,20,10,0,107,109,1,0,0,0,108,106,1,0,0,0,108,107,1,0,0,0,109,
+        123,1,0,0,0,110,123,3,28,14,0,111,123,3,24,12,0,112,113,5,30,0,0,
+        113,114,3,22,11,0,114,115,5,31,0,0,115,123,1,0,0,0,116,117,7,4,0,
+        0,117,120,3,22,11,0,118,121,3,20,10,0,119,121,1,0,0,0,120,118,1,
+        0,0,0,120,119,1,0,0,0,121,123,1,0,0,0,122,102,1,0,0,0,122,110,1,
+        0,0,0,122,111,1,0,0,0,122,112,1,0,0,0,122,116,1,0,0,0,123,154,1,
+        0,0,0,124,125,10,6,0,0,125,126,5,28,0,0,126,129,3,22,11,0,127,130,
+        3,20,10,0,128,130,1,0,0,0,129,127,1,0,0,0,129,128,1,0,0,0,130,153,
+        1,0,0,0,131,132,10,5,0,0,132,133,5,27,0,0,133,136,3,22,11,0,134,
+        137,3,20,10,0,135,137,1,0,0,0,136,134,1,0,0,0,136,135,1,0,0,0,137,
+        153,1,0,0,0,138,139,10,4,0,0,139,140,5,26,0,0,140,143,3,22,11,0,
+        141,144,3,20,10,0,142,144,1,0,0,0,143,141,1,0,0,0,143,142,1,0,0,
+        0,144,153,1,0,0,0,145,146,10,3,0,0,146,147,5,25,0,0,147,150,3,22,
+        11,0,148,151,3,20,10,0,149,151,1,0,0,0,150,148,1,0,0,0,150,149,1,
+        0,0,0,151,153,1,0,0,0,152,124,1,0,0,0,152,131,1,0,0,0,152,138,1,
+        0,0,0,152,145,1,0,0,0,153,156,1,0,0,0,154,152,1,0,0,0,154,155,1,
+        0,0,0,155,23,1,0,0,0,156,154,1,0,0,0,157,158,5,30,0,0,158,159,3,
+        24,12,0,159,160,3,20,10,0,160,161,5,31,0,0,161,166,1,0,0,0,162,166,
+        5,43,0,0,163,166,5,37,0,0,164,166,5,40,0,0,165,157,1,0,0,0,165,162,
+        1,0,0,0,165,163,1,0,0,0,165,164,1,0,0,0,166,25,1,0,0,0,167,170,7,
+        1,0,0,168,169,5,29,0,0,169,171,3,26,13,0,170,168,1,0,0,0,170,171,
+        1,0,0,0,171,27,1,0,0,0,172,173,5,30,0,0,173,176,3,26,13,0,174,177,
+        3,20,10,0,175,177,1,0,0,0,176,174,1,0,0,0,176,175,1,0,0,0,177,178,
+        1,0,0,0,178,179,5,31,0,0,179,182,1,0,0,0,180,182,3,26,13,0,181,172,
+        1,0,0,0,181,180,1,0,0,0,182,29,1,0,0,0,183,184,3,22,11,0,184,31,
+        1,0,0,0,22,39,46,48,53,60,68,77,83,100,108,120,122,129,136,143,150,
+        152,154,165,170,176,181
     ]
 
 class at_krlParser ( Parser ):
@@ -111,24 +114,26 @@ class at_krlParser ( Parser ):
 
     RULE_instructions = 0
     RULE_assign_instruction = 1
-    RULE_kb_rule = 2
-    RULE_kb_rule_instructions = 3
-    RULE_kb_rule_condition = 4
-    RULE_kb_rule_else_instructions = 5
-    RULE_kb_rule_comment = 6
-    RULE_belief = 7
-    RULE_accuracy = 8
-    RULE_non_factor = 9
-    RULE_kb_operation = 10
-    RULE_kb_value = 11
-    RULE_ref_path = 12
-    RULE_kb_reference = 13
-    RULE_evaluatable = 14
+    RULE_kb_rules = 2
+    RULE_kb_rule = 3
+    RULE_kb_rule_instructions = 4
+    RULE_kb_rule_condition = 5
+    RULE_kb_rule_else_instructions = 6
+    RULE_kb_rule_comment = 7
+    RULE_belief = 8
+    RULE_accuracy = 9
+    RULE_non_factor = 10
+    RULE_kb_operation = 11
+    RULE_kb_value = 12
+    RULE_ref_path = 13
+    RULE_kb_reference = 14
+    RULE_evaluatable = 15
 
-    ruleNames =  [ "instructions", "assign_instruction", "kb_rule", "kb_rule_instructions", 
-                   "kb_rule_condition", "kb_rule_else_instructions", "kb_rule_comment", 
-                   "belief", "accuracy", "non_factor", "kb_operation", "kb_value", 
-                   "ref_path", "kb_reference", "evaluatable" ]
+    ruleNames =  [ "instructions", "assign_instruction", "kb_rules", "kb_rule", 
+                   "kb_rule_instructions", "kb_rule_condition", "kb_rule_else_instructions", 
+                   "kb_rule_comment", "belief", "accuracy", "non_factor", 
+                   "kb_operation", "kb_value", "ref_path", "kb_reference", 
+                   "evaluatable" ]
 
     EOF = Token.EOF
     T__0=1
@@ -215,7 +220,7 @@ class at_krlParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_instructions)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 30
+            self.state = 32
             self.assign_instruction()
         except RecognitionException as re:
             localctx.exception = re
@@ -265,27 +270,27 @@ class at_krlParser ( Parser ):
         self.enterRule(localctx, 2, self.RULE_assign_instruction)
         self._la = 0 # Token type
         try:
-            self.state = 46
+            self.state = 48
             self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 32
+                self.state = 34
                 self.ref_path()
-                self.state = 33
+                self.state = 35
                 _la = self._input.LA(1)
                 if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 14) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 34
+                self.state = 36
                 self.evaluatable()
-                self.state = 37
+                self.state = 39
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [12, 13]:
-                    self.state = 35
+                    self.state = 37
                     self.non_factor()
                     pass
                 elif token in [7, 8, 9, 10, 17, 22, 30, 37, 38, 39, 40, 43]:
@@ -297,17 +302,17 @@ class at_krlParser ( Parser ):
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 39
-                self.evaluatable()
-                self.state = 40
-                self.match(at_krlParser.T__3)
                 self.state = 41
+                self.evaluatable()
+                self.state = 42
+                self.match(at_krlParser.T__3)
+                self.state = 43
                 self.ref_path()
-                self.state = 44
+                self.state = 46
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [12, 13]:
-                    self.state = 42
+                    self.state = 44
                     self.non_factor()
                     pass
                 elif token in [7, 8, 9, 10, 17, 22, 30, 37, 38, 39, 40, 43]:
@@ -317,6 +322,62 @@ class at_krlParser ( Parser ):
 
                 pass
 
+
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
+    class Kb_rulesContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def kb_rule(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(at_krlParser.Kb_ruleContext)
+            else:
+                return self.getTypedRuleContext(at_krlParser.Kb_ruleContext,i)
+
+
+        def getRuleIndex(self):
+            return at_krlParser.RULE_kb_rules
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterKb_rules" ):
+                listener.enterKb_rules(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitKb_rules" ):
+                listener.exitKb_rules(self)
+
+
+
+
+    def kb_rules(self):
+
+        localctx = at_krlParser.Kb_rulesContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 4, self.RULE_kb_rules)
+        self._la = 0 # Token type
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 51 
+            self._errHandler.sync(self)
+            _la = self._input.LA(1)
+            while True:
+                self.state = 50
+                self.kb_rule()
+                self.state = 53 
+                self._errHandler.sync(self)
+                _la = self._input.LA(1)
+                if not (_la==14):
+                    break
 
         except RecognitionException as re:
             localctx.exception = re
@@ -376,32 +437,32 @@ class at_krlParser ( Parser ):
     def kb_rule(self):
 
         localctx = at_krlParser.Kb_ruleContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 4, self.RULE_kb_rule)
+        self.enterRule(localctx, 6, self.RULE_kb_rule)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 48
+            self.state = 55
             self.match(at_krlParser.RULE)
-            self.state = 49
+            self.state = 56
             _la = self._input.LA(1)
             if not(_la==38 or _la==39):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 50
+            self.state = 57
             self.kb_rule_condition()
-            self.state = 51
+            self.state = 58
             self.kb_rule_instructions()
-            self.state = 53
+            self.state = 60
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==17:
-                self.state = 52
+                self.state = 59
                 self.kb_rule_else_instructions()
 
 
-            self.state = 55
+            self.state = 62
             self.kb_rule_comment()
         except RecognitionException as re:
             localctx.exception = re
@@ -446,19 +507,19 @@ class at_krlParser ( Parser ):
     def kb_rule_instructions(self):
 
         localctx = at_krlParser.Kb_rule_instructionsContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 6, self.RULE_kb_rule_instructions)
+        self.enterRule(localctx, 8, self.RULE_kb_rule_instructions)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 57
+            self.state = 64
             self.match(at_krlParser.THEN)
-            self.state = 59 
+            self.state = 66 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 58
+                self.state = 65
                 self.instructions()
-                self.state = 61 
+                self.state = 68 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 10858751068032) != 0)):
@@ -504,12 +565,12 @@ class at_krlParser ( Parser ):
     def kb_rule_condition(self):
 
         localctx = at_krlParser.Kb_rule_conditionContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 8, self.RULE_kb_rule_condition)
+        self.enterRule(localctx, 10, self.RULE_kb_rule_condition)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 63
+            self.state = 70
             self.match(at_krlParser.IF)
-            self.state = 64
+            self.state = 71
             self.kb_operation(0)
         except RecognitionException as re:
             localctx.exception = re
@@ -554,19 +615,19 @@ class at_krlParser ( Parser ):
     def kb_rule_else_instructions(self):
 
         localctx = at_krlParser.Kb_rule_else_instructionsContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 10, self.RULE_kb_rule_else_instructions)
+        self.enterRule(localctx, 12, self.RULE_kb_rule_else_instructions)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 66
+            self.state = 73
             self.match(at_krlParser.ELSE)
-            self.state = 68 
+            self.state = 75 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 67
+                self.state = 74
                 self.instructions()
-                self.state = 70 
+                self.state = 77 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 10858751068032) != 0)):
@@ -608,24 +669,24 @@ class at_krlParser ( Parser ):
     def kb_rule_comment(self):
 
         localctx = at_krlParser.Kb_rule_commentContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 12, self.RULE_kb_rule_comment)
+        self.enterRule(localctx, 14, self.RULE_kb_rule_comment)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 72
+            self.state = 79
             self.match(at_krlParser.COMMENT)
-            self.state = 74 
+            self.state = 81 
             self._errHandler.sync(self)
             _alt = 1+1
             while _alt!=1 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt == 1+1:
-                    self.state = 73
+                    self.state = 80
                     self.matchWildcard()
 
                 else:
                     raise NoViableAltException(self)
-                self.state = 76 
+                self.state = 83 
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,6,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,7,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -681,36 +742,36 @@ class at_krlParser ( Parser ):
     def belief(self):
 
         localctx = at_krlParser.BeliefContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 14, self.RULE_belief)
+        self.enterRule(localctx, 16, self.RULE_belief)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 78
+            self.state = 85
             self.match(at_krlParser.BELIEF)
-            self.state = 79
+            self.state = 86
             self.match(at_krlParser.LS_BR)
-            self.state = 80
+            self.state = 87
             _la = self._input.LA(1)
             if not(_la==37 or _la==40):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 81
+            self.state = 88
             _la = self._input.LA(1)
             if not(_la==5 or _la==6):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 82
+            self.state = 89
             _la = self._input.LA(1)
             if not(_la==37 or _la==40):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 83
+            self.state = 90
             self.match(at_krlParser.RS_BR)
         except RecognitionException as re:
             localctx.exception = re
@@ -754,13 +815,13 @@ class at_krlParser ( Parser ):
     def accuracy(self):
 
         localctx = at_krlParser.AccuracyContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 16, self.RULE_accuracy)
+        self.enterRule(localctx, 18, self.RULE_accuracy)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 85
+            self.state = 92
             self.match(at_krlParser.ACCURACY)
-            self.state = 86
+            self.state = 93
             _la = self._input.LA(1)
             if not(_la==37 or _la==40):
                 self._errHandler.recoverInline(self)
@@ -808,28 +869,28 @@ class at_krlParser ( Parser ):
     def non_factor(self):
 
         localctx = at_krlParser.Non_factorContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 18, self.RULE_non_factor)
+        self.enterRule(localctx, 20, self.RULE_non_factor)
         try:
-            self.state = 93
+            self.state = 100
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,7,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,8,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 88
+                self.state = 95
                 self.belief()
-                self.state = 89
+                self.state = 96
                 self.accuracy()
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 91
+                self.state = 98
                 self.belief()
                 pass
 
             elif la_ == 3:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 92
+                self.state = 99
                 self.accuracy()
                 pass
 
@@ -913,26 +974,26 @@ class at_krlParser ( Parser ):
         _parentState = self.state
         localctx = at_krlParser.Kb_operationContext(self, self._ctx, _parentState)
         _prevctx = localctx
-        _startState = 20
-        self.enterRecursionRule(localctx, 20, self.RULE_kb_operation, _p)
+        _startState = 22
+        self.enterRecursionRule(localctx, 22, self.RULE_kb_operation, _p)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 115
+            self.state = 122
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,10,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,11,self._ctx)
             if la_ == 1:
-                self.state = 96
+                self.state = 103
                 self.ref_path()
-                self.state = 97
+                self.state = 104
                 self.match(at_krlParser.T__0)
-                self.state = 98
+                self.state = 105
                 self.evaluatable()
-                self.state = 101
+                self.state = 108
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,8,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,9,self._ctx)
                 if la_ == 1:
-                    self.state = 99
+                    self.state = 106
                     self.non_factor()
                     pass
 
@@ -943,39 +1004,39 @@ class at_krlParser ( Parser ):
                 pass
 
             elif la_ == 2:
-                self.state = 103
+                self.state = 110
                 self.kb_reference()
                 pass
 
             elif la_ == 3:
-                self.state = 104
+                self.state = 111
                 self.kb_value()
                 pass
 
             elif la_ == 4:
-                self.state = 105
+                self.state = 112
                 self.match(at_krlParser.L_BR)
-                self.state = 106
+                self.state = 113
                 self.kb_operation(0)
-                self.state = 107
+                self.state = 114
                 self.match(at_krlParser.R_BR)
                 pass
 
             elif la_ == 5:
-                self.state = 109
+                self.state = 116
                 _la = self._input.LA(1)
                 if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 1920) != 0)):
                     self._errHandler.recoverInline(self)
                 else:
                     self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 110
+                self.state = 117
                 self.kb_operation(0)
-                self.state = 113
+                self.state = 120
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input,9,self._ctx)
+                la_ = self._interp.adaptivePredict(self._input,10,self._ctx)
                 if la_ == 1:
-                    self.state = 111
+                    self.state = 118
                     self.non_factor()
                     pass
 
@@ -987,51 +1048,26 @@ class at_krlParser ( Parser ):
 
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 147
+            self.state = 154
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,16,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,17,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 145
+                    self.state = 152
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,15,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input,16,self._ctx)
                     if la_ == 1:
                         localctx = at_krlParser.Kb_operationContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_kb_operation)
-                        self.state = 117
+                        self.state = 124
                         if not self.precpred(self._ctx, 6):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
-                        self.state = 118
-                        self.match(at_krlParser.HIGHP_MATH_SIGN)
-                        self.state = 119
-                        self.kb_operation(0)
-                        self.state = 122
-                        self._errHandler.sync(self)
-                        la_ = self._interp.adaptivePredict(self._input,11,self._ctx)
-                        if la_ == 1:
-                            self.state = 120
-                            self.non_factor()
-                            pass
-
-                        elif la_ == 2:
-                            pass
-
-
-                        pass
-
-                    elif la_ == 2:
-                        localctx = at_krlParser.Kb_operationContext(self, _parentctx, _parentState)
-                        self.pushNewRecursionContext(localctx, _startState, self.RULE_kb_operation)
-                        self.state = 124
-                        if not self.precpred(self._ctx, 5):
-                            from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 125
-                        self.match(at_krlParser.LOWP_MATH_SIGN)
+                        self.match(at_krlParser.HIGHP_MATH_SIGN)
                         self.state = 126
                         self.kb_operation(0)
                         self.state = 129
@@ -1048,15 +1084,15 @@ class at_krlParser ( Parser ):
 
                         pass
 
-                    elif la_ == 3:
+                    elif la_ == 2:
                         localctx = at_krlParser.Kb_operationContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_kb_operation)
                         self.state = 131
-                        if not self.precpred(self._ctx, 4):
+                        if not self.precpred(self._ctx, 5):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 132
-                        self.match(at_krlParser.COMP_SIGN)
+                        self.match(at_krlParser.LOWP_MATH_SIGN)
                         self.state = 133
                         self.kb_operation(0)
                         self.state = 136
@@ -1073,15 +1109,15 @@ class at_krlParser ( Parser ):
 
                         pass
 
-                    elif la_ == 4:
+                    elif la_ == 3:
                         localctx = at_krlParser.Kb_operationContext(self, _parentctx, _parentState)
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_kb_operation)
                         self.state = 138
-                        if not self.precpred(self._ctx, 3):
+                        if not self.precpred(self._ctx, 4):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
                         self.state = 139
-                        self.match(at_krlParser.LOG_SIGN)
+                        self.match(at_krlParser.COMP_SIGN)
                         self.state = 140
                         self.kb_operation(0)
                         self.state = 143
@@ -1098,10 +1134,35 @@ class at_krlParser ( Parser ):
 
                         pass
 
+                    elif la_ == 4:
+                        localctx = at_krlParser.Kb_operationContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_kb_operation)
+                        self.state = 145
+                        if not self.precpred(self._ctx, 3):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
+                        self.state = 146
+                        self.match(at_krlParser.LOG_SIGN)
+                        self.state = 147
+                        self.kb_operation(0)
+                        self.state = 150
+                        self._errHandler.sync(self)
+                        la_ = self._interp.adaptivePredict(self._input,15,self._ctx)
+                        if la_ == 1:
+                            self.state = 148
+                            self.non_factor()
+                            pass
+
+                        elif la_ == 2:
+                            pass
+
+
+                        pass
+
              
-                self.state = 149
+                self.state = 156
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,16,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,17,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -1159,35 +1220,35 @@ class at_krlParser ( Parser ):
     def kb_value(self):
 
         localctx = at_krlParser.Kb_valueContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 22, self.RULE_kb_value)
+        self.enterRule(localctx, 24, self.RULE_kb_value)
         try:
-            self.state = 158
+            self.state = 165
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [30]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 150
+                self.state = 157
                 self.match(at_krlParser.L_BR)
-                self.state = 151
+                self.state = 158
                 self.kb_value()
-                self.state = 152
+                self.state = 159
                 self.non_factor()
-                self.state = 153
+                self.state = 160
                 self.match(at_krlParser.R_BR)
                 pass
             elif token in [43]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 155
+                self.state = 162
                 self.match(at_krlParser.STRING)
                 pass
             elif token in [37]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 156
+                self.state = 163
                 self.match(at_krlParser.NUMERIC)
                 pass
             elif token in [40]:
                 self.enterOuterAlt(localctx, 4)
-                self.state = 157
+                self.state = 164
                 self.match(at_krlParser.FRAC)
                 pass
             else:
@@ -1239,24 +1300,24 @@ class at_krlParser ( Parser ):
     def ref_path(self):
 
         localctx = at_krlParser.Ref_pathContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 24, self.RULE_ref_path)
+        self.enterRule(localctx, 26, self.RULE_ref_path)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 160
+            self.state = 167
             _la = self._input.LA(1)
             if not(_la==38 or _la==39):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 163
+            self.state = 170
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,18,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,19,self._ctx)
             if la_ == 1:
-                self.state = 161
+                self.state = 168
                 self.match(at_krlParser.DOT)
-                self.state = 162
+                self.state = 169
                 self.ref_path()
 
 
@@ -1307,22 +1368,22 @@ class at_krlParser ( Parser ):
     def kb_reference(self):
 
         localctx = at_krlParser.Kb_referenceContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 26, self.RULE_kb_reference)
+        self.enterRule(localctx, 28, self.RULE_kb_reference)
         try:
-            self.state = 174
+            self.state = 181
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [30]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 165
+                self.state = 172
                 self.match(at_krlParser.L_BR)
-                self.state = 166
+                self.state = 173
                 self.ref_path()
-                self.state = 169
+                self.state = 176
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [12, 13]:
-                    self.state = 167
+                    self.state = 174
                     self.non_factor()
                     pass
                 elif token in [31]:
@@ -1330,12 +1391,12 @@ class at_krlParser ( Parser ):
                 else:
                     raise NoViableAltException(self)
 
-                self.state = 171
+                self.state = 178
                 self.match(at_krlParser.R_BR)
                 pass
             elif token in [38, 39]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 173
+                self.state = 180
                 self.ref_path()
                 pass
             else:
@@ -1378,10 +1439,10 @@ class at_krlParser ( Parser ):
     def evaluatable(self):
 
         localctx = at_krlParser.EvaluatableContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 28, self.RULE_evaluatable)
+        self.enterRule(localctx, 30, self.RULE_evaluatable)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 176
+            self.state = 183
             self.kb_operation(0)
         except RecognitionException as re:
             localctx.exception = re
@@ -1396,7 +1457,7 @@ class at_krlParser ( Parser ):
     def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):
         if self._predicates == None:
             self._predicates = dict()
-        self._predicates[10] = self.kb_operation_sempred
+        self._predicates[11] = self.kb_operation_sempred
         pred = self._predicates.get(ruleIndex, None)
         if pred is None:
             raise Exception("No predicate with index:" + str(ruleIndex))

@@ -1,4 +1,4 @@
-from xml.etree.ElementTree import Element, SubElement, tostring, ElementTree
+from xml.etree.ElementTree import Element
 from typing import  List, Iterable, Union
 from collections.abc import Iterable as ITR
 
@@ -44,12 +44,3 @@ class KBEntity:
     @staticmethod
     def from_xml(xml: Element) -> 'KBEntity':
         pass
-
-
-    
-
-
-    
-    
-
-    

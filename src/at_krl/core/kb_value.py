@@ -89,9 +89,9 @@ class KBValue(Evaluatable):
     @property
     def inner_krl(self) -> str:
         try:
-            result = json.dumps(self.content)
+            result = json.dumps(self.content, ensure_ascii=False)
         except:
-            result = json.dumps(str(self.content))
+            result = json.dumps(str(self.content), ensure_ascii=False)
         return result
 
     @property

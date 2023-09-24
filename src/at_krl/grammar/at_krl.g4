@@ -9,6 +9,7 @@ assign_instruction: (
 	)
 	| (evaluatable '->' ref_path (non_factor|));
 
+kb_rules: kb_rule+;
 kb_rule:
 	RULE (ALPHANUMERIC | ALPHANUMERIC_U) kb_rule_condition kb_rule_instructions
 		kb_rule_else_instructions? kb_rule_comment;

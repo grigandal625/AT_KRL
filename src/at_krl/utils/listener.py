@@ -3,9 +3,9 @@ from at_krl.core.kb_value import KBValue, NonFactor
 from at_krl.core.kb_reference import KBReference
 from at_krl.core.kb_operation import KBOperation
 from at_krl.core.kb_instruction import AssignInstruction
+from at_krl.core.kb_rule import KBRule
 from at_krl.grammar.at_krlParser import at_krlParser
 from typing import Any, Union
-from antlr4.tree.Tree import TerminalNode
 
 
 def uni(s: str) -> Union[str, int, float]:
@@ -15,7 +15,10 @@ def uni(s: str) -> Union[str, int, float]:
         try:
             return float(s)
         except ValueError:
-            return str(s)
+            res = str(s)
+            if res.startswith('"') and res.endswith('"'):
+                res = res[1:-1]
+            return res
 
 
 class ATKRLListener(at_krlListener):
@@ -50,11 +53,24 @@ class ATKRLListener(at_krlListener):
                 ctx.children[0].getText(), ctx.children[2].content)
 
     def exitKb_rule(self, ctx: at_krlParser.Kb_ruleContext | Any):
-        pass
+        id = ctx.children[1].getText()
+        condition = ctx.children[2].content
+        instructions = [
+            child.content for child in ctx.children[3].children[1:]]
+        else_instructions = None
+        if not isinstance(ctx.children[4], at_krlParser.Kb_rule_commentContext):
+            else_instructions = [
+                child.content for child in ctx.children[4].children[1:]]
+        comment = ctx.children[-1].content
+        rule = KBRule(id, condition, instructions,
+                             else_instructions=else_instructions, desc=comment)
+        ctx.content = rule
 
     def exitAssign_instruction(self, ctx: at_krlParser.Assign_instructionContext | Any):
-        ref = ctx.children[0].content if isinstance(ctx.children[0], at_krlParser.Ref_pathContext) else ctx.children[1].content
-        value = ctx.children[2].content if isinstance(ctx.children[2], at_krlParser.EvaluatableContext) else ctx.children[0].content
+        ref = ctx.children[0].content if isinstance(
+            ctx.children[0], at_krlParser.Ref_pathContext) else ctx.children[1].content
+        value = ctx.children[2].content if isinstance(
+            ctx.children[2], at_krlParser.EvaluatableContext) else ctx.children[0].content
         ctx.content = AssignInstruction(ref, value)
         if len(ctx.children) == 4:
             ctx.content.non_factor = ctx.children[3].content
@@ -93,3 +109,12 @@ class ATKRLListener(at_krlListener):
 
     def exitEvaluatable(self, ctx: at_krlParser.EvaluatableContext | Any):
         ctx.content = ctx.children[0].content
+
+    def exitInstructions(self, ctx: at_krlParser.InstructionsContext | Any):
+        ctx.content = ctx.children[0].content
+
+    def exitKb_rule_condition(self, ctx: at_krlParser.Kb_rule_conditionContext | Any):
+        ctx.content = ctx.children[1].content
+
+    def exitKb_rule_comment(self, ctx: at_krlParser.Kb_rule_commentContext | Any):
+        ctx.content = ' '.join(child.getText() for child in ctx.children[1:])
