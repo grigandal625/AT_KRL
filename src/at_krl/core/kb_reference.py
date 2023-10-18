@@ -8,7 +8,7 @@ class KBReference(Evaluatable):
     ref: Union['KBReference', None] = None
 
     def __init__(self, id: str, ref: Union['KBReference', None] = None, non_factor: Union[NonFactor, None] = None):
-        super().__init__(non_factor)
+        super().__init__(non_factor=non_factor)
         self.id = id
         self.ref = ref
         self.tag = 'ref'
@@ -17,7 +17,14 @@ class KBReference(Evaluatable):
         return env.get_ref(self.id, recursively=recursively)
 
     def __dict__(self) -> dict:
-        return dict(id=self.id, ref=self.ref.__dict__(), **(super().__dict__())) if self.ref is not None else dict(id=self.id, **(super().__dict__()))
+        return dict(
+            id=self.id, 
+            ref=self.ref.__dict__(), 
+            **(super().__dict__())
+        ) if self.ref is not None else dict(
+            id=self.id, 
+            **(super().__dict__())
+        )
 
     @property
     def attrs(self) -> dict:

@@ -10,75 +10,92 @@ TAGS_SIGNS = {
         "values": ["=", "==", "eq"],
         "is_binary": True,
         "convert_non_factor": True,
+        "meta": "eq",
     },
     "gt": {
         "values": [">", "gt"],
         "is_binary": True,
         "convert_non_factor": True,
+        "meta": "eq",
     },
     "ge": {
         "values": [">=", "ge"],
         "is_binary": True,
         "convert_non_factor": True,
+        "meta": "eq",
     },
     "lt": {
         "values": ["<", "lt"],
         "is_binary": True,
         "convert_non_factor": True,
+        "meta": "eq",
     },
     "le": {
         "values": ["<=", "le"],
         "is_binary": True,
         "convert_non_factor": True,
+        "meta": "eq",
     },
     "ne": {
         "values": ["<>", "!=", "ne"],
         "is_binary": True,
         "convert_non_factor": True,
+        "meta": "eq",
     },
     "and": {
         "values": ["&", "&&", "and"],
         "is_binary": True,
+        "meta": "log",
     },
     "or": {
         "values": ["|", "||", "or"],
         "is_binary": True,
+        "meta": "log",
     },
     "not": {
         "values": ["~", "!", "not"],
         "is_binary": False,
+        "meta": "log",
     },
     "xor": {
         "values": ["xor"],
         "is_binary": True,
+        "meta": "log",
     },
     "neg": {
         "values": ["-", "neg"],
         "is_binary": False,
+        "meta": "super_math",
     },
     "add": {
         "values": ["+", "add"],
         "is_binary": True,
+        "meta": "math",
     },
     "sub": {
         "values": ["-", "sub"],
         "is_binary": True,
+        "meta": "math",
     },
     "mul": {
         "values": ["*", "mul"],
         "is_binary": True,
+        "meta": "math",
     },
     "div": {
         "values": ["/", "div"],
         "is_binary": True,
+        "meta": "math",
     },
     "mod": {
         "values": ["%", "mod"],
         "is_binary": True,
+        "meta": "super_math",
     },
     "pow": {
         "values": ["^", "**", "pow"],
         "is_binary": True,
+        "meta": "super_math",
     },
 }
 
@@ -86,12 +103,16 @@ TAGS_SIGNS = {
 class KBOperation(Evaluatable):
     left: 'Evaluatable' = None
     right: Union['Evaluatable', None] = None
+    op: str = None
 
     def __init__(self, sign: str, left: 'Evaluatable', right: Union['Evaluatable', None] = None, non_factor: Union['NonFactor', None] = None):
         super().__init__(non_factor=non_factor)
         for op in TAGS_SIGNS:
             if sign in TAGS_SIGNS[op]['values']:
+                self.op = op
                 self.tag = op
+                break
+            
         if self.tag is None:
             raise Exception(f"Unknown operation: {sign}")
         self.convert_non_factor = TAGS_SIGNS[self.tag].get(
@@ -103,7 +124,7 @@ class KBOperation(Evaluatable):
 
     @property
     def is_binary(self) -> bool:
-        return TAGS_SIGNS[self.tag]["is_binary"]
+        return TAGS_SIGNS[self.op]["is_binary"]
 
     def __dict__(self) -> dict:
         return dict(

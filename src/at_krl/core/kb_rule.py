@@ -14,7 +14,7 @@ class KBRule(KBEntity):
     meta: str
     desc: str
 
-    def __init__(self, id, condition: Evaluatable, instructions: List[KBInstruction], else_instructions: List[KBInstruction] | None = None, meta='simple', desc='rule'):
+    def __init__(self, id, condition: Evaluatable, instructions: List[KBInstruction], else_instructions: List[KBInstruction] | None = None, meta='simple', desc=None):
         self.id = id
         self.tag = 'rule'
         self.condition = condition
@@ -22,7 +22,7 @@ class KBRule(KBEntity):
         self.else_instructions = else_instructions if else_instructions is not None and len(
             else_instructions) else None
         self.meta = meta
-        self.desc = desc
+        self.desc = desc or id
 
     @property
     def attrs(self) -> dict:
