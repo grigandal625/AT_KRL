@@ -1,3 +1,4 @@
+# sudo docker run -it --rm -v $$(pwd)/src/at_krl/grammar:/app qmu1/antlr4:latest sh -c "cd /app && java -jar /antlr4.jar -Dlanguage=Python3 test.g4" 
 help:
 	@echo "Tasks in \033[1;32mdemo\033[0m:"
 	@cat Makefile
@@ -12,6 +13,9 @@ dev:
 test: dev
 	pytest
 
-
 clean:
 	@rm -rf .pytest_cache/ .mypy_cache/ junit/ build/ dist/
+antlr:
+	sudo docker run -it --rm -v $$(pwd)/src/at_krl/grammar:/app antlr/antlr4 -Dlanguage=Python3 /app/at_krl.g4
+    
+	
