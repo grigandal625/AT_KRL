@@ -39,6 +39,10 @@ class Evaluatable(KBEntity):
         from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
         if xml.tag in TAGS_SIGNS:
             return KBOperation.from_xml(xml)
+
+        from at_krl.core.temporal.kb_allen_operation import TEMPORAL_TAGS_SIGNS, KBAllenOperation
+        if xml.tag in ['EvRel', 'IntRel', 'EvIntRel']:
+            return KBAllenOperation.from_xml(xml)
         raise Exception("Unknown evaluatable tag: " + xml.tag)
 
     @staticmethod
@@ -51,7 +55,12 @@ class Evaluatable(KBEntity):
         from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
         if d['tag'] in TAGS_SIGNS:
             return KBOperation.from_dict(d)
-        raise Exception("Unknown evaluatable tag: " + d['tag'])
+        from at_krl.core.temporal.kb_allen_operation import TEMPORAL_TAGS_SIGNS, KBAllenOperation
+        if d.get('tag', None) in [
+            'EvRel', 'IntRel', 'EvIntRel'
+        ] or d.get('Value', None) in TEMPORAL_TAGS_SIGNS or d.get('sign', None) in TEMPORAL_TAGS_SIGNS:
+            return KBAllenOperation.from_dict(d)
+        raise ValueError("Unknown evaluatable tag: " + d['tag'])
 
     def evaluate(self, *args, **kwargs) -> 'KBValue':
         pass
