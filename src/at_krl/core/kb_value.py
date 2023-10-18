@@ -43,7 +43,7 @@ class Evaluatable(KBEntity):
         from at_krl.core.temporal.kb_allen_operation import TEMPORAL_TAGS_SIGNS, KBAllenOperation
         if xml.tag in ['EvRel', 'IntRel', 'EvIntRel']:
             return KBAllenOperation.from_xml(xml)
-        raise Exception("Unknown evaluatable tag: " + xml.tag)
+        raise ValueError("Unknown evaluatable tag: " + xml.tag)
 
     @staticmethod
     def from_dict(d: dict) -> 'Evaluatable':
