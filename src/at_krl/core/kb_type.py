@@ -56,9 +56,9 @@ class KBType(KBEntity):
 
     @staticmethod
     def from_dict(d: dict) -> 'KBType':
-        if d.get('meta') == 'numeric':
+        if (d.get('meta') == 'numeric') or (d.get('meta') == 'number'):
             return KBNumericType.from_dict(d)
-        elif d.get('meta') == 'string':
+        elif (d.get('meta') == 'string') or (d.get('meta') == 'symbolic'):
             return KBSymbolicType.from_dict(d)
         elif d.get('meta') == 'fuzzy':
             return KBFuzzyType.from_dict(d)
@@ -196,7 +196,6 @@ class KBFuzzyType(KBType):
             mf.xml for mf in self.membership_functions
         ]
 
-    @property
     def __dict__(self) -> dict:
         return dict(
             membership_functions=[mf.__dict__()

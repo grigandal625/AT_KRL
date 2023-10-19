@@ -128,7 +128,10 @@ class KBInstance(KBEntity):
         return self.value.xml
 
     def __dict__(self) -> dict:
-        return dict(**(self.attrs), **(super().__dict__()), value=self.value.__dict__())
+        res = dict(**(self.attrs), **(super().__dict__()))
+        if self.value is not None:
+            res['value'] = self.value.__dict__()
+        return res
 
     @staticmethod
     def from_xml(xml: Element) -> 'KBInstance':

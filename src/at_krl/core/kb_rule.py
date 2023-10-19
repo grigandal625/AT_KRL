@@ -75,7 +75,7 @@ class KBRule(KBEntity):
             condition=self.condition.__dict__(),
             instructions=[instruction.__dict__()
                           for instruction in self.instructions],
-            **(self.attrs)
+            **(self.attrs),
             ** (super().__dict__())
         )
         if self.else_instructions is not None:

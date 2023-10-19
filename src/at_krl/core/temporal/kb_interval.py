@@ -65,7 +65,7 @@ class KBInterval(KBClass):
     def from_dict(d: dict) -> 'KBInterval':
         return KBInterval(
             id=d.get('Name'),
-            open=SimpleEvaluatable.from_dict(d.get('open')),
-            close=SimpleEvaluatable.from_dict(d.get('close')),
+            open=SimpleEvaluatable.from_dict(d.get('Open')),
+            close=SimpleEvaluatable.from_dict(d.get('Close')),
             desc=d.get('desc', None),
         )

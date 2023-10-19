@@ -5,6 +5,7 @@ from at_krl.grammar.at_krlLexer import at_krlLexer
 from at_krl.grammar.at_krlParser import at_krlParser
 from at_krl.utils.listener import ATKRLListener
 from xml.etree.ElementTree import ElementTree, tostring, indent
+import json
 
 from at_krl.core.knowledge_base import KnowledgeBase
 
@@ -65,38 +66,67 @@ def kb_to_krl(kb: KnowledgeBase, output: str = None, *args, **kwargs):
             kb_file.write(krl_text)
 
 
+def kb_from_krl(input: str, *args, **kwargs):
+    with open(args_dict.get('input'), 'r') as krl_file:
+        krl_text = krl_file.read()
+
+        input_stream = InputStream(krl_text)
+        lexer = at_krlLexer(input_stream)
+        stream = CommonTokenStream(lexer)
+        parser = at_krlParser(stream)
+
+        listener = ATKRLListener()
+        parser.addParseListener(listener)
+        tree = parser.knowledge_base()
+
+        if tree.exception:
+            print(tree.exception)
+            exit(0)
+        return listener.KB
+
+
+def kb_from_xml(input: str, allen: str = None, *args, **kwargs):
+    with open(input, 'r') as xml_file:
+        tree = ElementTree(file=xml_file)
+        kb_xml = tree.getroot()
+        allen_xml = None
+        if allen is not None:
+            with open(allen, 'r') as allen_file:
+                allen_tree = ElementTree(file=allen_file)
+                allen_xml = allen_tree.getroot()
+
+        return KnowledgeBase.from_xml(kb_xml, allen_xml=allen_xml)
+
+
+def kb_to_json(kb: KnowledgeBase, output: str = None, *args, **kwargs):
+    d = kb.__dict__()
+    if output is not None:
+        with open(output, 'w') as kb_file:
+            kb_file.write(json.dumps(d, indent=4, ensure_ascii=False))
+    else:
+        print(json.dumps(d, indent=4, ensure_ascii=False))
+
+
+def kb_from_json(input, *args, **kwargs):
+    with open(input, 'r') as f:
+        d = json.loads(f.read())
+        kb = KnowledgeBase.from_dict(d)
+        return kb
+
+
 if __name__ == "__main__":
     args = parser.parse_args()
     args_dict = vars(args)
+    if args_dict.get('mode').startswith('atkrl'):
+        kb = kb_from_krl(**args_dict)
+    elif args_dict.get('mode').startswith('xml'):
+        kb = kb_from_xml(**args_dict)
+    elif args_dict.get('mode').startswith('json'):
+        kb = kb_from_json(**args_dict)
 
-    if args_dict.get('mode') == 'atkrl-xml':
-        with open(args_dict.get('input'), 'r') as krl_file:
-            krl_text = krl_file.read()
-
-            input_stream = InputStream(krl_text)
-            lexer = at_krlLexer(input_stream)
-            stream = CommonTokenStream(lexer)
-            parser = at_krlParser(stream)
-
-            listener = ATKRLListener()
-            parser.addParseListener(listener)
-            tree = parser.knowledge_base()
-
-            if tree.exception:
-                print(tree.exception)
-                exit(0)
-
-            kb_to_xml(listener.KB, **args_dict)
-
-    elif args_dict.get('mode') == 'xml-atkrl':
-        with open(args_dict.get('input'), 'r') as xml_file:
-            tree = ElementTree(file=xml_file)
-            kb_xml = tree.getroot()
-            allen_xml = None
-            if args_dict.get('allen', None) is not None:
-                with open(args_dict.get('allen'), 'r') as allen_file:
-                    allen_tree = ElementTree(file=allen_file)
-                    allen_xml = allen_tree.getroot()
-
-            kb = KnowledgeBase.from_xml(kb_xml, allen_xml=allen_xml)
-            kb_to_krl(kb, **args_dict)
+    if args_dict.get('mode').endswith('krl'):
+        kb_to_krl(kb, **args_dict)
+    elif args_dict.get('mode').endswith('xml'):
+        kb_to_xml(kb, **args_dict)
+    elif args_dict.get('mode').endswith('json'):
+        kb_to_json(kb, **args_dict)

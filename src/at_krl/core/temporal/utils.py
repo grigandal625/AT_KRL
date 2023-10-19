@@ -22,7 +22,7 @@ class SimpleEvaluatable(Evaluatable):
             return SimpleOperation.from_xml(xml)
 
     @staticmethod
-    def from_dict(d: dict) -> Evaluatable:
+    def from_dict(d: dict) -> 'SimpleEvaluatable':
         if d.get('tag') in ['Number', 'TruthVal', 'String']:
             return SimpleValue.from_dict(d)
         elif d.get('tag') == 'Attribute':

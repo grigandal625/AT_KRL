@@ -138,7 +138,8 @@ class KnowledgeBase:
         for c in self.classes.objects:
             classes.append(c.xml)
 
-        classes.append(self.world.xml)  # rules are here
+        if not self.with_world:
+            classes.append(self.world.xml)  # rules are here
         knowledge_base.append(classes)
 
         return knowledge_base
@@ -159,6 +160,16 @@ class KnowledgeBase:
         intervals_and_events.append(events)
 
         return intervals_and_events
+
+    def __dict__(self) -> dict:
+        knowledge_base = {}
+        knowledge_base['types'] = [t.__dict__() for t in self.types]
+        knowledge_base['intervals'] = [i.__dict__() for i in self.classes.intervals]
+        knowledge_base['events'] = [e.__dict__() for e in self.classes.events]
+        knowledge_base['classes'] = [c.__dict__() for c in self.classes.objects]
+        if not self.with_world:
+            knowledge_base['classes'].append(self.world.__dict__())
+        return knowledge_base
 
     @staticmethod
     def from_xml(xml: Element, allen_xml: Element = None) -> 'KnowledgeBase':
@@ -184,6 +195,28 @@ class KnowledgeBase:
             KB.classes.objects.append(KBClass.from_xml(class_xml))
 
         if KB.world:
+            KB.rules = KB.world.rules
+
+        return KB
+    
+    @staticmethod
+    def from_dict(d: dict) -> 'KnowledgeBase':
+        KB = KnowledgeBase()
+        
+        types = d.get('types', [])
+        KB.types = [KBType.from_dict(t) for t in types]
+
+        intervals = d.get('intervals', [])
+        KB.classes.intervals = [KBInterval.from_dict(i) for i in intervals]
+
+        events = d.get('events', [])
+        KB.classes.events = [KBEvent.from_dict(e) for e in events]
+
+        classes = d.get('classes', [])
+        KB.classes.objects = [KBClass.from_dict(c) for c in classes]
+
+        if KB.get_object_by_id('world') is not None:
+            KB.with_world = True
             KB.rules = KB.world.rules
 
         return KB
