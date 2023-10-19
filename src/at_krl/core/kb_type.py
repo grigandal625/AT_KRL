@@ -1,4 +1,4 @@
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
 from at_krl.core.fuzzy.membership_function import MembershipFunction
 from typing import Iterable, List, Union
 from xml.etree.ElementTree import Element
@@ -47,9 +47,9 @@ class KBType(KBEntity):
 
     @staticmethod
     def from_xml(xml: Element) -> 'KBType':
-        if xml.attrib.get('meta') == 'numeric':
+        if (xml.attrib.get('meta') == 'numeric') or (xml.attrib.get('meta') == 'number'):
             return KBNumericType.from_xml(xml)
-        elif xml.attrib.get('meta') == 'string':
+        elif (xml.attrib.get('meta') == 'string') or (xml.attrib.get('meta') == 'symbolic'):
             return KBSymbolicType.from_xml(xml)
         elif xml.attrib.get('meta') == 'fuzzy':
             return KBFuzzyType.from_xml(xml)

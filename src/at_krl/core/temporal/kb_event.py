@@ -33,7 +33,7 @@ class KBEvent(KBClass):
     def inner_krl(self):
         return f"""АТРИБУТЫ
 АТРИБУТ УслВозн
-ТИП логвыр
+ТИП ЛогВыр
 ЗНАЧЕНИЕ 
 {self.occurance_condition.krl}
 КОММЕНТАРИЙ УслВозн

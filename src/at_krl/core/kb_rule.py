@@ -1,4 +1,4 @@
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_value import Evaluatable
 from at_krl.core.kb_instruction import KBInstruction
 from typing import Iterable, List

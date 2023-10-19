@@ -1,5 +1,14 @@
 from xml.etree.ElementTree import Element
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
+
+
+def num(v):
+    i = int(v)
+    f = float(v)
+
+    if i == f:
+        return i
+    return f
 
 
 class NonFactor(KBEntity):
@@ -9,10 +18,10 @@ class NonFactor(KBEntity):
     initialized: bool = None
 
     def __init__(self, belief: float = None, probability: float = None, accuracy: float = None, *args, **kwargs):
-        self.belief = float(belief if belief is not None else 50)
-        self.probability = float(
+        self.belief = num(belief if belief is not None else 50)
+        self.probability = num(
             probability if probability is not None else 100)
-        self.accuracy = float(accuracy if accuracy is not None else 0)
+        self.accuracy = num(accuracy if accuracy is not None else 0)
         self.tag = 'with'
         self.initialized = (belief is not None) and (
             probability is not None) or (accuracy is not None)

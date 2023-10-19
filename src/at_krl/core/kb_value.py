@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
 from at_krl.core.non_factor import NonFactor
 
 from typing import Union
