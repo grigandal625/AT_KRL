@@ -1,4 +1,4 @@
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_value import Evaluatable
 from at_krl.core.kb_instruction import KBInstruction
 from typing import Iterable, List
@@ -75,7 +75,7 @@ class KBRule(KBEntity):
             condition=self.condition.__dict__(),
             instructions=[instruction.__dict__()
                           for instruction in self.instructions],
-            **(self.attrs)
+            **(self.attrs),
             ** (super().__dict__())
         )
         if self.else_instructions is not None:

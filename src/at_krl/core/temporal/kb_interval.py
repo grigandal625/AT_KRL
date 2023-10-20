@@ -39,12 +39,12 @@ class KBInterval(KBClass):
     def inner_krl(self):
         return f"""АТРИБУТЫ
 АТРИБУТ УслНач
-ТИП логвыр
+ТИП ЛогВыр
 ЗНАЧЕНИЕ 
 {self.open.krl}
 КОММЕНТАРИЙ УслНач
 АТРИБУТ УслОконч
-ТИП логвыр
+ТИП ЛогВыр
 ЗНАЧЕНИЕ 
 {self.close.krl}
 КОММЕНТАРИЙ УслОконч
@@ -65,7 +65,7 @@ class KBInterval(KBClass):
     def from_dict(d: dict) -> 'KBInterval':
         return KBInterval(
             id=d.get('Name'),
-            open=SimpleEvaluatable.from_dict(d.get('open')),
-            close=SimpleEvaluatable.from_dict(d.get('close')),
+            open=SimpleEvaluatable.from_dict(d.get('Open')),
+            close=SimpleEvaluatable.from_dict(d.get('Close')),
             desc=d.get('desc', None),
         )

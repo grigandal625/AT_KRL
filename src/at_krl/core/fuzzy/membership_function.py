@@ -1,6 +1,6 @@
 from typing import Iterable, List, Union
 from xml.etree.ElementTree import Element
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
 
 class MFPoint(KBEntity):
     x: float|int = None
@@ -14,7 +14,7 @@ class MFPoint(KBEntity):
     @property
     def attrs(self) -> dict:
         return dict(
-            x=self.x, y=self.y,
+            x=str(self.x), y=str(self.y),
             **super().attrs
         )
     
@@ -23,7 +23,7 @@ class MFPoint(KBEntity):
         return f"{self.x}|{self.y}"
     
     def __dict__(self) -> dict:
-        return dict(**self.attrs, **(super().__dict__()))
+        return dict(x=self.x, y=self.y, **(super().__dict__()))
     
     @staticmethod
     def from_xml(xml: Element) -> 'MFPoint':
@@ -50,8 +50,8 @@ class MembershipFunction(KBEntity):
     @property
     def attrs(self) -> dict:
         res = super().attrs
-        res['min-value'] = self.min
-        res['max-value'] = self.max
+        res['min-value'] = str(self.min)
+        res['max-value'] = str(self.max)
         return res
     
     @property

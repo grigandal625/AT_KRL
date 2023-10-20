@@ -2,7 +2,7 @@ from xml.etree.ElementTree import Element
 from at_krl.core.temporal.kb_event import KBEvent
 from at_krl.core.temporal.kb_interval import KBInterval
 from at_krl.core.kb_operation import KBOperation
-from at_krl.core.non_factor import NonFactor, KBEntity
+from at_krl.core.non_factor import NonFactor
 from typing import List
 
 
@@ -112,15 +112,18 @@ class KBAllenOperation(KBOperation):
             if self._left in event_ids and self._right in event_ids:
                 if self.for_what.get('event_event'):
                     self.tag = 'EvRel'
-                    self._left_kb = [e for e in events if e.id == self._left][0]
-                    self._right_kb = [e for e in events if e.id == self._right][0]
+                    self._left_kb = [
+                        e for e in events if e.id == self._left][0]
+                    self._right_kb = [
+                        e for e in events if e.id == self._right][0]
                 else:
                     raise ValueError(
                         f'Can not apply operation {self._left} {sign} {self._right} (event-event)')
             elif self._left in event_ids and self._right in interval_ids:
                 if self.for_what.get('event_interval'):
                     self.tag = 'EvIntRel'
-                    self._left_kb = [e for e in events if e.id == self._left][0]
+                    self._left_kb = [
+                        e for e in events if e.id == self._left][0]
                     self._right_kb = [
                         i for i in intervals if i.id == self._right][0]
                 else:
@@ -217,7 +220,7 @@ class KBAllenOperation(KBOperation):
         return [left, right]
 
     def __dict__(self) -> dict:
-        res = KBEntity.__dict__(self)
+        res = {'tag': self.tag}
         res['Value'] = self.sign
         res['left'] = {'tag': self.left_tag, 'Name': self._left}
         res['right'] = {'tag': self.right_tag, 'Name': self._right}
@@ -234,8 +237,8 @@ class KBAllenOperation(KBOperation):
     @staticmethod
     def from_dict(d: dict) -> 'KBAllenOperation':
         rel_type = d.get('tag')
-        left = d.get('left').get['Name']
-        right = d.get('right').get['Name']
+        left = d.get('left').get('Name')
+        right = d.get('right').get('Name')
         sign = d.get('Value')
 
         return KBAllenOperation(sign, left, right, rel_type=rel_type)
@@ -251,7 +254,7 @@ class KBAllenOperation(KBOperation):
     @property
     def validated(self) -> bool:
         return self._validated
-    
+
     @property
     def is_binary(self) -> bool:
         return True

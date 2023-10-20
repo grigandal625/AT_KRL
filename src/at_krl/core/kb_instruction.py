@@ -1,4 +1,4 @@
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_value import Evaluatable
 from at_krl.core.kb_reference import KBReference
 from at_krl.core.non_factor import NonFactor
@@ -28,7 +28,7 @@ class KBInstruction(KBEntity):
     @staticmethod
     def from_dict(d: dict) -> 'KBInstruction':
         if d['tag'] == 'assign':
-            return KBInstruction.from_dict(d)
+            return AssignInstruction.from_dict(d)
         raise
 
 

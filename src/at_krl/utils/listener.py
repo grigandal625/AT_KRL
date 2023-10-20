@@ -13,6 +13,8 @@ from at_krl.core.temporal.kb_event import KBEvent
 from at_krl.core.temporal.kb_interval import KBInterval
 from at_krl.core.temporal.kb_allen_operation import KBAllenOperation
 
+from at_krl.core.knowledge_base import KnowledgeBase
+
 from at_krl.grammar.at_krlParser import at_krlParser
 from typing import Any, Union
 from antlr4.tree import Tree
@@ -36,15 +38,7 @@ class ATKRLListener(at_krlListener):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.KB = {
-            'types': [],
-            'classes': {
-                'objects': [],
-                'events': [],
-                'intervals': [],
-            },
-            'rules': [],
-        }
+        self.KB = KnowledgeBase()
 
     def exitBelief(self, ctx: at_krlParser.BeliefContext | Any):
         ctx.content = {'belief': float(ctx.children[2].getText(
@@ -91,7 +85,7 @@ class ATKRLListener(at_krlListener):
         rule = KBRule(id, condition, instructions,
                       else_instructions=else_instructions, desc=comment)
         ctx.content = rule
-        self.KB['rules'].append(rule)
+        self.KB.add_rule(rule)
 
     def exitAssign_instruction(self, ctx: at_krlParser.Assign_instructionContext | Any):
         ref = ctx.children[0].content if isinstance(
@@ -183,7 +177,7 @@ class ATKRLListener(at_krlListener):
             ctx.content = KBSymbolicType(
                 type_name, symbolic_contexts[0].content, desc=desc)
 
-        self.KB['types'].append(ctx.content)
+        self.KB.types.append(ctx.content)
         return super().exitKb_type(ctx)
 
     def exitSymbolic_type_body(self, ctx: at_krlParser.Symbolic_type_bodyContext | Any):
@@ -232,14 +226,14 @@ class ATKRLListener(at_krlListener):
         return super().exitMembersip_function(ctx)
 
     def exitKb_class(self, ctx: at_krlParser.Kb_classContext | Any):
-        class_id = ctx.children[1].getText()
+        object_id = ctx.children[1].getText()
         body_context = ctx.children[2].children[0]
-
         desc = None
         if isinstance(ctx.children[-1], at_krlParser.CommentaryContext):
             desc = ctx.children[-1].content
 
         if isinstance(body_context, at_krlParser.Object_bodyContext):
+            class_id = self.KB.get_free_class_id(object_id)
             group = None
             if len(body_context.children) > 1:
                 if isinstance(body_context.children[1], Tree.TerminalNodeImpl):
@@ -248,18 +242,22 @@ class ATKRLListener(at_krlListener):
                 c, at_krlParser.AttributesContext)][0]
             ctx.content = KBClass(
                 class_id, attrs_context.content, group=group, desc=desc)
+            
+            self.KB.world.properties.append(KBProperty(object_id, class_id, desc=desc))
+            self.KB.classes.objects.append(ctx.content)
 
-            self.KB['classes']['objects'].append(ctx.content)
         elif isinstance(body_context, at_krlParser.Interval_bodyContext):
+            class_id = object_id
             open, close = [c.content for c in body_context.children if isinstance(
                 c, at_krlParser.Simple_evaluatableContext)]
             ctx.content = KBInterval(class_id, open, close, desc=desc)
-            self.KB['classes']['intervals'].append(ctx.content)
+            self.KB.classes.intervals.append(ctx.content)
         elif isinstance(body_context, at_krlParser.Event_bodyContext):
+            class_id = object_id
             occurance_condition = [c.content for c in body_context.children if isinstance(
                 c, at_krlParser.Simple_evaluatableContext)][0]
             ctx.content = KBEvent(class_id, occurance_condition, desc=desc)
-            self.KB['classes']['events'].append(ctx.content)
+            self.KB.classes.events.append(ctx.content)
         return super().exitKb_class(ctx)
 
     def exitAttribute(self, ctx: at_krlParser.AttributeContext | Any):
@@ -354,12 +352,9 @@ class ATKRLListener(at_krlListener):
         return super().exitKb_allen_operation(ctx)
 
     def _search_interval_or_event(self, class_id):
-        for interval in self.KB['classes']['intervals']:
-            if interval.id == class_id:
-                return interval
-
-        for event in self.KB['classes']['events']:
-            if event.id == class_id:
-                return event
-
-        return class_id
+        res = self.KB.get_interval_by_id(class_id)
+        if res is None:
+            res = self.KB.get_event_by_id(class_id)
+            if res is None:
+                res = class_id
+        return res

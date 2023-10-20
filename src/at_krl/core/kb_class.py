@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element
-from at_krl.core.kb import KBEntity
+from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_rule import KBRule
 from at_krl.core.kb_value import Evaluatable
 from typing import Iterable, List, Union
@@ -66,8 +66,8 @@ class KBClass(KBEntity):
 
     @staticmethod
     def from_xml(xml: Element) -> 'KBClass':
-        id = xml.attrib.get('id'),
-        desc = xml.attrib.get('desc', id),
+        id = xml.attrib.get('id')
+        desc = xml.attrib.get('desc', id)
         properties = []
         ps = xml.find('properties')
         if ps:
@@ -76,9 +76,9 @@ class KBClass(KBEntity):
         rs = xml.find('rules')
         if rs:
             rules = [KBRule.from_xml(r) for r in rs]
-        return KBClass(id, properties, rules, desc=desc)
+        return KBClass(id, properties, rules=rules, desc=desc)
 
-    @classmethod
+    @staticmethod
     def from_dict(d: dict):
         id = d.get('id')
         desc = d.get('desc', id)
@@ -128,7 +128,10 @@ class KBInstance(KBEntity):
         return self.value.xml
 
     def __dict__(self) -> dict:
-        return dict(**(self.attrs), **(super().__dict__()), value=self.value.__dict__())
+        res = dict(**(self.attrs), **(super().__dict__()))
+        if self.value is not None:
+            res['value'] = self.value.__dict__()
+        return res
 
     @staticmethod
     def from_xml(xml: Element) -> 'KBInstance':
@@ -165,7 +168,7 @@ class KBProperty(KBInstance):
 
     @property
     def attrs(self) -> dict:
-        return dict(**(super().attrs), source=self.source)
+        return dict(**(super().attrs), source=self.source or 'asked')
 
     @property
     def krl_type(self):
@@ -174,7 +177,7 @@ class KBProperty(KBInstance):
     @staticmethod
     def from_xml(xml: Element) -> 'KBProperty':
         value = None
-        if xml.find('value'):
+        if xml.find('value') is not None:
             value = Evaluatable.from_xml(xml.find('value'))
         return KBProperty(
             id=xml.attrib.get("id"),
