@@ -68,7 +68,7 @@ from at_krl.grammar.at_krlLexer import at_krlLexer
 from at_krl.grammar.at_krlParser import at_krlParser
 from at_krl.utils.listener import ATKRLListener
 
-krl_file = 'example/test.kbs' # Входной файл на япз
+input = 'example/test.kbs' # Входной файл на япз
 
 with open(input, 'r') as krl_file:
     krl_text = krl_file.read() # считываем текст БЗ
