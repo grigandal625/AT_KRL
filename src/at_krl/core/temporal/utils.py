@@ -70,9 +70,7 @@ class SimpleValue(KBValue, SimpleEvaluatable):
     @staticmethod
     def from_dict(d: dict) -> 'SimpleValue':
         if d.get('tag') == 'Number':
-            if '.' in d.get('Value'):
-                return SimpleValue(float(d.get('Value')))
-            return SimpleValue(int(d.get('Value')))
+            return SimpleValue(d.get('Value'))
         elif d.get('tag') == 'TruthVal':
             return SimpleValue(d.get('Value') != 'FALSE')
         elif d.get('tag') == 'String':

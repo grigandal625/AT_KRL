@@ -69,23 +69,24 @@ class ATKRLListener(at_krlListener):
                 ctx.children[0].getText(), ctx.children[2].content)
 
     def exitKb_rule(self, ctx: at_krlParser.Kb_ruleContext | Any):
-        id = ctx.children[1].getText()
-        condition = ctx.children[2].content
-        instructions = [
-            child.content for child in ctx.children[3].children[1:]]
-        else_instructions = None
-        comment = None
-        if len(ctx.children) > 4:
+        if ctx.children:
+            id = ctx.children[1].getText()
+            condition = ctx.children[2].content
+            instructions = [
+                child.content for child in ctx.children[3].children[1:]]
+            else_instructions = None
+            comment = None
+            if len(ctx.children) > 4:
 
-            if not isinstance(ctx.children[4], at_krlParser.CommentaryContext):
-                else_instructions = [
-                    child.content for child in ctx.children[4].children[1:]]
-            if isinstance(ctx.children[-1], at_krlParser.CommentaryContext):
-                comment = ctx.children[-1].content
-        rule = KBRule(id, condition, instructions,
-                      else_instructions=else_instructions, desc=comment)
-        ctx.content = rule
-        self.KB.add_rule(rule)
+                if not isinstance(ctx.children[4], at_krlParser.CommentaryContext):
+                    else_instructions = [
+                        child.content for child in ctx.children[4].children[1:]]
+                if isinstance(ctx.children[-1], at_krlParser.CommentaryContext):
+                    comment = ctx.children[-1].content
+            rule = KBRule(id, condition, instructions,
+                        else_instructions=else_instructions, desc=comment)
+            ctx.content = rule
+            self.KB.add_rule(rule)
 
     def exitAssign_instruction(self, ctx: at_krlParser.Assign_instructionContext | Any):
         ref = ctx.children[0].content if isinstance(
@@ -98,14 +99,20 @@ class ATKRLListener(at_krlListener):
 
     def exitKb_reference(self, ctx: at_krlParser.Kb_referenceContext | Any):
         if len(ctx.children) == 1:
-            ctx.content = ctx.children[0].content
-        elif isinstance(ctx.children[2], at_krlParser.Non_factorContext):
-            ctx.content = ctx.children[1].content
-            ctx.content.non_factor = ctx.children[2].content
+            s = ctx.children[0].content
+            ctx.content = KBReference(s.id, s.ref)
+        else:
+            s = ctx.children[1].content
+            n = None
+            if isinstance(ctx.children[2], at_krlParser.Non_factorContext):
+                n = ctx.children[2].content
+            ctx.content = KBReference(s.id, s.ref, non_factor=n)
 
     def exitKb_operation(self, ctx: at_krlParser.Kb_operationContext | Any):
         if len(ctx.children) == 1:
             ctx.content = ctx.children[0].content
+        elif (ctx.children[0].getText() == '(') and (ctx.children[2].getText() == ')'):
+            ctx.content = ctx.children[1].content
         elif len(ctx.children) == 2:
             if isinstance(ctx.children[1], at_krlParser.Non_factorContext):
                 ctx.content = ctx.children[0].content
