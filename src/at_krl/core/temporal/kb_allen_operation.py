@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import Element
-from at_krl.core.temporal.kb_event import KBEvent
+from at_krl.core.temporal.kb_event import KBEvent, KBClass
 from at_krl.core.temporal.kb_interval import KBInterval
 from at_krl.core.kb_operation import KBOperation
 from at_krl.core.non_factor import NonFactor
@@ -42,8 +42,17 @@ class KBAllenOperation(KBOperation):
         self.non_factor = NonFactor()
         self.non_factor.initialized = False
 
-        if isinstance(left, str) and isinstance(right, str):
-            self._left = left
+        if isinstance(left, str) or isinstance(right, str):
+            if isinstance(left, KBClass):
+                self._left = left.id
+            else:
+                self._left = left
+
+            if isinstance(right, KBClass):
+                self._right = right.id
+            else:
+                self._right = right
+                
             self._right = right
             self.tag = rel_type
 

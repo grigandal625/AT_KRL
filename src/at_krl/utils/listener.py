@@ -261,10 +261,12 @@ class ATKRLListener(at_krlListener):
             self.KB.classes.intervals.append(ctx.content)
         elif isinstance(body_context, at_krlParser.Event_bodyContext):
             class_id = object_id
-            occurance_condition = [c.content for c in body_context.children if isinstance(
-                c, at_krlParser.Simple_evaluatableContext)][0]
-            ctx.content = KBEvent(class_id, occurance_condition, desc=desc)
-            self.KB.classes.events.append(ctx.content)
+            occurance_conditions = [c.content for c in body_context.children if isinstance(
+                c, at_krlParser.Simple_evaluatableContext)]
+            if len(occurance_conditions):
+                occurance_condition = occurance_conditions[0]
+                ctx.content = KBEvent(class_id, occurance_condition, desc=desc)
+                self.KB.classes.events.append(ctx.content)
         return super().exitKb_class(ctx)
 
     def exitAttribute(self, ctx: at_krlParser.AttributeContext | Any):

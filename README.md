@@ -67,6 +67,7 @@ from antlr4 import CommonTokenStream, InputStream
 from at_krl.grammar.at_krlLexer import at_krlLexer
 from at_krl.grammar.at_krlParser import at_krlParser
 from at_krl.utils.listener import ATKRLListener
+from at_krl.utils.error_listener import ATKRLErrorListener
 
 input = 'example/test.kbs' # Входной файл на япз
 
@@ -80,6 +81,10 @@ with open(input, 'r') as krl_file:
     listener = ATKRLListener()
     parser.addParseListener(listener) # добавляем лисенер
 
+    error_listener = ATKRLErrorListener()
+    parser.removeErrorListeners()
+    parser.addErrorListener(error_listener)
+
     tree = parser.knowledge_base() # даем команду распарсить БЗ
 
     # После этого в объекте listener в свойсте KB будет загруженная бз
@@ -90,7 +95,7 @@ with open(input, 'r') as krl_file:
         print(t.id)
     
     for p in kb.world.properties: # печатаем все объекты
-        print(p.id, p.type_or_class)
+        print(p.id, p.type_or_class_id)
 
     for i in kb.classes.intervals: # печатаем все интервалы
         print(i.id)
