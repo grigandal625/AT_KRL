@@ -4,6 +4,7 @@ from antlr4 import CommonTokenStream, InputStream
 from at_krl.grammar.at_krlLexer import at_krlLexer
 from at_krl.grammar.at_krlParser import at_krlParser
 from at_krl.utils.listener import ATKRLListener
+from at_krl.utils.error_listener import ATKRLErrorListener
 from xml.etree.ElementTree import ElementTree, tostring, indent
 import json
 
@@ -67,7 +68,7 @@ def kb_to_krl(kb: KnowledgeBase, output: str = None, *args, **kwargs):
 
 
 def kb_from_krl(input: str, *args, **kwargs):
-    with open(args_dict.get('input'), 'r') as krl_file:
+    with open(input, 'r') as krl_file:
         krl_text = krl_file.read()
 
         input_stream = InputStream(krl_text)
@@ -77,6 +78,8 @@ def kb_from_krl(input: str, *args, **kwargs):
 
         listener = ATKRLListener()
         parser.addParseListener(listener)
+        parser.removeErrorListeners()
+        parser.addErrorListener(ATKRLErrorListener())
         tree = parser.knowledge_base()
 
         if tree.exception:

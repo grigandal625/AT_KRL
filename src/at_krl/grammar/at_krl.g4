@@ -4,9 +4,9 @@ grammar at_krl;
 
 knowledge_base: kb_types kb_classes kb_rules;
 
-kb_types: kb_type+;
-kb_classes: kb_class+;
-kb_rules: kb_rule+;
+kb_types: kb_type+?;
+kb_classes: kb_class+?;
+kb_rules: kb_rule+?;
 
 commentary: COMMENT (.)+?;
 

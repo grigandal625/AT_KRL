@@ -18,7 +18,7 @@ if __name__ == '__main__':
         packages=find_packages('src', include=[
             'at_krl*'
         ]),
-        description='An AT-TECHNOLOGY knowledge representation language parsing and processing package.',
+        description='AT-TECHNOLOGY knowledge representation language parsing and processing package.',
         install_requires=[
               *read_pipenv_dependencies('Pipfile.lock'),
         ]
