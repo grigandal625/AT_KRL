@@ -122,7 +122,7 @@ class SimpleReference(KBReference, SimpleEvaluatable):
 
     def validate(self, kb: 'KnowledgeBase', *args, inst: KBInstance = None, **kwargs):
         return KBReference.validate(self, kb, *args, inst=inst, **kwargs)
-    
+
 
 class SimpleOperation(KBOperation, SimpleEvaluatable):
     left: SimpleEvaluatable = None
@@ -155,20 +155,20 @@ class SimpleOperation(KBOperation, SimpleEvaluatable):
             for op, data in TAGS_SIGNS.items():
                 if sign in data['values']:
                     d['tag'] = {
-                        'eq': 'EqOp', 
-                        'log': 'LogOp', 
+                        'eq': 'EqOp',
+                        'log': 'LogOp',
                         'math': 'ArOp',
                     }[data['meta']]
                     d['Value'] = op
                     break
-    
+
         if d.get('tag') == 'EqOp':
             return SimpleEqOperation.from_dict(d)
         elif d.get('tag') == 'LogOp':
             return SimpleLogOperation.from_dict(d)
         elif d.get('tag') == 'ArOp':
             return SimpleArOperation.from_dict(d)
-        
+
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         return KBOperation.validate(self, kb, *args, **kwargs)
 

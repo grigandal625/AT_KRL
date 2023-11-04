@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+
 class KBClass(KBEntity):
     id: str = None
     desc: str = None
@@ -101,10 +102,11 @@ class KBClass(KBEntity):
         for prop in self.properties:
             prop.validate(kb, self)
 
-    def validate_rules(self, kb: 'KnowledgeBase'): 
+    def validate_rules(self, kb: 'KnowledgeBase'):
         if self.rules:
-            inst = self.create_instance(kb, self.id + '_instance', self.desc, ignore_validation=True)
-            for rule in self.rules:        
+            inst = self.create_instance(
+                kb, self.id + '_instance', self.desc, ignore_validation=True)
+            for rule in self.rules:
                 rule.validate(kb, inst=inst)
 
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
@@ -113,7 +115,7 @@ class KBClass(KBEntity):
             self.validate_rules(kb)
             self._validated = True
 
-    def create_instance(self, kb: 'KnowledgeBase', _id: str, desc: str=None, source: str=None, as_property: bool = False, ignore_validation: bool=False) -> Union['KBInstance', 'KBProperty']:
+    def create_instance(self, kb: 'KnowledgeBase', _id: str, desc: str = None, source: str = None, as_property: bool = False, ignore_validation: bool = False) -> Union['KBInstance', 'KBProperty']:
         if (not self._validated) and (not ignore_validation):
             self.validate(kb)
 
@@ -124,18 +126,20 @@ class KBClass(KBEntity):
         inst.value = KBValue(id(inst))
         inst._type_or_class = self
         inst._validated = True
-        for prop in self.properties:    
+        for prop in self.properties:
             if prop.is_type_instance:
-                prop_inst = KBProperty(prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
+                prop_inst = KBProperty(
+                    prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
             elif prop.is_class_instance:
-                prop_inst = prop._type_or_class.create_instance(kb, prop.id, prop.desc, prop.source, as_property=True, ignore_validation=ignore_validation)
+                prop_inst = prop._type_or_class.create_instance(
+                    kb, prop.id, prop.desc, prop.source, as_property=True, ignore_validation=ignore_validation)
             prop_inst.owner_class = self
             prop_inst.owner = inst
             prop_inst._validated = True
 
             inst.properties_instances.append(prop_inst)
         return inst
-            
+
 
 class KBInstance(KBEntity):
     id: str = None
@@ -151,7 +155,7 @@ class KBInstance(KBEntity):
         self.desc = desc or id
         self.tag = 'instance'
         self.value = value
-        self.properties_instances = [] # наполнятся при валидации
+        self.properties_instances = []  # наполнятся при валидации
 
     @property
     def attrs(self) -> dict:
@@ -209,7 +213,7 @@ class KBInstance(KBEntity):
             desc=d.get("desc", None),
             value=value
         )
-    
+
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         if not self._validated:
             for t in kb.types:
@@ -225,7 +229,7 @@ class KBInstance(KBEntity):
                         if kb._raise_on_validation:
                             raise KBValidationError(msg, kb_entity=self)
                     return
-                
+
             if self.type_or_class_id == 'world':
                 self._validate_by_obj(kb.world, kb)
             else:
@@ -237,7 +241,7 @@ class KBInstance(KBEntity):
                 logger.warning(msg)
                 if kb._raise_on_validation:
                     raise KBValidationError(msg, kb_entity=self)
-            
+
     def _validate_by_obj(self, obj: 'KBClass', kb: 'KnowledgeBase'):
         if obj.id == self.type_or_class_id:
             self._type_or_class = obj
@@ -245,9 +249,11 @@ class KBInstance(KBEntity):
                 obj.validate_properties(kb)
             for prop in obj.properties:
                 if prop.is_type_instance:
-                    prop_inst = KBProperty(prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
+                    prop_inst = KBProperty(
+                        prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
                 elif prop.is_class_instance:
-                    prop_inst = prop._type_or_class.create_instance(kb, prop.id, prop.desc, prop.source, as_property=True)
+                    prop_inst = prop._type_or_class.create_instance(
+                        kb, prop.id, prop.desc, prop.source, as_property=True)
                 prop_inst.owner_class = self._type_or_class
                 prop_inst.owner = self
                 prop_inst._validated = True
@@ -257,16 +263,19 @@ class KBInstance(KBEntity):
     @property
     def is_type_instance(self):
         return isinstance(self._type_or_class, KBType)
-    
+
     @property
     def is_class_instance(self):
         return isinstance(self._type_or_class, KBClass)
 
+
 class KBProperty(KBInstance):
     source: str = None
-    owner_class: KBClass = None # устанавливается при валидации или в конструкторе родительского класса
-    owner: KBInstance = None # устанавливается при вызове create_instance родительского класса
-    
+    # устанавливается при валидации или в конструкторе родительского класса
+    owner_class: KBClass = None
+    # устанавливается при вызове create_instance родительского класса
+    owner: KBInstance = None
+
     def __init__(self, id: str, type_or_class_id: str, desc: str = None, source: str = None, value: Evaluatable = None) -> None:
         super().__init__(id, type_or_class_id, desc=desc, value=value)
         self.tag = 'property'

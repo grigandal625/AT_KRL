@@ -62,7 +62,7 @@ class KBType(KBEntity):
             return KBSymbolicType.from_dict(d)
         elif d.get('meta') == 'fuzzy':
             return KBFuzzyType.from_dict(d)
-        
+
     def validate_value(self, value) -> bool:
         return False
 
@@ -120,7 +120,7 @@ class KBNumericType(KBType):
         from_ = d.get('from')
         to_ = d.get('to')
         return KBNumericType(id, from_, to_, desc=desc)
-    
+
     def validate_value(self, value) -> bool:
         from at_krl.core.kb_value import Evaluatable
         if isinstance(value, Evaluatable):
@@ -181,10 +181,10 @@ class KBSymbolicType(KBType):
             desc=d.get('desc', None),
             values=d.get('values', []),
         )
-    
+
     def validate_value(self, value) -> bool:
         return True
-    
+
 
 class KBFuzzyType(KBType):
     membership_functions: List[MembershipFunction] = None
@@ -237,7 +237,7 @@ class KBFuzzyType(KBType):
             membership_functions=[MembershipFunction.from_dict(
                 parameter) for parameter in d.get('membership_functions', [])]
         )
-    
+
     def validate_value(self, value) -> bool:
         from at_krl.core.kb_value import Evaluatable
         if isinstance(value, Evaluatable):

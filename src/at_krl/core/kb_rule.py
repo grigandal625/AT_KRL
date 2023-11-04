@@ -7,6 +7,7 @@ from xml.etree.ElementTree import Element
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
 
+
 class KBRule(KBEntity):
     id: str
     condition: Evaluatable
@@ -119,7 +120,7 @@ class KBRule(KBEntity):
 {action_krl}
 {else_action_krl}КОММЕНТАРИЙ {self.desc}
 """
-    
+
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         if not self._validated:
             self.condition.validate(kb, *args, **kwargs)

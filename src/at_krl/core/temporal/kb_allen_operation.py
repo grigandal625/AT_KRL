@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
 
 
-
 TEMPORAL_TAGS_SIGNS = {
     # default: interval_interval: True, event_event: False, event_interval: False
     "b": {'event_event': True, 'event_interval': True},
@@ -55,7 +54,7 @@ class KBAllenOperation(KBOperation):
                 self._right = right.id
             else:
                 self._right = right
-                
+
             self._right = right
             self.tag = rel_type
 

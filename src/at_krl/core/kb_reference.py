@@ -27,11 +27,11 @@ class KBReference(Evaluatable):
 
     def __dict__(self) -> dict:
         return dict(
-            id=self.id, 
-            ref=self.ref.__dict__(), 
+            id=self.id,
+            ref=self.ref.__dict__(),
             **(super().__dict__())
         ) if self.ref is not None else dict(
-            id=self.id, 
+            id=self.id,
             **(super().__dict__())
         )
 
@@ -79,14 +79,17 @@ class KBReference(Evaluatable):
             return KBReference(ref_str)
 
     def validate(self, kb: 'KnowledgeBase', *args, inst: 'KBInstance' = None, **kwargs):
-        inst = inst or kb.world.create_instance(kb, 'world_inst', kb.world.desc, ignore_validation=True)
-        self._validated = self._validate(inst, raise_on_validation=kb._raise_on_validation)
+        inst = inst or kb.world.create_instance(
+            kb, 'world_inst', kb.world.desc, ignore_validation=True)
+        self._validated = self._validate(
+            inst, raise_on_validation=kb._raise_on_validation)
 
     def _validate(self, inst: 'KBInstance', raise_on_validation: bool) -> bool:
         for p in inst.properties_instances:
             if p.id == self.id:
                 if self.ref:
-                    self._validated = self.ref._validate(p, raise_on_validation)
+                    self._validated = self.ref._validate(
+                        p, raise_on_validation)
                 else:
                     self._validated = True
                 break
@@ -96,4 +99,3 @@ class KBReference(Evaluatable):
             if raise_on_validation:
                 raise KBValidationError(msg, kb_entity=self)
         return self._validated
-                

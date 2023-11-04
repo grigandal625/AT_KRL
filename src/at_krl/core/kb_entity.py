@@ -1,9 +1,10 @@
 from xml.etree.ElementTree import Element
-from typing import  List, Iterable, Union, TYPE_CHECKING
+from typing import List, Iterable, Union, TYPE_CHECKING
 from collections.abc import Iterable as ITR
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
+
 
 class KBEntity:
     tag: str = None
@@ -15,11 +16,11 @@ class KBEntity:
     @staticmethod
     def from_dict(d: dict) -> 'KBEntity':
         pass
-    
+
     @property
     def attrs(self) -> dict:
         return {}
-    
+
     @property
     def inner_xml(self) -> Union[str, Element, List[Element], Iterable[Element], None]:
         return None
@@ -44,7 +45,7 @@ class KBEntity:
                 for e in inner_xml:
                     result.append(e)
         return result
-    
+
     @staticmethod
     def from_xml(xml: Element) -> 'KBEntity':
         pass

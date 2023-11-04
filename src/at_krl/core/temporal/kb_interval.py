@@ -38,7 +38,7 @@ class KBInterval(KBClass):
         res['Open'] = self.open.__dict__()
         res['Close'] = self.close.__dict__()
         return res
-    
+
     @property
     def inner_krl(self):
         return f"""АТРИБУТЫ
@@ -73,7 +73,7 @@ class KBInterval(KBClass):
             close=SimpleEvaluatable.from_dict(d.get('Close')),
             desc=d.get('desc', None),
         )
-    
+
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         if not self._validated:
             self.open.validate(kb, *args, **kwargs)

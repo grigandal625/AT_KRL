@@ -19,13 +19,13 @@ class KBEvent(KBClass):
     @property
     def attrs(self) -> dict:
         return {'Name': self.id}
-    
+
     @property
     def inner_xml(self) -> Element:
         formula = Element('Formula')
         formula.append(self.occurance_condition.xml)
         return formula
-    
+
     def __dict__(self) -> dict:
         res = super().__dict__()
         res.pop('properties', None)
@@ -33,7 +33,7 @@ class KBEvent(KBClass):
         res.pop('id', None)
         res['Formula'] = self.occurance_condition.__dict__()
         return res
-    
+
     @property
     def inner_krl(self):
         return f"""АТРИБУТЫ
@@ -43,15 +43,16 @@ class KBEvent(KBClass):
 {self.occurance_condition.krl}
 КОММЕНТАРИЙ УслВозн
 """
-    
+
     @staticmethod
     def from_xml(xml: Element) -> 'KBEvent':
         return KBEvent(
             id=xml.attrib.get('Name'),
-            occurance_condition=SimpleEvaluatable.from_xml(xml.find('Formula')[0]),
+            occurance_condition=SimpleEvaluatable.from_xml(
+                xml.find('Formula')[0]),
             desc=xml.attrib.get('desc', None),
         )
-    
+
     @staticmethod
     def from_dict(d: dict):
         return KBEvent(
@@ -59,7 +60,7 @@ class KBEvent(KBClass):
             occurance_condition=SimpleEvaluatable.from_dict(d.get('Formula')),
             desc=d.get('desc', None),
         )
-    
+
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         if not self._validated:
             self.occurance_condition.validate(kb)

@@ -115,7 +115,7 @@ class KBOperation(Evaluatable):
                 self.op = op
                 self.tag = op
                 break
-            
+
         if self.tag is None:
             raise Exception(f"Unknown operation: {sign}")
         self.convert_non_factor = TAGS_SIGNS[self.tag].get(

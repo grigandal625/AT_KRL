@@ -167,9 +167,11 @@ class KnowledgeBase:
     def __dict__(self) -> dict:
         knowledge_base = {}
         knowledge_base['types'] = [t.__dict__() for t in self.types]
-        knowledge_base['intervals'] = [i.__dict__() for i in self.classes.intervals]
+        knowledge_base['intervals'] = [i.__dict__()
+                                       for i in self.classes.intervals]
         knowledge_base['events'] = [e.__dict__() for e in self.classes.events]
-        knowledge_base['classes'] = [c.__dict__() for c in self.classes.objects]
+        knowledge_base['classes'] = [c.__dict__()
+                                     for c in self.classes.objects]
         if not self.with_world:
             knowledge_base['classes'].append(self.world.__dict__())
         return knowledge_base
@@ -188,7 +190,6 @@ class KnowledgeBase:
                 event.validate(self)
 
             self._validated = True
-
 
     @staticmethod
     def from_xml(xml: Element, allen_xml: Element = None) -> 'KnowledgeBase':
@@ -217,11 +218,11 @@ class KnowledgeBase:
             KB.rules = KB.world.rules
 
         return KB
-    
+
     @staticmethod
     def from_dict(d: dict) -> 'KnowledgeBase':
         KB = KnowledgeBase()
-        
+
         types = d.get('types', [])
         KB.types = [KBType.from_dict(t) for t in types]
 
