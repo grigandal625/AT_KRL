@@ -1,9 +1,13 @@
 from xml.etree.ElementTree import Element
-from typing import  List, Iterable, Union
+from typing import  List, Iterable, Union, TYPE_CHECKING
 from collections.abc import Iterable as ITR
+
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
 
 class KBEntity:
     tag: str = None
+    _validated: bool = False
 
     def __dict__(self) -> dict:
         return dict(tag=self.tag)
@@ -44,3 +48,6 @@ class KBEntity:
     @staticmethod
     def from_xml(xml: Element) -> 'KBEntity':
         pass
+
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        self._validated = True

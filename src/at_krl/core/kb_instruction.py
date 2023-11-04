@@ -4,8 +4,10 @@ from at_krl.core.kb_reference import KBReference
 from at_krl.core.non_factor import NonFactor
 from xml.etree.ElementTree import Element
 
+from typing import Iterable, List, Union, TYPE_CHECKING
 
-from typing import Iterable, List, Union
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
 
 
 class KBInstruction(KBEntity):
@@ -78,3 +80,9 @@ class AssignInstruction(KBInstruction):
             Evaluatable.from_dict(d['value']),
             NonFactor.from_dict(d.get('non_factor', None))
         )
+
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        if not self._validated:
+            self.ref.validate(kb, *args, **kwargs)
+            self.value.validate(kb, *args, **kwargs)
+            self._validated = True

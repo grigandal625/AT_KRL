@@ -1,10 +1,11 @@
 from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_value import Evaluatable
 from at_krl.core.kb_instruction import KBInstruction
-from typing import Iterable, List
+from typing import Iterable, List, TYPE_CHECKING
 from xml.etree.ElementTree import Element
-Element('rule').attrib
 
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
 
 class KBRule(KBEntity):
     id: str
@@ -118,3 +119,12 @@ class KBRule(KBEntity):
 {action_krl}
 {else_action_krl}КОММЕНТАРИЙ {self.desc}
 """
+    
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        if not self._validated:
+            self.condition.validate(kb, *args, **kwargs)
+
+            for instruct in self.instructions:
+                instruct.validate(kb, *args, **kwargs)
+
+            self._validated = True

@@ -3,7 +3,10 @@ from xml.etree.ElementTree import Element
 from at_krl.core.kb_value import KBValue
 from at_krl.core.kb_value import Evaluatable, KBValue, NonFactor
 
-from typing import Union
+from typing import Union, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
 
 TAGS_SIGNS = {
     "eq": {
@@ -171,3 +174,9 @@ class KBOperation(Evaluatable):
 
     def evaluate(self, env, *args, **kwargs) -> KBValue:
         return TAGS_SIGNS[self.tag]["evaluate"](self, env, *args, **kwargs)
+
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        if not self._validated:
+            self.left.validate(kb, *args, **kwargs)
+            self.right.validate(kb, *args, **kwargs)
+            self._validated = True

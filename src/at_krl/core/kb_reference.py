@@ -1,6 +1,15 @@
 from xml.etree.ElementTree import Element
 from at_krl.core.kb_value import Evaluatable, KBValue, NonFactor
-from typing import Union
+from typing import Union, TYPE_CHECKING
+
+from at_krl.exceptions.kb_exception import KBValidationError
+import logging
+
+logger = logging.getLogger(__name__)
+
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
+    from at_krl.core.kb_class import KBInstance
 
 
 class KBReference(Evaluatable):
@@ -68,3 +77,23 @@ class KBReference(Evaluatable):
             return KBReference(ref_str[:ref_str.index('.')], KBReference.parse(ref_str[ref_str.index('.')+1:]))
         else:
             return KBReference(ref_str)
+
+    def validate(self, kb: 'KnowledgeBase', *args, inst: 'KBInstance' = None, **kwargs):
+        inst = inst or kb.world.create_instance(kb, 'world_inst', kb.world.desc, ignore_validation=True)
+        self._validated = self._validate(inst, raise_on_validation=kb._raise_on_validation)
+
+    def _validate(self, inst: 'KBInstance', raise_on_validation: bool) -> bool:
+        for p in inst.properties_instances:
+            if p.id == self.id:
+                if self.ref:
+                    self._validated = self.ref._validate(p, raise_on_validation)
+                else:
+                    self._validated = True
+                break
+        if not self._validated:
+            msg = f'Error while validating reference "{self.id}" of {self.krl} with instance {inst.id}'
+            logger.warning(msg)
+            if raise_on_validation:
+                raise KBValidationError(msg, kb_entity=self)
+        return self._validated
+                

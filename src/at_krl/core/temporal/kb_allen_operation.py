@@ -3,7 +3,11 @@ from at_krl.core.temporal.kb_event import KBEvent, KBClass
 from at_krl.core.temporal.kb_interval import KBInterval
 from at_krl.core.kb_operation import KBOperation
 from at_krl.core.non_factor import NonFactor
-from typing import List
+from typing import List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
+
 
 
 TEMPORAL_TAGS_SIGNS = {
@@ -28,7 +32,6 @@ TEMPORAL_TAGS_SIGNS = {
 class KBAllenOperation(KBOperation):
     _left: str = None
     _right: str = None
-    _validated: bool = False
     _left_kb: KBEvent | KBInterval = None
     _right_kb: KBEvent | KBInterval = None
 
@@ -179,6 +182,10 @@ class KBAllenOperation(KBOperation):
             self._right_kb = [i for i in intervals if i.id == self._right][0]
 
         self._validated = True
+
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        if not self._validated:
+            self.validate_tag(kb.classes.events, kb.classes.intervals)
 
     @property
     def for_what(self) -> dict:

@@ -2,6 +2,11 @@ from xml.etree.ElementTree import Element
 from at_krl.core.kb_class import KBClass
 from at_krl.core.temporal.utils import SimpleEvaluatable
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
+
 
 class KBEvent(KBClass):
     occurance_condition: SimpleEvaluatable = None
@@ -54,3 +59,8 @@ class KBEvent(KBClass):
             occurance_condition=SimpleEvaluatable.from_dict(d.get('Formula')),
             desc=d.get('desc', None),
         )
+    
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        if not self._validated:
+            self.occurance_condition.validate(kb)
+            self._validated = True

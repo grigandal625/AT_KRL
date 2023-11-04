@@ -127,6 +127,9 @@ if __name__ == "__main__":
     elif args_dict.get('mode').startswith('json'):
         kb = kb_from_json(**args_dict)
 
+    kb._raise_on_validation = True
+    kb.validate()
+
     if args_dict.get('mode').endswith('krl'):
         kb_to_krl(kb, **args_dict)
     elif args_dict.get('mode').endswith('xml'):

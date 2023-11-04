@@ -1,5 +1,5 @@
 from at_krl.core.kb_type import KBType
-from at_krl.core.kb_class import KBClass, KBProperty
+from at_krl.core.kb_class import KBClass, KBInstance
 from at_krl.core.kb_rule import KBRule
 
 from at_krl.core.temporal.kb_interval import KBInterval
@@ -36,6 +36,9 @@ class KnowledgeBase:
     rules: List[KBRule]
     with_world: bool
     _world: KBClass
+
+    _raise_on_validation: bool = False
+    _validated: bool = False
 
     def __init__(self, with_world: bool = False) -> None:
         self.types = []
@@ -170,6 +173,22 @@ class KnowledgeBase:
         if not self.with_world:
             knowledge_base['classes'].append(self.world.__dict__())
         return knowledge_base
+
+    def validate(self):
+        if not self._validated:
+            for t in self.types:
+                t.validate(self)
+            for cls in self.classes.objects:
+                cls.validate(self)
+            if not self.with_world:
+                self.world.validate(self)
+            for interval in self.classes.intervals:
+                interval.validate(self)
+            for event in self.classes.events:
+                event.validate(self)
+
+            self._validated = True
+
 
     @staticmethod
     def from_xml(xml: Element, allen_xml: Element = None) -> 'KnowledgeBase':

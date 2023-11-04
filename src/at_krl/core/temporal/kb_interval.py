@@ -1,7 +1,11 @@
 from xml.etree.ElementTree import Element
 from at_krl.core.kb_class import KBClass
+
 from at_krl.core.temporal.utils import SimpleEvaluatable
-from typing import List
+from typing import List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
 
 
 class KBInterval(KBClass):
@@ -69,3 +73,9 @@ class KBInterval(KBClass):
             close=SimpleEvaluatable.from_dict(d.get('Close')),
             desc=d.get('desc', None),
         )
+    
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        if not self._validated:
+            self.open.validate(kb, *args, **kwargs)
+            self.close.validate(kb, *args, **kwargs)
+            self._validated = True

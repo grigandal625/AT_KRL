@@ -1,6 +1,6 @@
 from at_krl.core.kb_entity import KBEntity
 from at_krl.core.fuzzy.membership_function import MembershipFunction
-from typing import Iterable, List, Union
+from typing import Iterable, List
 from xml.etree.ElementTree import Element
 
 
@@ -62,6 +62,9 @@ class KBType(KBEntity):
             return KBSymbolicType.from_dict(d)
         elif d.get('meta') == 'fuzzy':
             return KBFuzzyType.from_dict(d)
+        
+    def validate_value(self, value) -> bool:
+        return False
 
 
 class KBNumericType(KBType):
@@ -117,6 +120,17 @@ class KBNumericType(KBType):
         from_ = d.get('from')
         to_ = d.get('to')
         return KBNumericType(id, from_, to_, desc=desc)
+    
+    def validate_value(self, value) -> bool:
+        from at_krl.core.kb_value import Evaluatable
+        if isinstance(value, Evaluatable):
+            return True
+        try:
+            value = float(value)
+        except ValueError:
+            pass
+
+        return isinstance(value, int) or isinstance(value, float)
 
 
 class KBSymbolicType(KBType):
@@ -167,7 +181,10 @@ class KBSymbolicType(KBType):
             desc=d.get('desc', None),
             values=d.get('values', []),
         )
-
+    
+    def validate_value(self, value) -> bool:
+        return True
+    
 
 class KBFuzzyType(KBType):
     membership_functions: List[MembershipFunction] = None
@@ -220,3 +237,12 @@ class KBFuzzyType(KBType):
             membership_functions=[MembershipFunction.from_dict(
                 parameter) for parameter in d.get('membership_functions', [])]
         )
+    
+    def validate_value(self, value) -> bool:
+        from at_krl.core.kb_value import Evaluatable
+        if isinstance(value, Evaluatable):
+            return True
+        if isinstance(value, MembershipFunction):
+            return True
+        else:
+            return str(value) in [mf.name for mf in self.membership_functions]

@@ -1,8 +1,12 @@
 from xml.etree.ElementTree import Element
+from at_krl.core.kb_class import KBInstance
 from at_krl.core.kb_value import Evaluatable, KBValue
 from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
 from at_krl.core.kb_reference import KBReference
-from typing import List
+from typing import List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
 
 
 class SimpleEvaluatable(Evaluatable):
@@ -116,6 +120,9 @@ class SimpleReference(KBReference, SimpleEvaluatable):
         refs = ref_path.split('.')
         return SimpleReference(id=refs[0], ref=SimpleReference.build_ref(refs[1:]))
 
+    def validate(self, kb: 'KnowledgeBase', *args, inst: KBInstance = None, **kwargs):
+        return KBReference.validate(self, kb, *args, inst=inst, **kwargs)
+    
 
 class SimpleOperation(KBOperation, SimpleEvaluatable):
     left: SimpleEvaluatable = None
@@ -161,6 +168,9 @@ class SimpleOperation(KBOperation, SimpleEvaluatable):
             return SimpleLogOperation.from_dict(d)
         elif d.get('tag') == 'ArOp':
             return SimpleArOperation.from_dict(d)
+        
+    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+        return KBOperation.validate(self, kb, *args, **kwargs)
 
 
 class SimpleEqOperation(SimpleOperation):
