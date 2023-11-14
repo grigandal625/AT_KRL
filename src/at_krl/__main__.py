@@ -25,7 +25,8 @@ parser.add_argument('-o', '--output', required=False,
                     help='[NOT REQUIRED] Destination of output file path to convert')
 parser.add_argument('-a', '--allen', required=False,
                     help='[NOT REQUIRED] Input or output file path to convert from or to XML temporal (Allen) objects: events and intervals definitions')
-
+parser.add_argument('-f', '--force', required=False, default=False,
+                    help='[NOT REQUIRED] A flag to force converting without validation')
 
 def kb_to_xml(kb: KnowledgeBase, output: str = None, allen: str = None, *args, **kwargs):
     output_path = output
@@ -128,7 +129,8 @@ if __name__ == "__main__":
         kb = kb_from_json(**args_dict)
 
     kb._raise_on_validation = True
-    kb.validate()
+    if not args_dict.get('force'):
+        kb.validate()
 
     if args_dict.get('mode').endswith('krl'):
         kb_to_krl(kb, **args_dict)

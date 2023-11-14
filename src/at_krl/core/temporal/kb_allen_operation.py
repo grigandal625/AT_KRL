@@ -188,10 +188,11 @@ class KBAllenOperation(KBOperation):
 
     @property
     def for_what(self) -> dict:
-        for_what = TEMPORAL_TAGS_SIGNS.get(self.op)
-        for_what['interval_interval'] = for_what.get('interval_interval', True)
-        for_what['event_event'] = for_what.get('event_enevt', False)
-        for_what['event_interval'] = for_what.get('event_interval', False)
+        _for_what = TEMPORAL_TAGS_SIGNS.get(self.op)
+        for_what = {}
+        for_what['interval_interval'] = _for_what.get('interval_interval', True)
+        for_what['event_event'] = _for_what.get('event_event', False)
+        for_what['event_interval'] = _for_what.get('event_interval', False)
         return for_what
 
     @property
