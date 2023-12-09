@@ -14,7 +14,7 @@ if __name__ == '__main__':
     setup(
         name='at-krl',
         version=os.getenv('PACKAGE_VERSION', '0.0.dev1'),
-        packages=find_packages(where='src/at_krl'),
+        packages=find_packages(where='src/at_krl', include=['src/at_krl/__main__.py']),
         package_dir={'': 'src/at_krl'},
         description='AT-TECHNOLOGY knowledge representation language parsing and processing package.',
         install_requires=[
