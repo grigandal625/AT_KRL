@@ -13,11 +13,9 @@ def read_pipenv_dependencies(fname):
 if __name__ == '__main__':
     setup(
         name='at-krl',
-        version=os.getenv('PACKAGE_VERSION', '0.0.dev0'),
-        package_dir={'': 'src'},
-        packages=find_packages('src', include=[
-            'at_krl*'
-        ]),
+        version=os.getenv('PACKAGE_VERSION', '0.0.dev1'),
+        packages=find_packages(where='src/at_krl'),
+        package_dir={'': 'src/at_krl'},
         description='AT-TECHNOLOGY knowledge representation language parsing and processing package.',
         install_requires=[
               *read_pipenv_dependencies('Pipfile.lock'),
