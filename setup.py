@@ -3,6 +3,9 @@ from setuptools import setup, find_packages
 import json
 import os
 
+root = os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir))
+os.chdir(root)
+
 def read_pipenv_dependencies(fname):
     # Получаем из Pipfile.lock зависимости по умолчанию.
     filepath = os.path.join(os.path.dirname(__file__), fname)
@@ -14,7 +17,7 @@ if __name__ == '__main__':
     setup(
         name='at-krl',
         version=os.getenv('PACKAGE_VERSION', '0.0.dev1'),
-        packages=find_packages(where='src/at_krl', include=['src/at_krl/__main__.py']),
+        packages=find_packages(where='src/at_krl'),
         package_dir={'': 'src/at_krl'},
         description='AT-TECHNOLOGY knowledge representation language parsing and processing package.',
         install_requires=[
