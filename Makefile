@@ -18,4 +18,6 @@ clean:
 antlr:
 	sudo docker run -it --rm -v $$(pwd)/src/at_krl/grammar:/app antlr/antlr4 -Dlanguage=Python3 /app/at_krl.g4
     
-	
+build: clean
+	pip install wheel
+	python setup.py bdist_wheel

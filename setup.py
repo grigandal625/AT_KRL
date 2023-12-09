@@ -4,7 +4,7 @@ import json
 import os
 
 def read_pipenv_dependencies(fname):
-    """Получаем из Pipfile.lock зависимости по умолчанию."""
+    # Получаем из Pipfile.lock зависимости по умолчанию.
     filepath = os.path.join(os.path.dirname(__file__), fname)
     with open(filepath) as lockfile:
         lockjson = json.load(lockfile)
