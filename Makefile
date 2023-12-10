@@ -21,3 +21,7 @@ antlr:
 build: clean
 	pip install wheel
 	python setup.py bdist_wheel
+stable:
+	cp dist/at_krl-*.*-py3-none-any.whl dist/at_krl-stable-py3-none-any.whl
+latest:
+	cp dist/at_krl-*.*-py3-none-any.whl dist/at_krl-latest-py3-none-any.whl
