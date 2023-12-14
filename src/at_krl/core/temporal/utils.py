@@ -109,6 +109,11 @@ class SimpleReference(KBReference, SimpleEvaluatable):
         return ref
 
     @staticmethod
+    def parse(ref_str: str) -> 'SimpleReference':
+        res = KBReference.parse(ref_str)
+        return SimpleReference(id=res.id, ref=res.ref)
+
+    @staticmethod
     def from_xml(xml: Element) -> 'SimpleReference':
         ref_path = xml.attrib.get('Value')
         refs = ref_path.split('.')
