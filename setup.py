@@ -7,7 +7,6 @@ root = os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir))
 os.chdir(root)
 
 def read_pipenv_dependencies(fname):
-    # Получаем из Pipfile.lock зависимости по умолчанию.
     filepath = os.path.join(os.path.dirname(__file__), fname)
     with open(filepath) as lockfile:
         lockjson = json.load(lockfile)
@@ -16,7 +15,7 @@ def read_pipenv_dependencies(fname):
 if __name__ == '__main__':
     setup(
         name='at-krl',
-        version=os.getenv('PACKAGE_VERSION', '0.0.dev3'),
+        version=os.getenv('PACKAGE_VERSION', '0.0.dev4'),
         packages=find_packages(where='src'),
         package_dir={'': 'src'},
         description='AT-TECHNOLOGY knowledge representation language parsing and processing package.',
