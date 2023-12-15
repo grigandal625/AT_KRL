@@ -14,10 +14,22 @@
 2. Установть пакет следующей командой:
 
 ```bash
+pip install git+https://github.com/grigandal625/AT_KRL.git#egg=at-krl
+```
+
+или
+
+```bash
 pip install https://github.com/grigandal625/AT_KRL/raw/master/dist/at_krl-latest-py3-none-any.whl
 ```
 
 Для систем типа `linux` может потребоваться напрямую указать версию python:
+
+```bash
+python3.10 -m pip install git+https://github.com/grigandal625/AT_KRL.git#egg=at-krl
+```
+
+или
 
 ```bash
 python3.10 -m pip install https://github.com/grigandal625/AT_KRL/raw/master/dist/at_krl-latest-py3-none-any.whl
