@@ -136,6 +136,10 @@ class SimpleOperation(KBOperation, SimpleEvaluatable):
     def __init__(self, sign: str, left: SimpleEvaluatable, right: SimpleEvaluatable | None):
         super().__init__(sign, left, right)
         self.convert_non_factor = False
+        self.config(sign, left, right)
+
+    def config(self, *args, **kwargs):
+        raise NotImplementedError()
 
     @property
     def sign(self):
@@ -176,12 +180,20 @@ class SimpleOperation(KBOperation, SimpleEvaluatable):
 
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         return KBOperation.validate(self, kb, *args, **kwargs)
+    
+    @staticmethod
+    def operation_class_by_sign(sign):
+        meta = [v['meta'] for v in TAGS_SIGNS.values() if sign in v['values']][0]
+        return {
+            'eq': SimpleEqOperation,
+            'log': SimpleLogOperation,
+            'math': SimpleArOperation,
+        }[meta]
 
 
 class SimpleEqOperation(SimpleOperation):
-
-    def __init__(self, sign: str, left: SimpleEvaluatable, right: SimpleEvaluatable | None):
-        super().__init__(sign, left, right)
+        
+    def config(self, sign, *args, **kwargs):
         avalible_signs = [
             s for s, v in TAGS_SIGNS.items() if v.get('meta', None) == 'eq']
 
@@ -234,6 +246,8 @@ class SimpleLogOperation(SimpleOperation):
     def __init__(self, sign: str, left: SimpleEvaluatable, right: SimpleEvaluatable | None):
         sg = sign.lower()
         super().__init__(sg, left, right)
+        
+    def config(self, sign, *args, **kwargs):
         avalible_signs = [
             s for s, v in TAGS_SIGNS.items() if v.get('meta', None) == 'log']
         if self.op not in avalible_signs:
@@ -287,6 +301,8 @@ class SimpleArOperation(SimpleOperation):
     def __init__(self, sign: str, left: SimpleEvaluatable, right: SimpleEvaluatable | None):
         sg = sign.lower()
         super().__init__(sg, left, right)
+        
+    def config(self, sign, *args, **kwargs):
         avalible_signs = [
             s for s, v in TAGS_SIGNS.items() if v.get('meta', None) == 'math']
         if self.op not in avalible_signs:
