@@ -192,6 +192,9 @@ class KBFuzzyType(KBType):
     def __init__(self, id: str, membership_functions: List[MembershipFunction], desc: str = None):
         super().__init__(id, desc=desc)
         self.membership_functions = membership_functions
+        for mf in self.membership_functions:
+            mf.owner = self
+
 
     @property
     def meta(self):

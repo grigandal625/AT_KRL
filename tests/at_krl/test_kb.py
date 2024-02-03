@@ -4,6 +4,12 @@ from at_krl.core.kb_operation import KBOperation
 
 from xml.etree.ElementTree import tostring, fromstring
 
+from antlr4 import CommonTokenStream, InputStream
+from at_krl.grammar.at_krlLexer import at_krlLexer
+from at_krl.grammar.at_krlParser import at_krlParser
+from at_krl.utils.listener import ATKRLListener
+from at_krl.utils.error_listener import ATKRLErrorListener
+
 
 def test_kb_value_from_xml():
     xml = fromstring("<value>test</value>")
@@ -18,6 +24,7 @@ def test_kb_value_from_xml():
     print('\n')
     print('VALUE KRL:', kb_value.krl)
     print('VALUE XML:', tostring(kb_value.xml).decode("utf-8"))
+
 
 def test_kb_reference_from_xml():
     xml = fromstring("""
@@ -70,3 +77,41 @@ def test_operation_from_xml():
     # assert kb_operation.krl == o.krl
 
     print('OP KRL:', o.krl)
+
+
+def test_examples():
+    with open('example/test.kbs') as krl_file:
+        krl_text = krl_file.read() # считываем текст БЗ
+        input_stream = InputStream(krl_text)
+        lexer = at_krlLexer(input_stream) # создаем лексер
+        stream = CommonTokenStream(lexer)
+        parser = at_krlParser(stream) # создаем парсер
+
+        listener = ATKRLListener()
+        parser.addParseListener(listener) # добавляем лисенер
+
+        error_listener = ATKRLErrorListener()
+        parser.removeErrorListeners()
+        parser.addErrorListener(error_listener)
+
+        tree = parser.knowledge_base() # даем команду распарсить БЗ
+
+        # После этого в объекте listener в свойсте KB будет загруженная бз
+
+        kb = listener.KB
+
+        for t in kb.types: # пеатаем все типы
+            print(t.id)
+        
+        for p in kb.world.properties: # печатаем все объекты
+            print(p.id, p.type_or_class_id)
+
+        for i in kb.classes.intervals: # печатаем все интервалы
+            print(i.id)
+
+        for e in kb.classes.events: # печатаем все события
+            print(e.id)
+
+        for r in kb.world.rules: # печатаем все правила
+            print(r.id)
+            

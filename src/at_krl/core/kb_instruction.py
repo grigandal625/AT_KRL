@@ -40,6 +40,8 @@ class AssignInstruction(KBInstruction):
         super().__init__(non_factor)
         self.tag = 'assign'
         self.ref = ref
+        if self.ref is not None:
+            self.ref.owner = self
         self.ref.convert_non_factor = False
         self.value = value
 

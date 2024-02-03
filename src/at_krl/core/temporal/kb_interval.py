@@ -15,7 +15,9 @@ class KBInterval(KBClass):
     def __init__(self, id: str, open: SimpleEvaluatable, close: SimpleEvaluatable, desc: str = None) -> None:
         super().__init__(id, [], [], group='ИНТЕРВАЛ', desc=desc)
         self.open = open
+        self.open.owner = self
         self.close = close
+        self.close.owner = self
         self.tag = 'Interval'
 
     @property

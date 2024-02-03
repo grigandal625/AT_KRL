@@ -9,6 +9,7 @@ if TYPE_CHECKING:
 class KBEntity:
     tag: str = None
     _validated: bool = False
+    owner: 'KBEntity' = None
 
     def __dict__(self) -> dict:
         return dict(tag=self.tag)

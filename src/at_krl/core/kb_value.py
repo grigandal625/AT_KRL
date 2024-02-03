@@ -4,6 +4,7 @@ from at_krl.core.non_factor import NonFactor
 
 from typing import Union
 import json
+from copy import deepcopy
 
 
 class Evaluatable(KBEntity):
@@ -15,6 +16,7 @@ class Evaluatable(KBEntity):
         if non_factor is None:
             non_factor = NonFactor()
         self.non_factor = non_factor
+        self.non_factor.owner = self
 
     def __dict__(self) -> dict:
         result = super().__dict__()
@@ -110,3 +112,12 @@ class KBValue(Evaluatable):
     @staticmethod
     def from_xml(xml: Element) -> 'KBValue':
         return KBValue(xml.text)
+    
+    def copy(self):
+        if self.non_factor is not None:
+            return KBValue(deepcopy(self.content), NonFactor(
+                self.non_factor.belief, 
+                self.non_factor.probability, 
+                self.non_factor.accuracy
+            ))
+        return KBValue(deepcopy(self.content))

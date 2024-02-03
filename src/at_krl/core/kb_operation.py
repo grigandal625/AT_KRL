@@ -122,8 +122,10 @@ class KBOperation(Evaluatable):
             'convert_non_factor', False)
 
         self.left = left
+        self.left.owner = self
         if self.is_binary:
             self.right = right
+            self.right.owner = self
 
     @property
     def is_binary(self) -> bool:

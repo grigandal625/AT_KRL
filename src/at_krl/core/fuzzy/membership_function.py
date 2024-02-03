@@ -40,12 +40,14 @@ class MembershipFunction(KBEntity):
     min: float = None
     max: float = None
 
-    def __init__(self, name, min, max, points):
+    def __init__(self, name: str, min: float, max: float, points: List[MFPoint] | Iterable[MFPoint]):
         self.tag = 'parameter'
         self.name = name
         self.min = min
         self.max = max
         self.points = points
+        for point in self.points:
+            point.owner = self
 
     @property
     def attrs(self) -> dict:

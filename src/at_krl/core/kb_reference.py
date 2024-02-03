@@ -20,6 +20,8 @@ class KBReference(Evaluatable):
         super().__init__(non_factor=non_factor)
         self.id = id
         self.ref = ref
+        if self.ref is not None:
+            self.ref.owner = self
         self.tag = 'ref'
 
     def evaluate(self, env, recursively=True, *args, **kwargs) -> 'KBValue':

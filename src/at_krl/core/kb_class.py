@@ -29,6 +29,8 @@ class KBClass(KBEntity):
         for prop in self.properties:
             prop.owner_class = self
         self.rules = rules or []
+        for rule in self.rules:
+            rule.owner = self
         self.tag = 'class'
         self.group = group or 'ГРУППА1'
 
@@ -37,6 +39,7 @@ class KBClass(KBEntity):
         return {
             'id': self.id,
             'desc': self.desc,
+            'group': self.group or 'ГРУППА1',
         }
 
     @property
@@ -80,6 +83,7 @@ class KBClass(KBEntity):
     def from_xml(xml: Element) -> 'KBClass':
         id = xml.attrib.get('id')
         desc = xml.attrib.get('desc', id)
+        group = xml.attrib.get('desc', id)
         properties = []
         ps = xml.find('properties')
         if ps:
@@ -88,15 +92,16 @@ class KBClass(KBEntity):
         rs = xml.find('rules')
         if rs:
             rules = [KBRule.from_xml(r) for r in rs]
-        return KBClass(id, properties, rules=rules, desc=desc)
+        return KBClass(id, properties, rules=rules, desc=desc, group=group)
 
     @staticmethod
     def from_dict(d: dict):
         id = d.get('id')
         desc = d.get('desc', id)
+        group = d.get('group', 'ГРУППА1')
         properties = [KBProperty.from_dict(p) for p in d.get('properties', [])]
         rules = [KBRule.from_dict(r) for r in d.get('rules', [])]
-        return KBClass(id, properties, rules, desc=desc)
+        return KBClass(id, properties, rules, desc=desc, group=group)
 
     def validate_properties(self, kb: 'KnowledgeBase'):
         for prop in self.properties:

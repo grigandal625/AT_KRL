@@ -14,6 +14,7 @@ class KBEvent(KBClass):
     def __init__(self, id: str, occurance_condition: SimpleEvaluatable, desc: str = None) -> None:
         super().__init__(id, [], [], group='СОБЫТИЕ', desc=desc)
         self.occurance_condition = occurance_condition
+        self.occurance_condition.owner = self
         self.tag = 'Event'
 
     @property

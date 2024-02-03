@@ -20,9 +20,16 @@ class KBRule(KBEntity):
         self.id = id
         self.tag = 'rule'
         self.condition = condition
+        self.condition.owner = self
         self.instructions = instructions
+        for instr in self.instructions:
+            instr.owner = self
         self.else_instructions = else_instructions if else_instructions is not None and len(
             else_instructions) else None
+        if self.else_instructions is not None:
+            for else_instr in self.else_instructions:
+                else_instr.owner = self
+                
         self.meta = meta
         self.desc = desc or id
 
