@@ -110,11 +110,15 @@ class KBOperation(Evaluatable):
 
     def __init__(self, sign: str, left: 'Evaluatable', right: Union['Evaluatable', None] = None, non_factor: Union['NonFactor', None] = None):
         super().__init__(non_factor=non_factor)
+        
+        get_is_binary = lambda l, r:  l is not None and r is not None
+        
         for op in TAGS_SIGNS:
             if sign in TAGS_SIGNS[op]['values']:
-                self.op = op
-                self.tag = op
-                break
+                if TAGS_SIGNS[op]['is_binary'] == get_is_binary(left, right):
+                    self.op = op
+                    self.tag = op
+                    break
 
         if self.tag is None:
             raise Exception(f"Unknown operation: {sign}")
