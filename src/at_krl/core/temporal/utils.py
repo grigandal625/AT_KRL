@@ -31,7 +31,7 @@ class SimpleEvaluatable(Evaluatable):
             return SimpleValue.from_dict(d)
         elif d.get('tag') == 'Attribute':
             return SimpleReference.from_dict(d)
-        elif d.get('tag') in ['EqOp', 'LogOp']:
+        elif d.get('tag') in ['EqOp', 'LogOp', 'ArOp']:
             return SimpleOperation.from_dict(d)
 
 
