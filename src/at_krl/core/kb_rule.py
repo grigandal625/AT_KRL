@@ -121,6 +121,9 @@ class KBRule(KBEntity):
             else_action_krl = 'ИНАЧЕ\n    ' + \
                 '\n    '.join(
                     [instruction.krl for instruction in self.else_instructions])
+        else:
+            else_action_krl = '\n'
+            
         return f"""ПРАВИЛО {self.id}
 ЕСЛИ
     {self.condition.krl}
