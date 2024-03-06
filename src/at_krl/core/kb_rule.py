@@ -120,10 +120,8 @@ class KBRule(KBEntity):
         if self.else_instructions is not None and len(self.else_instructions):
             else_action_krl = 'ИНАЧЕ\n    ' + \
                 '\n    '.join(
-                    [instruction.krl for instruction in self.else_instructions])
-        else:
-            else_action_krl = '\n'
-            
+                    [instruction.krl for instruction in self.else_instructions]) + '\n'
+
         return f"""ПРАВИЛО {self.id}
 ЕСЛИ
     {self.condition.krl}
