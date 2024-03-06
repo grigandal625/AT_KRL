@@ -29,7 +29,7 @@ class KBInstruction(KBEntity):
 
     @staticmethod
     def from_dict(d: dict) -> 'KBInstruction':
-        if d['tag'] == 'assign':
+        if d.get('tag', 'assign') == 'assign':
             return AssignInstruction.from_dict(d)
         raise
 

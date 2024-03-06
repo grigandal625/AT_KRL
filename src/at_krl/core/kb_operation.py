@@ -145,7 +145,7 @@ class KBOperation(Evaluatable):
     @staticmethod
     def from_dict(d: dict) -> 'KBOperation':
         return KBOperation(
-            d['sign'],
+            d.get('sign') or d.get('tag'),
             Evaluatable.from_dict(d['left']),
             Evaluatable.from_dict(d['right']) if d.get(
                 'right', None) is not None else None,
