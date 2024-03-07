@@ -206,7 +206,7 @@ class KBFuzzyType(KBType):
 
     @property
     def inner_krl(self):
-        return '\n'.join([
+        return f'{len(self.membership_functions)}\n' + '\n'.join([
             mf.krl for mf in self.membership_functions
         ])
 
