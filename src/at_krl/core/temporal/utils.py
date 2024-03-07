@@ -163,13 +163,16 @@ class SimpleOperation(KBOperation, SimpleEvaluatable):
                 sign = d.get('sign')
             for op, data in TAGS_SIGNS.items():
                 if sign in data['values']:
-                    d['tag'] = {
-                        'eq': 'EqOp',
-                        'log': 'LogOp',
-                        'math': 'ArOp',
-                    }[data['meta']]
-                    d['Value'] = op
-                    break
+                    if data['meta'] in ['eq', 'log', 'math']:
+                        d_is_binary = ('left' in d) and ('right' in d)
+                        if d_is_binary == data.get('is_binary'):
+                            d['tag'] = {
+                                'eq': 'EqOp',
+                                'log': 'LogOp',
+                                'math': 'ArOp',
+                            }[data['meta']]
+                            d['Value'] = op
+                            break
 
         if d.get('tag') == 'EqOp':
             return SimpleEqOperation.from_dict(d)

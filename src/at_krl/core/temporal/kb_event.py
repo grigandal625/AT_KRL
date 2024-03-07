@@ -42,7 +42,6 @@ class KBEvent(KBClass):
 ТИП ЛогВыр
 ЗНАЧЕНИЕ 
 {self.occurance_condition.krl}
-КОММЕНТАРИЙ УслВозн
 """
 
     @staticmethod
