@@ -48,12 +48,10 @@ class KBInterval(KBClass):
 ТИП ЛогВыр
 ЗНАЧЕНИЕ 
 {self.open.krl}
-КОММЕНТАРИЙ УслНач
 АТРИБУТ УслОконч
 ТИП ЛогВыр
 ЗНАЧЕНИЕ 
 {self.close.krl}
-КОММЕНТАРИЙ УслОконч
 """
 
     @staticmethod

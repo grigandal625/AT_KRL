@@ -8,6 +8,42 @@ else:
 # This class defines a complete listener for a parse tree produced by at_krlParser.
 class at_krlListener(ParseTreeListener):
 
+    # Enter a parse tree produced by at_krlParser#log_sign.
+    def enterLog_sign(self, ctx:at_krlParser.Log_signContext):
+        pass
+
+    # Exit a parse tree produced by at_krlParser#log_sign.
+    def exitLog_sign(self, ctx:at_krlParser.Log_signContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krlParser#comp_sign.
+    def enterComp_sign(self, ctx:at_krlParser.Comp_signContext):
+        pass
+
+    # Exit a parse tree produced by at_krlParser#comp_sign.
+    def exitComp_sign(self, ctx:at_krlParser.Comp_signContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krlParser#lowp_math_sign.
+    def enterLowp_math_sign(self, ctx:at_krlParser.Lowp_math_signContext):
+        pass
+
+    # Exit a parse tree produced by at_krlParser#lowp_math_sign.
+    def exitLowp_math_sign(self, ctx:at_krlParser.Lowp_math_signContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krlParser#highp_math_sign.
+    def enterHighp_math_sign(self, ctx:at_krlParser.Highp_math_signContext):
+        pass
+
+    # Exit a parse tree produced by at_krlParser#highp_math_sign.
+    def exitHighp_math_sign(self, ctx:at_krlParser.Highp_math_signContext):
+        pass
+
+
     # Enter a parse tree produced by at_krlParser#knowledge_base.
     def enterKnowledge_base(self, ctx:at_krlParser.Knowledge_baseContext):
         pass

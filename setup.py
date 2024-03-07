@@ -15,7 +15,7 @@ def read_pipenv_dependencies(fname):
 if __name__ == '__main__':
     setup(
         name='at-krl',
-        version=os.getenv('PACKAGE_VERSION', '0.0.dev10'),
+        version=os.getenv('PACKAGE_VERSION', '0.1.dev0'),
         packages=find_packages(where='src'),
         package_dir={'': 'src'},
         description='AT-TECHNOLOGY knowledge representation language parsing and processing package.',

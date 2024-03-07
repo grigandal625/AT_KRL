@@ -1,5 +1,59 @@
 grammar at_krl;
 
+log_sign: '||'
+	| '&&'
+	| '&'
+	| 'and'
+	| '|'
+	| 'or'
+	| '!'
+	| '~'
+	| 'not'
+	| 'xor';
+
+comp_sign:
+	'=='
+	| '='
+	| 'eq'
+	| '>='
+	| '>'
+	| 'gt'
+	| 'ge'
+	| '<>'
+	| '<='
+	| '<'
+	| 'lt'
+	| 'le'
+	| 'ne';
+
+lowp_math_sign: '+' | 'add' | '-' | 'sub';
+highp_math_sign:
+	'**'
+	| 'mul'
+	| '/'
+	| 'div'
+	| '%'
+	| 'mod'
+	| '^'
+	| '*'
+	| 'pow';
+
+ALLEN_SIGN:
+	'b'
+	| 'bi'
+	| 'm'
+	| 'mi'
+	| 's'
+	| 'si'
+	| 'f'
+	| 'fi'
+	| 'd'
+	| 'di'
+	| 'o'
+	| 'oi'
+	| 'e'
+	| 'a';
+
 // ---------------------- PARSER RULES ----------------------
 
 knowledge_base: kb_types kb_classes kb_rules;
@@ -37,12 +91,12 @@ kb_operation:
 	| kb_value '=' kb_value (non_factor |)
 	| kb_reference
 	| kb_value
-	| kb_operation HIGHP_MATH_SIGN kb_operation (non_factor |)
-	| kb_operation LOWP_MATH_SIGN kb_operation (non_factor |)
-	| kb_operation COMP_SIGN kb_operation (non_factor |)
-	| kb_operation LOG_SIGN kb_operation (non_factor |)
 	| L_BR kb_operation R_BR
 	| ('-' | '~' | '!' | 'not') kb_operation (non_factor |)
+	| kb_operation highp_math_sign kb_operation (non_factor |)
+	| kb_operation lowp_math_sign kb_operation (non_factor |)
+	| kb_operation comp_sign kb_operation (non_factor |)
+	| kb_operation log_sign kb_operation (non_factor |)
 	| kb_allen_operation;
 
 kb_allen_operation: (ALPHANUMERIC | ALPHANUMERIC_U) ALLEN_SIGN (
@@ -56,18 +110,18 @@ simple_operation:
 	| ref_path '=' simple_value
 	| simple_ref
 	| simple_value
-	| simple_operation HIGHP_MATH_SIGN simple_operation (
+	| ('~' | '!' | 'not') simple_operation
+	| simple_operation highp_math_sign simple_operation (
 		non_factor
 		|
 	)
-	| simple_operation LOWP_MATH_SIGN simple_operation (
+	| simple_operation lowp_math_sign simple_operation (
 		non_factor
 		|
 	)
-	| simple_operation COMP_SIGN simple_operation (non_factor |)
-	| simple_operation LOG_SIGN simple_operation (non_factor |)
-	| L_BR simple_operation R_BR
-	| ('~' | '!' | 'not') simple_operation;
+	| simple_operation comp_sign simple_operation (non_factor |)
+	| simple_operation log_sign simple_operation (non_factor |)
+	| L_BR simple_operation R_BR;
 
 simple_evaluatable: simple_operation;
 
@@ -154,61 +208,6 @@ FUZ: 'НЕЧЕТКИЙ';
 
 FROM: 'ОТ';
 TO: 'ДО';
-
-LOG_SIGN:
-	'&'
-	| '&&'
-	| 'and'
-	| '|'
-	| '||'
-	| 'or'
-	| '!'
-	| '~'
-	| 'not'
-	| 'xor';
-
-COMP_SIGN:
-	'='
-	| '=='
-	| 'eq'
-	| '>'
-	| 'gt'
-	| '>='
-	| 'ge'
-	| '<'
-	| 'lt'
-	| '<='
-	| 'le'
-	| '<>'
-	| 'ne';
-
-LOWP_MATH_SIGN: '+' | 'add' | '-' | 'sub';
-HIGHP_MATH_SIGN:
-	'*'
-	| 'mul'
-	| '/'
-	| 'div'
-	| '%'
-	| 'mod'
-	| '^'
-	| '**'
-	| 'pow';
-
-ALLEN_SIGN:
-	'b'
-	| 'bi'
-	| 'm'
-	| 'mi'
-	| 's'
-	| 'si'
-	| 'f'
-	| 'fi'
-	| 'd'
-	| 'di'
-	| 'o'
-	| 'oi'
-	| 'e'
-	| 'a';
 
 DOT: '.';
 
