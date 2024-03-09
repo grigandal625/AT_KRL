@@ -25,3 +25,5 @@ stable:
 	cp dist/at_krl-*.*-py3-none-any.whl dist/at_krl-stable-py3-none-any.whl
 latest:
 	cp dist/at_krl-*.*-py3-none-any.whl dist/at_krl-latest-py3-none-any.whl
+requirements:
+	pipenv requirements > requirements.txt
