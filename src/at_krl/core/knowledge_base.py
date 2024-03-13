@@ -12,6 +12,7 @@ from xml.etree.ElementTree import Element
 
 
 class KBClasses:
+    tag = 'classes'
     objects: List[KBClass]
     events: List[KBEvent]
     intervals: List[KBInterval]
@@ -31,6 +32,7 @@ class KBClasses:
 
 
 class KnowledgeBase:
+    tag = 'knowledge-base'
     types: List[KBType]
     classes: KBClasses
     rules: List[KBRule]
@@ -45,14 +47,20 @@ class KnowledgeBase:
         self.classes = KBClasses()
         self.rules = []
         self.with_world = with_world
-        self._world = KBClass('world', [
-        ], self.rules, desc='Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила')
+        self._world = KBClass(
+            'world', 
+            [], 
+            self.rules, 
+            desc='Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила')
+        self._world.owner = self.classes
 
     @property
     def world(self) -> KBClass:
+        world = self._world
         if self.with_world:
-            return self.get_object_by_id('world')
-        return self._world
+            world = self.get_object_by_id('world')
+        world.owner = self.classes
+        return world
 
     def get_free_class_id(self, initial: str = None, from_object_id: bool = True) -> str:
         initial = (
@@ -101,6 +109,7 @@ class KnowledgeBase:
         if not self.with_world:
             if rule not in self.world.rules:
                 self.world.rules.append(rule)
+                rule.owner = self.world
 
     @property
     def krl(self):
