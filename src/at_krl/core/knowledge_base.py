@@ -16,6 +16,7 @@ class KBClasses:
     objects: List[KBClass]
     events: List[KBEvent]
     intervals: List[KBInterval]
+    owner: 'KnowledgeBase' = None
 
     def __init__(self):
         self.objects = []
@@ -45,6 +46,7 @@ class KnowledgeBase:
     def __init__(self, with_world: bool = False) -> None:
         self.types = []
         self.classes = KBClasses()
+        self.classes.owner = self
         self.rules = []
         self.with_world = with_world
         self._world = KBClass(
