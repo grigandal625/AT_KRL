@@ -137,3 +137,9 @@ class KBRule(KBEntity):
                 instruct.validate(kb, *args, **kwargs)
 
             self._validated = True
+
+    @property
+    def xml_owner_path(self):
+        rule_ids = [r.id for r in self.owner.rules]
+        idx = rule_ids.index(self.id)
+        return self.owner.xml_owner_path + f'.rules[{idx}]'

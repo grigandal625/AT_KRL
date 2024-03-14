@@ -183,7 +183,7 @@ class ATKRLListener(at_krlListener):
         elif len(symbolic_contexts):
             ctx.content = KBSymbolicType(
                 type_name, symbolic_contexts[0].content, desc=desc)
-
+        ctx.content.owner = self.KB
         self.KB.types.append(ctx.content)
         return super().exitKb_type(ctx)
 
@@ -247,17 +247,25 @@ class ATKRLListener(at_krlListener):
                     group = body_context.children[1].getText()
             attrs_context = [c for c in body_context.children if isinstance(
                 c, at_krlParser.AttributesContext)][0]
-            ctx.content = KBClass(
-                class_id, attrs_context.content, group=group, desc=desc)
             
-            self.KB.world.properties.append(KBProperty(object_id, class_id, desc=desc))
+            attrs = attrs_context.content
+            cls = KBClass(
+                class_id, attrs, group=group, desc=desc)
+            cls.owner = self.KB
+            ctx.content = cls
+            object_world_prop = KBProperty(object_id, class_id, desc=desc)
+            object_world_prop.owner_class = self.KB.world
+            object_world_prop._type_or_class = cls
+            self.KB.world.properties.append(object_world_prop)
             self.KB.classes.objects.append(ctx.content)
 
         elif isinstance(body_context, at_krlParser.Interval_bodyContext):
             class_id = object_id
             open, close = [c.content for c in body_context.children if isinstance(
                 c, at_krlParser.Simple_evaluatableContext)]
-            ctx.content = KBInterval(class_id, open, close, desc=desc)
+            interval = KBInterval(class_id, open, close, desc=desc)
+            interval.owner = self.KB
+            ctx.content = interval
             self.KB.classes.intervals.append(ctx.content)
         elif isinstance(body_context, at_krlParser.Event_bodyContext):
             class_id = object_id
@@ -265,7 +273,9 @@ class ATKRLListener(at_krlListener):
                 c, at_krlParser.Simple_evaluatableContext)]
             if len(occurance_conditions):
                 occurance_condition = occurance_conditions[0]
-                ctx.content = KBEvent(class_id, occurance_condition, desc=desc)
+                event = KBEvent(class_id, occurance_condition, desc=desc)
+                event.owner = self.KB
+                ctx.content = event
                 self.KB.classes.events.append(ctx.content)
         return super().exitKb_class(ctx)
 

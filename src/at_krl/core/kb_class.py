@@ -145,6 +145,13 @@ class KBClass(KBEntity):
             inst.properties_instances.append(prop_inst)
         return inst
 
+    @property
+    def xml_owner_path(self):
+        from at_krl.core.knowledge_base import KnowledgeBase
+        owner: KnowledgeBase = self.owner
+        if (owner.world == self) and not owner.with_world:
+            return owner.xml_owner_path + f'.classes[{len(owner.classes.objects)}]'
+        return owner.xml_owner_path + f'.classes[{owner.classes.objects.index(self)}]'
 
 class KBInstance(KBEntity):
     id: str = None
@@ -319,3 +326,8 @@ class KBProperty(KBInstance):
             source=d.get("source"),
             value=value
         )
+    
+    @property
+    def xml_owner_path(self):
+        idx = self.owner_class.properties.index(self)
+        return self.owner_class.xml_owner_path + f'.properties[{idx}]'

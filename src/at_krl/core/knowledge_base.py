@@ -1,11 +1,12 @@
 from at_krl.core.kb_type import KBType
 from at_krl.core.kb_class import KBClass, KBInstance
 from at_krl.core.kb_rule import KBRule
+from at_krl.core.kb_value import KBEntity, KBValue
 
 from at_krl.core.temporal.kb_interval import KBInterval
 from at_krl.core.temporal.kb_event import KBEvent
 
-from typing import List
+from typing import List, Union
 from datetime import datetime
 
 from xml.etree.ElementTree import Element
@@ -32,8 +33,7 @@ class KBClasses:
         return self.intervals + self.events
 
 
-class KnowledgeBase:
-    tag = 'knowledge-base'
+class KnowledgeBase(KBEntity):
     types: List[KBType]
     classes: KBClasses
     rules: List[KBRule]
@@ -44,6 +44,7 @@ class KnowledgeBase:
     _validated: bool = False
 
     def __init__(self, with_world: bool = False) -> None:
+        self.tag = 'knowledge-base'
         self.types = []
         self.classes = KBClasses()
         self.classes.owner = self
@@ -61,7 +62,7 @@ class KnowledgeBase:
         world = self._world
         if self.with_world:
             world = self.get_object_by_id('world')
-        world.owner = self.classes
+        world.owner = self
         return world
 
     def get_free_class_id(self, initial: str = None, from_object_id: bool = True) -> str:
@@ -130,6 +131,10 @@ class KnowledgeBase:
             '\n'.join([obj.krl for obj in self.classes.temporal_objects])
         res += '\n' + '\n'.join([rule.krl for rule in self.rules])
         return res
+
+    @property
+    def xml(self):
+        return self.get_xml()
 
     def get_xml(self, with_allen=True) -> Element:
 
@@ -207,23 +212,30 @@ class KnowledgeBase:
         KB = KnowledgeBase()
         types = xml.find('types')
         for type_xml in types:
-            KB.types.append(KBType.from_xml(type_xml))
+            t = KBType.from_xml(type_xml)
+            t.owner = KB
+            KB.types.append(t)
 
         allen_xml = allen_xml or xml.find('IntervalsAndEvents')
         if allen_xml:
             intervals = allen_xml.find('Intervals')
             for interval_xml in intervals:
-                KB.classes.intervals.append(KBInterval.from_xml(interval_xml))
+                i = KBInterval.from_xml(interval_xml)
+                i.owner = KB
+                KB.classes.intervals.append()
 
             events = allen_xml.find('Events')
             for event_xml in events:
-                KB.classes.events.append(KBEvent.from_xml(event_xml))
+                e = KBEvent.from_xml(event_xml)
+                KB.classes.events.append(e)
 
         classes = xml.find('classes')
         for class_xml in classes:
             if class_xml.attrib.get('id', None) == 'world':
                 KB.with_world = True
-            KB.classes.objects.append(KBClass.from_xml(class_xml))
+            cls = KBClass.from_xml(class_xml)
+            cls.owner = KB
+            KB.classes.objects.append(cls)
 
         if KB.world:
             KB.rules = KB.world.rules
@@ -235,19 +247,34 @@ class KnowledgeBase:
         KB = KnowledgeBase()
 
         types = d.get('types', [])
-        KB.types = [KBType.from_dict(t) for t in types]
+        for t_dict in types:
+            t = KBType.from_dict(t_dict)
+            t.owner = KB
+            KB.types.append(t)
 
         intervals = d.get('intervals', [])
-        KB.classes.intervals = [KBInterval.from_dict(i) for i in intervals]
+        for i_dict in intervals:
+            i = KBInterval.from_dict(i_dict)
+            i.owner = KB
+            KB.classes.intervals.append(i)
 
         events = d.get('events', [])
-        KB.classes.events = [KBEvent.from_dict(e) for e in events]
+        for e_dict in events:
+            e = KBEvent.from_dict(e_dict)
+            KB.classes.events.append(e)
 
         classes = d.get('classes', [])
-        KB.classes.objects = [KBClass.from_dict(c) for c in classes]
+        for c_dict in classes:
+            c = KBClass.from_dict(c_dict)
+            c.owner = KB
+            KB.classes.objects.append(c)
 
         if KB.get_object_by_id('world') is not None:
             KB.with_world = True
-            KB.rules = KB.world.rules
-
+        
+        KB.rules = KB.world.rules
         return KB
+
+    @property
+    def xml_owner_path(self):
+        return self.tag

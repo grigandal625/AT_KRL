@@ -53,3 +53,18 @@ class KBEntity:
 
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         self._validated = True
+
+
+    @property
+    def xml_owner_path(self) -> str:
+        pass
+
+    @property
+    def _unknown_ownership(self):
+        owner_label = self.owner.id if hasattr(self.owner, 'id') else str(self.owner)
+        owner_type = self.owner.__class__.__name__
+        return f'''Unknown ownership of {owner_type} {owner_label} for {self}
+
+{owner_type} krl: {self.owner.krl}
+
+{self} krl: {self.krl}'''

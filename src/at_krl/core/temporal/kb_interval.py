@@ -79,3 +79,9 @@ class KBInterval(KBClass):
             self.open.validate(kb, *args, **kwargs)
             self.close.validate(kb, *args, **kwargs)
             self._validated = True
+
+    @property
+    def xml_owner_path(self):
+        from at_krl.core.knowledge_base import KnowledgeBase
+        owner: KnowledgeBase = self.owner
+        return owner.xml_owner_path + f'.IntervalsAndEvents.Intervals[{owner.classes.intervals.index(self)}]'

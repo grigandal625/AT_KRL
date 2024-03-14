@@ -44,6 +44,7 @@ class AssignInstruction(KBInstruction):
             self.ref.owner = self
         self.ref.convert_non_factor = False
         self.value = value
+        self.value.owner = self
 
     @property
     def inner_xml(self) -> str | Element | List[Element] | Iterable[Element] | None:

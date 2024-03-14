@@ -65,3 +65,9 @@ class KBEvent(KBClass):
         if not self._validated:
             self.occurance_condition.validate(kb)
             self._validated = True
+
+    @property
+    def xml_owner_path(self):
+        from at_krl.core.knowledge_base import KnowledgeBase
+        owner: KnowledgeBase = self.owner
+        return owner.xml_owner_path + f'.IntervalsAndEvents.Events[{owner.classes.events.index(self)}]'

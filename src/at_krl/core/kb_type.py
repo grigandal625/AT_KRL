@@ -1,8 +1,10 @@
 from at_krl.core.kb_entity import KBEntity
 from at_krl.core.fuzzy.membership_function import MembershipFunction
-from typing import Iterable, List
+from typing import Iterable, List, TYPE_CHECKING
 from xml.etree.ElementTree import Element
 
+if TYPE_CHECKING:
+    from at_krl.core.knowledge_base import KnowledgeBase
 
 class KBType(KBEntity):
     id: str = None
@@ -65,6 +67,11 @@ class KBType(KBEntity):
 
     def validate_value(self, value) -> bool:
         return False
+
+    @property
+    def xml_owner_path(self):
+        owner: 'KnowledgeBase' = self.owner
+        return owner.xml_owner_path + f'.types[{[t.id for t in owner.types].index(self.id)}]'
 
 
 class KBNumericType(KBType):

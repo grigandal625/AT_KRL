@@ -59,3 +59,7 @@ class NonFactor(KBEntity):
     @property
     def krl(self) -> str:
         return f'УВЕРЕННОСТЬ [{self.belief}; {self.probability}] ТОЧНОСТЬ {self.accuracy}'
+
+    @property
+    def xml_owner_path(self):
+        return self.owner.xml_owner_path + '.with'

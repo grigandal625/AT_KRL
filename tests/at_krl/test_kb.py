@@ -1,6 +1,6 @@
 from at_krl.core.kb_value import KBValue
 from at_krl.core.kb_reference import KBReference
-from at_krl.core.kb_operation import KBOperation
+from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
 
 from xml.etree.ElementTree import tostring, fromstring
 
@@ -79,6 +79,13 @@ def test_operation_from_xml():
     print('OP KRL:', o.krl)
 
 
+def print_v_xml_paths(op: KBOperation):
+    if op.tag in TAGS_SIGNS:
+        print_v_xml_paths(op.left)
+        if op.is_binary:
+            print_v_xml_paths(op.right)
+    print(op.xml_owner_path)
+
 def test_examples():
     with open('example/test.kbs') as krl_file:
         krl_text = krl_file.read() # считываем текст БЗ
@@ -100,18 +107,28 @@ def test_examples():
 
         kb = listener.KB
 
+        print('------ KB ------')
         for t in kb.types: # пеатаем все типы
             print(t.id)
+            print(t.xml_owner_path)
         
         for p in kb.world.properties: # печатаем все объекты
             print(p.id, p.type_or_class_id)
+            print(p.xml_owner_path)
+            print(p._type_or_class.xml_owner_path)
 
         for i in kb.classes.intervals: # печатаем все интервалы
             print(i.id)
+            print(i.xml_owner_path)
 
         for e in kb.classes.events: # печатаем все события
             print(e.id)
+            print(e.xml_owner_path)
 
         for r in kb.world.rules: # печатаем все правила
             print(r.id)
+            print(r.xml_owner_path)
+            print_v_xml_paths(r.condition)
+            
+
             
