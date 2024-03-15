@@ -1,5 +1,6 @@
 from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_value import Evaluatable
+from at_krl.core.kb_value import KBValue
 from at_krl.core.kb_instruction import KBInstruction
 from typing import Iterable, List, TYPE_CHECKING
 from xml.etree.ElementTree import Element
@@ -15,6 +16,7 @@ class KBRule(KBEntity):
     else_instructions: List[KBInstruction]
     meta: str
     desc: str
+    evaluated_condition: KBValue | None
 
     def __init__(self, id, condition: Evaluatable, instructions: List[KBInstruction], else_instructions: List[KBInstruction] | None = None, meta='simple', desc=None):
         self.id = id
