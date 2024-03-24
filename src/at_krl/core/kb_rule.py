@@ -144,4 +144,4 @@ class KBRule(KBEntity):
     def xml_owner_path(self):
         rule_ids = [r.id for r in self.owner.rules]
         idx = rule_ids.index(self.id)
-        return self.owner.xml_owner_path + f'.rules[{idx}]'
+        return self.owner.xml_owner_path + f'/rules/rule[{idx}]'

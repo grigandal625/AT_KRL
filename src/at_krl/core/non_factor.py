@@ -62,4 +62,4 @@ class NonFactor(KBEntity):
 
     @property
     def xml_owner_path(self):
-        return self.owner.xml_owner_path + '.with'
+        return self.owner.xml_owner_path + '/with'

@@ -71,7 +71,7 @@ class KBType(KBEntity):
     @property
     def xml_owner_path(self):
         owner: 'KnowledgeBase' = self.owner
-        return owner.xml_owner_path + f'.types[{[t.id for t in owner.types].index(self.id)}]'
+        return owner.xml_owner_path + f'/types/type[{[t.id for t in owner.types].index(self.id)}]'
 
 
 class KBNumericType(KBType):

@@ -70,4 +70,4 @@ class KBEvent(KBClass):
     def xml_owner_path(self):
         from at_krl.core.knowledge_base import KnowledgeBase
         owner: KnowledgeBase = self.owner
-        return owner.xml_owner_path + f'.IntervalsAndEvents.Events[{owner.classes.events.index(self)}]'
+        return owner.xml_owner_path + f'/IntervalsAndEvents/Events/Event[{owner.classes.events.index(self)}]'

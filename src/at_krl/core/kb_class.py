@@ -150,8 +150,8 @@ class KBClass(KBEntity):
         from at_krl.core.knowledge_base import KnowledgeBase
         owner: KnowledgeBase = self.owner
         if (owner.world == self) and not owner.with_world:
-            return owner.xml_owner_path + f'.classes[{len(owner.classes.objects)}]'
-        return owner.xml_owner_path + f'.classes[{owner.classes.objects.index(self)}]'
+            return owner.xml_owner_path + f'/classes/class[{len(owner.classes.objects)}]'
+        return owner.xml_owner_path + f'/classes/class[{owner.classes.objects.index(self)}]'
 
 class KBInstance(KBEntity):
     id: str = None
@@ -176,6 +176,10 @@ class KBInstance(KBEntity):
             'type': self.type_or_class_id,
             'desc': self.desc
         }
+
+    @property
+    def type_or_class(self) -> Union['KBType', KBClass, None]:
+        return self._type_or_class
 
     @property
     def krl(self) -> str:
@@ -330,4 +334,4 @@ class KBProperty(KBInstance):
     @property
     def xml_owner_path(self):
         idx = self.owner_class.properties.index(self)
-        return self.owner_class.xml_owner_path + f'.properties[{idx}]'
+        return self.owner_class.xml_owner_path + f'/properties/property[{idx}]'

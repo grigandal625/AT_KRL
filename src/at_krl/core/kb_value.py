@@ -84,7 +84,7 @@ class Evaluatable(KBEntity):
         if isinstance(self.owner, KBRule):
             if self.owner.condition != self:
                 raise ValueError(self._unknown_ownership)
-            return self.owner.xml_owner_path + '.condition.' + self.tag
+            return self.owner.xml_owner_path + '/condition/' + self.tag
         
         from at_krl.core.kb_operation import KBOperation
         if isinstance(self.owner, KBOperation):
@@ -93,7 +93,7 @@ class Evaluatable(KBEntity):
             if self.owner.is_binary:
                 if self.owner.left.__class__ == self.owner.right.__class__:
                     index = '0' if self.owner.left == self else '1'
-                    return self.owner.xml_owner_path + '.' + self.tag + f'[{index}]'
+                    return self.owner.xml_owner_path + '/' + self.tag + f'[{index}]'
                 
         from at_krl.core.kb_instruction import AssignInstruction
         if isinstance(self.owner, AssignInstruction):
@@ -101,9 +101,9 @@ class Evaluatable(KBEntity):
                 raise ValueError(self._unknown_ownership)
             if self.owner.ref.__class__ == self.owner.value.__class__:
                 index = '0' if self.owner.ref == self else '1'
-                return self.owner.xml_owner_path + '.' + self.tag + f'[{index}]'
+                return self.owner.xml_owner_path + '/' + self.tag + f'[{index}]'
 
-        return self.owner.xml_owner_path + '.' + self.tag
+        return self.owner.xml_owner_path + '/' + self.tag
 
 
 class KBValue(Evaluatable):
