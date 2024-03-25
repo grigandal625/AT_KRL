@@ -90,7 +90,7 @@ class KBRule(KBEntity):
             ** (super().__dict__())
         )
         if self.else_instructions is not None:
-            res['esle_instructions'] = [instruction.__dict__()
+            res['else_instructions'] = [instruction.__dict__()
                                         for instruction in self.else_instructions]
 
         return res
