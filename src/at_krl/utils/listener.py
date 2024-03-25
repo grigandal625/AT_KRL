@@ -192,8 +192,15 @@ class ATKRLListener(at_krlListener):
         return super().exitSymbolic_type_body(ctx)
 
     def exitNumeric_type_body(self, ctx: at_krlParser.Numeric_type_bodyContext | Any):
-        from_ = ctx.children[2].getText()
-        to_ = ctx.children[4].getText()
+        texts = [c.getText() for c in ctx.children]
+        exit_minuses = [t for t in texts]
+        for i, t in enumerate(texts):
+            if t == '-':
+                exit_minuses[i + 1] = '-' + exit_minuses[i + 1]
+        exit_minuses = [e for e in exit_minuses if e != '-']
+        
+        from_ = exit_minuses[2]
+        to_ = exit_minuses[4]
 
         if '.' in from_:
             from_ = float(from_)

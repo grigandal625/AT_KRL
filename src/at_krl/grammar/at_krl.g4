@@ -147,7 +147,7 @@ kb_type_body:
 
 symbolic_type_body: SYM (STRING)+?;
 numeric_type_body:
-	NUM FROM (NUMERIC | FRAC) TO (NUMERIC | FRAC);
+	NUM FROM (NUMERIC | FRAC | '-' NUMERIC | '-' FRAC) TO ('-'|) (NUMERIC | FRAC | '-' NUMERIC | '-' FRAC);
 fuzzy_type_body: FUZ NUMERIC membersip_function+?;
 
 membersip_function: mf_def mf_body;
