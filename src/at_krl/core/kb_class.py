@@ -338,26 +338,35 @@ class KBProperty(KBInstance):
         value = None
         if xml.find('value') is not None:
             value = Evaluatable.from_xml(xml.find('value'))
-        return KBProperty(
+        res = KBProperty(
             id=xml.attrib.get("id"),
             type_or_class_id=xml.attrib.get("type"),
             desc=xml.attrib.get("desc"),
             source=xml.attrib.get("source"),
             value=value,
         )
+        if xml.find('properties_instances'):
+            for prop_inst_xml in xml.find('properties_instances'):
+                prop_inst = KBProperty.from_xml(prop_inst_xml)
+                res.properties_instances.append(prop_inst)
+        return res
 
     @staticmethod
     def from_dict(d: dict) -> 'KBProperty':
         value = None
         if d.get('value', None) is not None:
             value = Evaluatable.from_dict(d.get('value'))
-        return KBProperty(
+        res = KBProperty(
             id=d.get("id"),
             type_or_class_id=d.get("type"),
             desc=d.get("desc"),
             source=d.get("source"),
             value=value
         )
+        for prop_inst_dict in d.get("properties_instances", []):
+            prop_inst = KBProperty.from_dict(prop_inst_dict)
+            res.properties_instances.append(prop_inst)
+        return res
     
     @property
     def xml_owner_path(self):
