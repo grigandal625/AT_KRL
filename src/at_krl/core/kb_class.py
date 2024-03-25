@@ -195,15 +195,22 @@ class KBInstance(KBEntity):
         return "ЭКЗЕМПЛЯР"
 
     @property
-    def inner_xml(self) -> Element | None:
+    def inner_xml(self) -> List[Element] | None:
         if self.value is None:
             return None
-        return self.value.xml
+        
+        prop_inst_xml = Element("properties_instances")
+        for prop in self.properties_instances:
+            prop_inst_xml.append(prop.xml)
+        return [self.value.xml, prop_inst_xml]
 
     def __dict__(self) -> dict:
         res = dict(**(self.attrs), **(super().__dict__()))
         if self.value is not None:
             res['value'] = self.value.__dict__()
+        res['properties_instances'] = []
+        for prop in self.properties_instances:
+            res['properties_instances'].append(prop.__dict__())
         return res
 
     @staticmethod
@@ -211,24 +218,33 @@ class KBInstance(KBEntity):
         value = None
         if xml.find('value'):
             value = Evaluatable.from_xml(xml.find('value'))
-        return KBInstance(
+        res = KBInstance(
             id=xml.attrib.get("id"),
             type_or_class_id=xml.attrib.get("type"),
             desc=xml.attrib.get("desc", None),
             value=value,
         )
+        if xml.find('properties_instances'):
+            for prop_inst_xml in xml.find('properties_instances'):
+                prop_inst = KBProperty.from_xml(prop_inst_xml)
+                res.properties_instances.append(prop_inst)
+        return res
 
     @staticmethod
     def from_dict(d: dict) -> 'KBInstance':
         value = None
         if d.get('value', None) is not None:
             value = Evaluatable.from_dict(d.get('value'))
-        return KBInstance(
+        res = KBInstance(
             id=d.get("id"),
             type_or_class_id=d.get("type"),
             desc=d.get("desc", None),
             value=value
         )
+        for prop_inst_dict in d.get("properties_instances", []):
+            prop_inst = KBProperty.from_dict(prop_inst_dict)
+            res.properties_instances.append(prop_inst)
+        return res
 
     def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
         if not self._validated:
@@ -264,16 +280,28 @@ class KBInstance(KBEntity):
             if not obj._validated:
                 obj.validate_properties(kb)
             for prop in obj.properties:
-                if prop.is_type_instance:
-                    prop_inst = KBProperty(
-                        prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
-                elif prop.is_class_instance:
-                    prop_inst = prop._type_or_class.create_instance(
-                        kb, prop.id, prop.desc, prop.source, as_property=True)
-                prop_inst.owner_class = self._type_or_class
-                prop_inst.owner = self
-                prop_inst._validated = True
-                self.properties_instances.append(prop_inst)
+                having_prop_instances = [p for p in self.properties_instances if p.id == prop.id]
+                if len(having_prop_instances) == 1:
+                    having_prop = having_prop_instances[0]
+                    having_prop.owner_class = self._type_or_class
+                    having_prop.owner = self
+                    having_prop.validate(kb)
+                elif len(having_prop_instances) > 1:
+                    msg = f"Found more than one property instance \"{prop.id}\""
+                    logger.warning(msg)
+                    if kb._raise_on_validation:
+                        raise KBValidationError(msg, kb_entity=self)
+                else:
+                    if prop.is_type_instance:
+                        prop_inst = KBProperty(
+                            prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
+                    elif prop.is_class_instance:
+                        prop_inst = prop._type_or_class.create_instance(
+                            kb, prop.id, prop.desc, prop.source, as_property=True)
+                    prop_inst.owner_class = self._type_or_class
+                    prop_inst.owner = self
+                    prop_inst._validated = True
+                    self.properties_instances.append(prop_inst)
             self._validated = True
 
     @property
