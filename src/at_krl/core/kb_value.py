@@ -70,7 +70,7 @@ class Evaluatable(KBEntity):
     @property
     def krl(self):
         result = self.inner_krl
-        if self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized:
+        if (self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized) and not self.non_factor.is_default:
             result = result + ' ' + self.non_factor.krl
         return result
 

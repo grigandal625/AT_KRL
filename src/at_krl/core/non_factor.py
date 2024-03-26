@@ -41,6 +41,10 @@ class NonFactor(KBEntity):
         return NonFactor(**d)
 
     @property
+    def is_default(self):
+        return self.belief == 50 and self.probability == 100 and self.accuracy == 0
+
+    @property
     def attrs(self) -> dict:
         return {
             'belief': str(self.belief),

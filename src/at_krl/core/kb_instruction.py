@@ -59,7 +59,7 @@ class AssignInstruction(KBInstruction):
 
     @property
     def krl(self) -> str:
-        return f'{self.ref.krl} = {self.value.krl} {self.non_factor.krl}'
+        return f'{self.ref.krl} = ({self.value.krl}) {self.non_factor.krl}'
 
     @staticmethod
     def from_xml(xml: Element) -> 'AssignInstruction':
