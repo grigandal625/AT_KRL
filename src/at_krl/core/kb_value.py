@@ -122,7 +122,11 @@ class KBValue(Evaluatable):
 
     @staticmethod
     def from_dict(d: dict) -> 'KBValue':
-        return KBValue(d['content'], d.get('non_factor', None))
+        nf_dict = d.get('non_factor', None)
+        nf = None
+        if nf_dict is not None:
+            nf = NonFactor.from_dict(nf_dict)
+        return KBValue(d['content'], non_factor=nf)
 
     @property
     def inner_krl(self) -> str:
@@ -138,7 +142,7 @@ class KBValue(Evaluatable):
 
     @staticmethod
     def from_xml(xml: Element) -> 'KBValue':
-        return KBValue(xml.text)
+        return KBValue(xml.text) # TODO: non_factor ???
     
     def copy(self):
         if self.non_factor is not None:
