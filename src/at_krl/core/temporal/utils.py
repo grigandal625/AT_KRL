@@ -38,12 +38,13 @@ class SimpleEvaluatable(Evaluatable):
 class SimpleValue(KBValue, SimpleEvaluatable):
     def __init__(self, content):
         super().__init__(content)
-        if isinstance(content, float) or isinstance(content, int):
+        if isinstance(content, bool):
+            self.tag = 'TruthVal'
+        elif isinstance(content, float) or isinstance(content, int):
             self.tag = 'Number'
         elif isinstance(content, str):
             self.tag = 'String'
-        elif isinstance(content, bool):
-            self.tag = 'TruthVal'
+        
 
     @property
     def inner_xml(self) -> str:
@@ -67,7 +68,9 @@ class SimpleValue(KBValue, SimpleEvaluatable):
                 return SimpleValue(float(xml.attrib.get('Value')))
             return SimpleValue(int(xml.attrib.get('Value')))
         elif xml.tag == 'TruthVal':
-            return SimpleValue(xml.attrib.get('Value') != 'FALSE')
+            if isinstance(xml.attrib.get('Value'), bool):
+                return SimpleValue(xml.attrib.get('Value'))
+            return SimpleValue((xml.attrib.get('Value') != 'FALSE') and (xml.attrib.get('Value') != 'False'))
         elif xml.tag == 'String':
             return SimpleValue(xml.attrib.get('Value'))
 
@@ -76,7 +79,9 @@ class SimpleValue(KBValue, SimpleEvaluatable):
         if d.get('tag') == 'Number':
             return SimpleValue(d.get('Value'))
         elif d.get('tag') == 'TruthVal':
-            return SimpleValue(d.get('Value') != 'FALSE')
+            if isinstance(d.get('Value'), bool):
+                return SimpleValue(d.get('Value'))    
+            return SimpleValue((d.get('Value') != 'FALSE') and (d.get('Value') != 'False'))
         elif d.get('tag') == 'String':
             return SimpleValue(d.get('Value'))
 
