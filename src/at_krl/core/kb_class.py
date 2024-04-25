@@ -138,6 +138,7 @@ class KBClass(KBEntity):
             elif prop.is_class_instance:
                 prop_inst = prop._type_or_class.create_instance(
                     kb, prop.id, prop.desc, prop.source, as_property=True, ignore_validation=ignore_validation)
+            prop_inst._type_or_class = prop.type_or_class
             prop_inst.owner_class = self
             prop_inst.owner = inst
             prop_inst._validated = True
