@@ -222,7 +222,7 @@ class KnowledgeBase(KBEntity):
             for interval_xml in intervals:
                 i = KBInterval.from_xml(interval_xml)
                 i.owner = KB
-                KB.classes.intervals.append()
+                KB.classes.intervals.append(i)
 
             events = allen_xml.find('Events')
             for event_xml in events:
