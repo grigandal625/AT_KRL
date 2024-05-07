@@ -124,10 +124,9 @@ with open(input, 'r') as krl_file:
 ### 3.1. Локальная установка
 
 1. Клонировать репозиторий командой `git clone https://github.com/grigandal625/AT_KRL.git`
-2. Установить python версии 3.10 и пакетный менеджер pipenv командой `python3.10 -m pip install pipenv`
+2. Установить python версии 3.10 и пакетный менеджер poetry 
 3. Перейти в директорию склонированного проекта
-4. Установить зависимости командой `python3.10 -m pipenv install`
-5. Локально установить пакет командой `pipenv run python setup.py develop` или `make dev` 
+4. Установить зависимости командой `poetry install` 
 
 ### 3.2. Генерация парсера
 
