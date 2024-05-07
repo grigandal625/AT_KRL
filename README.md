@@ -14,13 +14,13 @@
 2. Установть пакет следующей командой:
 
 ```bash
-pip install git+https://github.com/grigandal625/AT_KRL.git#egg=at-krl
+pip install git+https://github.com/grigandal625/AT_KRL.git@master
 ```
 
-или
+В более ранних версиях pip установка осуществляется следующей командой:
 
 ```bash
-pip install https://github.com/grigandal625/AT_KRL/raw/master/dist/at_krl-latest-py3-none-any.whl
+pip install git+https://github.com/grigandal625/AT_KRL.git#egg=at-krl
 ```
 
 Для систем типа `linux` может потребоваться напрямую указать версию python:
@@ -29,13 +29,8 @@ pip install https://github.com/grigandal625/AT_KRL/raw/master/dist/at_krl-latest
 python3.10 -m pip install git+https://github.com/grigandal625/AT_KRL.git#egg=at-krl
 ```
 
-или
 
-```bash
-python3.10 -m pip install https://github.com/grigandal625/AT_KRL/raw/master/dist/at_krl-latest-py3-none-any.whl
-```
-
-Также можно использовать пакетный менеджер pipenv
+Также можно использовать пакетный менеджер pipenv, poetry
 
 Пакет установлен и готов к работе.
 
@@ -138,13 +133,7 @@ with open(input, 'r') as krl_file:
 2. Перегенерировать модули парсера следующей командой:
 
 ```bash
-docker run -it --rm -v $$(pwd)/src/at_krl/grammar:/app antlr/antlr4 -Dlanguage=Python3 /app/at_krl.g4
-```
-
-или 
-
-```bash
-make antlr
+docker run -it --rm -v $$(pwd)/at_krl/grammar:/app antlr/antlr4 -Dlanguage=Python3 /app/at_krl.g4
 ```
 
 **Действия из пункта "1. Подготовка" нужно выполнить только один раз, дальше можно всегда пользоваться этим образом**
