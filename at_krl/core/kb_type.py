@@ -1,10 +1,14 @@
-from at_krl.core.kb_entity import KBEntity
-from at_krl.core.fuzzy.membership_function import MembershipFunction
-from typing import Iterable, List, TYPE_CHECKING
+from typing import Iterable
+from typing import List
+from typing import TYPE_CHECKING
 from xml.etree.ElementTree import Element
+
+from at_krl.core.fuzzy.membership_function import MembershipFunction
+from at_krl.core.kb_entity import KBEntity
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
+
 
 class KBType(KBEntity):
     id: str = None
@@ -13,7 +17,7 @@ class KBType(KBEntity):
     def __init__(self, id: str, desc: str = None):
         self.id = id
         self.desc = desc or id
-        self.tag = 'type'
+        self.tag = "type"
 
     @property
     def meta(self):
@@ -37,32 +41,27 @@ class KBType(KBEntity):
 
     @property
     def attrs(self) -> dict:
-        return {
-            'id': self.id,
-            'meta': self.meta,
-            'desc': self.desc,
-            **super().attrs
-        }
+        return {"id": self.id, "meta": self.meta, "desc": self.desc, **super().attrs}
 
     def __dict__(self) -> dict:
         return self.attrs
 
     @staticmethod
-    def from_xml(xml: Element) -> 'KBType':
-        if (xml.attrib.get('meta') == 'numeric') or (xml.attrib.get('meta') == 'number'):
+    def from_xml(xml: Element) -> "KBType":
+        if (xml.attrib.get("meta") == "numeric") or (xml.attrib.get("meta") == "number"):
             return KBNumericType.from_xml(xml)
-        elif (xml.attrib.get('meta') == 'string') or (xml.attrib.get('meta') == 'symbolic'):
+        elif (xml.attrib.get("meta") == "string") or (xml.attrib.get("meta") == "symbolic"):
             return KBSymbolicType.from_xml(xml)
-        elif xml.attrib.get('meta') == 'fuzzy':
+        elif xml.attrib.get("meta") == "fuzzy":
             return KBFuzzyType.from_xml(xml)
 
     @staticmethod
-    def from_dict(d: dict) -> 'KBType':
-        if (d.get('meta') == 'numeric') or (d.get('meta') == 'number'):
+    def from_dict(d: dict) -> "KBType":
+        if (d.get("meta") == "numeric") or (d.get("meta") == "number"):
             return KBNumericType.from_dict(d)
-        elif (d.get('meta') == 'string') or (d.get('meta') == 'symbolic'):
+        elif (d.get("meta") == "string") or (d.get("meta") == "symbolic"):
             return KBSymbolicType.from_dict(d)
-        elif d.get('meta') == 'fuzzy':
+        elif d.get("meta") == "fuzzy":
             return KBFuzzyType.from_dict(d)
 
     def validate_value(self, value) -> bool:
@@ -70,8 +69,8 @@ class KBType(KBEntity):
 
     @property
     def xml_owner_path(self):
-        owner: 'KnowledgeBase' = self.owner
-        return owner.xml_owner_path + f'/types/type[{[t.id for t in owner.types].index(self.id)}]'
+        owner: "KnowledgeBase" = self.owner
+        return owner.xml_owner_path + f"/types/type[{[t.id for t in owner.types].index(self.id)}]"
 
 
 class KBNumericType(KBType):
@@ -98,38 +97,41 @@ class KBNumericType(KBType):
 
     @property
     def inner_xml(self) -> List[Element]:
-        f = Element('from')
+        f = Element("from")
         f.text = str(self._from)
-        t = Element('to')
+        t = Element("to")
         t.text = str(self._to)
         return [f, t]
 
     def __dict__(self) -> dict:
         res = super().__dict__()
-        res.update({
-            'from': self._from,
-            'to': self._to,
-        })
+        res.update(
+            {
+                "from": self._from,
+                "to": self._to,
+            }
+        )
         return res
 
     @staticmethod
-    def from_xml(xml: Element) -> 'KBNumericType':
-        from_ = float(xml.find('from').text)
-        to_ = float(xml.find('to').text)
-        id = xml.attrib.get('id')
-        desc = xml.attrib.get('desc', None)
+    def from_xml(xml: Element) -> "KBNumericType":
+        from_ = float(xml.find("from").text)
+        to_ = float(xml.find("to").text)
+        id = xml.attrib.get("id")
+        desc = xml.attrib.get("desc", None)
         return KBNumericType(id, from_, to_, desc=desc)
 
     @staticmethod
-    def from_dict(d: dict) -> 'KBNumericType':
-        id = d.get('id')
-        desc = d.get('desc', None)
-        from_ = d.get('from')
-        to_ = d.get('to')
+    def from_dict(d: dict) -> "KBNumericType":
+        id = d.get("id")
+        desc = d.get("desc", None)
+        from_ = d.get("from")
+        to_ = d.get("to")
         return KBNumericType(id, from_, to_, desc=desc)
 
     def validate_value(self, value) -> bool:
         from at_krl.core.kb_value import Evaluatable
+
         if isinstance(value, Evaluatable):
             return True
         try:
@@ -163,30 +165,26 @@ class KBSymbolicType(KBType):
     def inner_xml(self) -> List[Element]:
         res = []
         for v in self.values:
-            value = Element('value')
+            value = Element("value")
             value.text = str(v)
             res.append(value)
         return res
 
     def __dict__(self) -> dict:
         res = super().__dict__()
-        res.update({'values': self.values})
+        res.update({"values": self.values})
         return res
 
     @staticmethod
-    def from_xml(xml: Element) -> 'KBSymbolicType':
-        return KBSymbolicType(
-            id=xml.attrib.get('id'),
-            desc=xml.attrib.get('desc', None),
-            values=[v.text for v in xml]
-        )
+    def from_xml(xml: Element) -> "KBSymbolicType":
+        return KBSymbolicType(id=xml.attrib.get("id"), desc=xml.attrib.get("desc", None), values=[v.text for v in xml])
 
     @staticmethod
-    def from_dict(d: dict) -> 'KBSymbolicType':
+    def from_dict(d: dict) -> "KBSymbolicType":
         return KBSymbolicType(
-            id=d.get('id'),
-            desc=d.get('desc', None),
-            values=d.get('values', []),
+            id=d.get("id"),
+            desc=d.get("desc", None),
+            values=d.get("values", []),
         )
 
     def validate_value(self, value) -> bool:
@@ -202,7 +200,6 @@ class KBFuzzyType(KBType):
         for mf in self.membership_functions:
             mf.owner = self
 
-
     @property
     def meta(self):
         return "fuzzy"
@@ -213,43 +210,36 @@ class KBFuzzyType(KBType):
 
     @property
     def inner_krl(self):
-        return f'{len(self.membership_functions)}\n' + '\n'.join([
-            mf.krl for mf in self.membership_functions
-        ])
+        return f"{len(self.membership_functions)}\n" + "\n".join([mf.krl for mf in self.membership_functions])
 
     @property
     def inner_xml(self) -> List[Element] | Iterable[Element]:
-        return [
-            mf.xml for mf in self.membership_functions
-        ]
+        return [mf.xml for mf in self.membership_functions]
 
     def __dict__(self) -> dict:
-        return dict(
-            membership_functions=[mf.__dict__()
-                                  for mf in self.membership_functions],
-            **(super().__dict__())
+        return dict(membership_functions=[mf.__dict__() for mf in self.membership_functions], **(super().__dict__()))
+
+    @staticmethod
+    def from_xml(xml: Element) -> "KBFuzzyType":
+        return KBFuzzyType(
+            id=xml.attrib.get("id"),
+            desc=xml.attrib.get("desc", None),
+            membership_functions=[MembershipFunction.from_xml(parameter) for parameter in xml],
         )
 
     @staticmethod
-    def from_xml(xml: Element) -> 'KBFuzzyType':
+    def from_dict(d: dict) -> "KBFuzzyType":
         return KBFuzzyType(
-            id=xml.attrib.get('id'),
-            desc=xml.attrib.get('desc', None),
-            membership_functions=[MembershipFunction.from_xml(
-                parameter) for parameter in xml]
-        )
-
-    @staticmethod
-    def from_dict(d: dict) -> 'KBFuzzyType':
-        return KBFuzzyType(
-            id=d.get('id'),
-            desc=d.get('desc', None),
-            membership_functions=[MembershipFunction.from_dict(
-                parameter) for parameter in d.get('membership_functions', [])]
+            id=d.get("id"),
+            desc=d.get("desc", None),
+            membership_functions=[
+                MembershipFunction.from_dict(parameter) for parameter in d.get("membership_functions", [])
+            ],
         )
 
     def validate_value(self, value) -> bool:
         from at_krl.core.kb_value import Evaluatable
+
         if isinstance(value, Evaluatable):
             return True
         if isinstance(value, MembershipFunction):

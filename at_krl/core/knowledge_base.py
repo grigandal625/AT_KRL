@@ -1,23 +1,21 @@
-from at_krl.core.kb_type import KBType
-from at_krl.core.kb_class import KBClass, KBInstance
-from at_krl.core.kb_rule import KBRule
-from at_krl.core.kb_value import KBEntity, KBValue
-
-from at_krl.core.temporal.kb_interval import KBInterval
-from at_krl.core.temporal.kb_event import KBEvent
-
-from typing import List, Union
 from datetime import datetime
-
+from typing import List
 from xml.etree.ElementTree import Element
+
+from at_krl.core.kb_class import KBClass
+from at_krl.core.kb_rule import KBRule
+from at_krl.core.kb_type import KBType
+from at_krl.core.kb_value import KBEntity
+from at_krl.core.temporal.kb_event import KBEvent
+from at_krl.core.temporal.kb_interval import KBInterval
 
 
 class KBClasses:
-    tag = 'classes'
+    tag = "classes"
     objects: List[KBClass]
     events: List[KBEvent]
     intervals: List[KBInterval]
-    owner: 'KnowledgeBase' = None
+    owner: "KnowledgeBase" = None
 
     def __init__(self):
         self.objects = []
@@ -44,38 +42,38 @@ class KnowledgeBase(KBEntity):
     _validated: bool = False
 
     def __init__(self, with_world: bool = False) -> None:
-        self.tag = 'knowledge-base'
+        self.tag = "knowledge-base"
         self.types = []
         self.classes = KBClasses()
         self.classes.owner = self
         self.rules = []
         self.with_world = with_world
         self._world = KBClass(
-            'world', 
-            [], 
-            self.rules, 
-            desc='Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила')
+            "world",
+            [],
+            self.rules,
+            desc="Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила",
+        )
         self._world.owner = self.classes
 
     @property
     def world(self) -> KBClass:
         world = self._world
         if self.with_world:
-            world = self.get_object_by_id('world')
+            world = self.get_object_by_id("world")
         world.owner = self
         return world
 
     def get_free_class_id(self, initial: str = None, from_object_id: bool = True) -> str:
-        initial = (
-            f'КЛАСС_{initial}' if from_object_id else initial) if initial else 'КЛАСС_0'
+        initial = (f"КЛАСС_{initial}" if from_object_id else initial) if initial else "КЛАСС_0"
         if not initial in [cls.id for cls in self.classes.all]:
             return initial
-        if initial == 'КЛАСС_0':
-            initial = 'КЛАСС'
+        if initial == "КЛАСС_0":
+            initial = "КЛАСС"
         c = 1
-        while f'{initial}_{c}' in [cls.id for cls in self.classes.all]:
+        while f"{initial}_{c}" in [cls.id for cls in self.classes.all]:
             c += 1
-        return f'{initial}_{c}'
+        return f"{initial}_{c}"
 
     def get_object_by_id(self, object_id: str) -> KBClass | None:
         for obj in self.classes.objects:
@@ -116,7 +114,7 @@ class KnowledgeBase(KBEntity):
 
     @property
     def krl(self):
-        res = '\n'.join([t.krl for t in self.types])
+        res = "\n".join([t.krl for t in self.types])
         for property in self.world.properties:
             object_id = property.id
             class_id = property.type_or_class_id
@@ -124,12 +122,11 @@ class KnowledgeBase(KBEntity):
             cls = self.get_object_by_id(class_id)
             cls.id = object_id
 
-            res += '\n' + cls.krl
+            res += "\n" + cls.krl
             cls.id = class_id
 
-        res += '\n' + \
-            '\n'.join([obj.krl for obj in self.classes.temporal_objects])
-        res += '\n' + '\n'.join([rule.krl for rule in self.rules])
+        res += "\n" + "\n".join([obj.krl for obj in self.classes.temporal_objects])
+        res += "\n" + "\n".join([rule.krl for rule in self.rules])
         return res
 
     @property
@@ -137,13 +134,11 @@ class KnowledgeBase(KBEntity):
         return self.get_xml()
 
     def get_xml(self, with_allen=True) -> Element:
+        knowledge_base = Element("knowledge-base")
+        knowledge_base.attrib["creation-date"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
-        knowledge_base = Element('knowledge-base')
-        knowledge_base.attrib['creation-date'] = datetime.now().strftime(
-            '%d.%m.%Y %H:%M:%S')
-
-        knowledge_base.append(Element('problem-info'))
-        types = Element('types')
+        knowledge_base.append(Element("problem-info"))
+        types = Element("types")
 
         for t in self.types:
             types.append(t.xml)
@@ -153,7 +148,7 @@ class KnowledgeBase(KBEntity):
         if with_allen:
             knowledge_base.append(self.allen_xml)
 
-        classes = Element('classes')
+        classes = Element("classes")
         for c in self.classes.objects:
             classes.append(c.xml)
 
@@ -165,16 +160,15 @@ class KnowledgeBase(KBEntity):
 
     @property
     def allen_xml(self) -> Element:
-
-        intervals = Element('Intervals')
+        intervals = Element("Intervals")
         for interval in self.classes.intervals:
             intervals.append(interval.xml)
 
-        events = Element('Events')
+        events = Element("Events")
         for event in self.classes.events:
             events.append(event.xml)
 
-        intervals_and_events = Element('IntervalsAndEvents')
+        intervals_and_events = Element("IntervalsAndEvents")
         intervals_and_events.append(intervals)
         intervals_and_events.append(events)
 
@@ -182,14 +176,12 @@ class KnowledgeBase(KBEntity):
 
     def __dict__(self) -> dict:
         knowledge_base = {}
-        knowledge_base['types'] = [t.__dict__() for t in self.types]
-        knowledge_base['intervals'] = [i.__dict__()
-                                       for i in self.classes.intervals]
-        knowledge_base['events'] = [e.__dict__() for e in self.classes.events]
-        knowledge_base['classes'] = [c.__dict__()
-                                     for c in self.classes.objects]
+        knowledge_base["types"] = [t.__dict__() for t in self.types]
+        knowledge_base["intervals"] = [i.__dict__() for i in self.classes.intervals]
+        knowledge_base["events"] = [e.__dict__() for e in self.classes.events]
+        knowledge_base["classes"] = [c.__dict__() for c in self.classes.objects]
         if not self.with_world:
-            knowledge_base['classes'].append(self.world.__dict__())
+            knowledge_base["classes"].append(self.world.__dict__())
         return knowledge_base
 
     def validate(self):
@@ -208,30 +200,30 @@ class KnowledgeBase(KBEntity):
             self._validated = True
 
     @staticmethod
-    def from_xml(xml: Element, allen_xml: Element = None) -> 'KnowledgeBase':
+    def from_xml(xml: Element, allen_xml: Element = None) -> "KnowledgeBase":
         KB = KnowledgeBase()
-        types = xml.find('types')
+        types = xml.find("types")
         for type_xml in types:
             t = KBType.from_xml(type_xml)
             t.owner = KB
             KB.types.append(t)
 
-        allen_xml = allen_xml or xml.find('IntervalsAndEvents')
+        allen_xml = allen_xml or xml.find("IntervalsAndEvents")
         if allen_xml:
-            intervals = allen_xml.find('Intervals')
+            intervals = allen_xml.find("Intervals")
             for interval_xml in intervals:
                 i = KBInterval.from_xml(interval_xml)
                 i.owner = KB
                 KB.classes.intervals.append(i)
 
-            events = allen_xml.find('Events')
+            events = allen_xml.find("Events")
             for event_xml in events:
                 e = KBEvent.from_xml(event_xml)
                 KB.classes.events.append(e)
 
-        classes = xml.find('classes')
+        classes = xml.find("classes")
         for class_xml in classes:
-            if class_xml.attrib.get('id', None) == 'world':
+            if class_xml.attrib.get("id", None) == "world":
                 KB.with_world = True
             cls = KBClass.from_xml(class_xml)
             cls.owner = KB
@@ -243,35 +235,35 @@ class KnowledgeBase(KBEntity):
         return KB
 
     @staticmethod
-    def from_dict(d: dict) -> 'KnowledgeBase':
+    def from_dict(d: dict) -> "KnowledgeBase":
         KB = KnowledgeBase()
 
-        types = d.get('types', [])
+        types = d.get("types", [])
         for t_dict in types:
             t = KBType.from_dict(t_dict)
             t.owner = KB
             KB.types.append(t)
 
-        intervals = d.get('intervals', [])
+        intervals = d.get("intervals", [])
         for i_dict in intervals:
             i = KBInterval.from_dict(i_dict)
             i.owner = KB
             KB.classes.intervals.append(i)
 
-        events = d.get('events', [])
+        events = d.get("events", [])
         for e_dict in events:
             e = KBEvent.from_dict(e_dict)
             KB.classes.events.append(e)
 
-        classes = d.get('classes', [])
+        classes = d.get("classes", [])
         for c_dict in classes:
             c = KBClass.from_dict(c_dict)
             c.owner = KB
             KB.classes.objects.append(c)
 
-        if KB.get_object_by_id('world') is not None:
+        if KB.get_object_by_id("world") is not None:
             KB.with_world = True
-        
+
         KB.rules = KB.world.rules
         return KB
 

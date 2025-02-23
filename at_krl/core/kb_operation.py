@@ -1,9 +1,10 @@
+from typing import TYPE_CHECKING
+from typing import Union
 from xml.etree.ElementTree import Element
 
+from at_krl.core.kb_value import Evaluatable
 from at_krl.core.kb_value import KBValue
-from at_krl.core.kb_value import Evaluatable, KBValue, NonFactor
-
-from typing import Union, TYPE_CHECKING
+from at_krl.core.kb_value import NonFactor
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
@@ -104,26 +105,31 @@ TAGS_SIGNS = {
 
 
 class KBOperation(Evaluatable):
-    left: 'Evaluatable' = None
-    right: Union['Evaluatable', None] = None
+    left: "Evaluatable" = None
+    right: Union["Evaluatable", None] = None
     op: str = None
 
-    def __init__(self, sign: str, left: 'Evaluatable', right: Union['Evaluatable', None] = None, non_factor: Union['NonFactor', None] = None):
+    def __init__(
+        self,
+        sign: str,
+        left: "Evaluatable",
+        right: Union["Evaluatable", None] = None,
+        non_factor: Union["NonFactor", None] = None,
+    ):
         super().__init__(non_factor=non_factor)
-        
-        get_is_binary = lambda l, r:  l is not None and r is not None
-        
+
+        get_is_binary = lambda l, r: l is not None and r is not None
+
         for op in TAGS_SIGNS:
-            if sign in TAGS_SIGNS[op]['values']:
-                if TAGS_SIGNS[op]['is_binary'] == get_is_binary(left, right):
+            if sign in TAGS_SIGNS[op]["values"]:
+                if TAGS_SIGNS[op]["is_binary"] == get_is_binary(left, right):
                     self.op = op
                     self.tag = op
                     break
 
         if self.tag is None:
             raise Exception(f"Unknown operation: {sign}")
-        self.convert_non_factor = TAGS_SIGNS[self.tag].get(
-            'convert_non_factor', False)
+        self.convert_non_factor = TAGS_SIGNS[self.tag].get("convert_non_factor", False)
 
         self.left = left
         self.left.owner = self
@@ -136,21 +142,19 @@ class KBOperation(Evaluatable):
         return TAGS_SIGNS[self.op]["is_binary"]
 
     def __dict__(self) -> dict:
-        return dict(
-            sign=self.sign, left=self.left.__dict__(), right=self.right.__dict__(), **(super().__dict__())
-        ) if self.is_binary else dict(
-            sign=self.sign, left=self.left.__dict__(), **(super().__dict__())
+        return (
+            dict(sign=self.sign, left=self.left.__dict__(), right=self.right.__dict__(), **(super().__dict__()))
+            if self.is_binary
+            else dict(sign=self.sign, left=self.left.__dict__(), **(super().__dict__()))
         )
 
     @staticmethod
-    def from_dict(d: dict) -> 'KBOperation':
+    def from_dict(d: dict) -> "KBOperation":
         return KBOperation(
-            d.get('sign') or d.get('tag'),
-            Evaluatable.from_dict(d['left']),
-            Evaluatable.from_dict(d['right']) if d.get(
-                'right', None) is not None else None,
-            NonFactor.from_dict(d['non_factor']) if d.get(
-                'non_factor', None) is not None else None
+            d.get("sign") or d.get("tag"),
+            Evaluatable.from_dict(d["left"]),
+            Evaluatable.from_dict(d["right"]) if d.get("right", None) is not None else None,
+            NonFactor.from_dict(d["non_factor"]) if d.get("non_factor", None) is not None else None,
         )
 
     @property
@@ -161,27 +165,29 @@ class KBOperation(Evaluatable):
         return result
 
     @staticmethod
-    def from_xml(xml: Element) -> 'KBOperation':
+    def from_xml(xml: Element) -> "KBOperation":
         sign = xml.tag
         left = Evaluatable.from_xml(xml[0])
         right = None
-        if TAGS_SIGNS[sign]['is_binary']:
+        if TAGS_SIGNS[sign]["is_binary"]:
             right = Evaluatable.from_xml(xml[1])
-        non_factor = NonFactor.from_xml(xml.find('with'))
+        non_factor = NonFactor.from_xml(xml.find("with"))
         return KBOperation(sign, left, right, non_factor)
 
     @property
     def sign(self):
-        return TAGS_SIGNS[self.tag]['values'][0]
+        return TAGS_SIGNS[self.tag]["values"][0]
 
     @property
     def inner_krl(self) -> str:
-        return f"({self.left.krl}) {self.sign} ({self.right.krl})" if self.is_binary else f"{self.sign} ({self.left.krl})"
+        return (
+            f"({self.left.krl}) {self.sign} ({self.right.krl})" if self.is_binary else f"{self.sign} ({self.left.krl})"
+        )
 
     def evaluate(self, env, *args, **kwargs) -> KBValue:
         return TAGS_SIGNS[self.tag]["evaluate"](self, env, *args, **kwargs)
 
-    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+    def validate(self, kb: "KnowledgeBase", *args, **kwargs):
         if not self._validated:
             self.left.validate(kb, *args, **kwargs)
             self.right.validate(kb, *args, **kwargs)

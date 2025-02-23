@@ -1,6 +1,9 @@
-from xml.etree.ElementTree import Element
-from typing import List, Iterable, Union, TYPE_CHECKING
 from collections.abc import Iterable as ITR
+from typing import Iterable
+from typing import List
+from typing import TYPE_CHECKING
+from typing import Union
+from xml.etree.ElementTree import Element
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
@@ -9,13 +12,13 @@ if TYPE_CHECKING:
 class KBEntity:
     tag: str = None
     _validated: bool = False
-    owner: 'KBEntity' = None
+    owner: "KBEntity" = None
 
     def __dict__(self) -> dict:
         return dict(tag=self.tag)
 
     @staticmethod
-    def from_dict(d: dict) -> 'KBEntity':
+    def from_dict(d: dict) -> "KBEntity":
         pass
 
     @property
@@ -48,12 +51,11 @@ class KBEntity:
         return result
 
     @staticmethod
-    def from_xml(xml: Element) -> 'KBEntity':
+    def from_xml(xml: Element) -> "KBEntity":
         pass
 
-    def validate(self, kb: 'KnowledgeBase', *args, **kwargs):
+    def validate(self, kb: "KnowledgeBase", *args, **kwargs):
         self._validated = True
-
 
     @property
     def xml_owner_path(self) -> str:
@@ -61,10 +63,10 @@ class KBEntity:
 
     @property
     def _unknown_ownership(self):
-        owner_label = self.owner.id if hasattr(self.owner, 'id') else str(self.owner)
+        owner_label = self.owner.id if hasattr(self.owner, "id") else str(self.owner)
         owner_type = self.owner.__class__.__name__
-        return f'''Unknown ownership of {owner_type} {owner_label} for {self}
+        return f"""Unknown ownership of {owner_type} {owner_label} for {self}
 
 {owner_type} krl: {self.owner.krl}
 
-{self} krl: {self.krl}'''
+{self} krl: {self.krl}"""

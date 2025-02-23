@@ -12,6 +12,7 @@ antlr4-python3-runtime = "^4.13.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
+pre-commit = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]

@@ -106,7 +106,7 @@ kb_allen_operation: (ALPHANUMERIC | ALPHANUMERIC_U) ALLEN_SIGN (
 
 simple_operation:
 	simple_value '=' ref_path
-	| ref_path '=' ref_path 
+	| ref_path '=' ref_path
 	| ref_path '=' simple_value
 	| simple_ref
 	| simple_value

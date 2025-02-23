@@ -1,10 +1,14 @@
-from xml.etree.ElementTree import tostring, fromstring
+from xml.etree.ElementTree import fromstring
+from xml.etree.ElementTree import tostring
 
-from at_krl.core.temporal.kb_allen_operation import KBEvent, KBInterval, KBAllenOperation
+from at_krl.core.temporal.kb_allen_operation import KBAllenOperation
+from at_krl.core.temporal.kb_allen_operation import KBEvent
+from at_krl.core.temporal.kb_allen_operation import KBInterval
 
 
 def test_event_interval():
-    interval_xml = fromstring("""<Interval Name="Положительный_интервал_13064720_0">
+    interval_xml = fromstring(
+        """<Interval Name="Положительный_интервал_13064720_0">
             <Open>
                 <LogOp Value="AND">
                     <EqOp Value="eq">
@@ -23,47 +27,48 @@ def test_event_interval():
                     <Number Value="2" />
                 </EqOp>
             </Close>
-        </Interval>""")
-    
+        </Interval>"""
+    )
+
     interval = KBInterval.from_xml(interval_xml)
     print(interval.krl)
-    print(tostring(interval.xml, encoding='unicode'))
+    print(tostring(interval.xml, encoding="unicode"))
     int2 = KBInterval.from_xml(interval.xml)
-    print('')
-    print(tostring(int2.xml, encoding='unicode'))
+    print("")
+    print(tostring(int2.xml, encoding="unicode"))
 
-    event_xml = fromstring("""<Event Name="Текущий_такт_0">
+    event_xml = fromstring(
+        """<Event Name="Текущий_такт_0">
             <Formula>
                 <EqOp Value="eq">
                     <Attribute Value="Таймер.такт" />
                     <Number Value="0" />
                 </EqOp>
             </Formula>
-        </Event>""")
+        </Event>"""
+    )
     event = KBEvent.from_xml(event_xml)
 
     print(event.krl)
-    print(tostring(event.xml, encoding='unicode'))
+    print(tostring(event.xml, encoding="unicode"))
 
     ev2 = KBEvent.from_xml(event.xml)
     print()
-    print(tostring(ev2.xml, encoding='unicode'))
+    print(tostring(ev2.xml, encoding="unicode"))
 
-    operation = KBAllenOperation('d', event, interval)
+    operation = KBAllenOperation("d", event, interval)
     print()
     print(operation.krl)
     print()
-    print(tostring(operation.xml, encoding='unicode'))
+    print(tostring(operation.xml, encoding="unicode"))
     op2 = KBAllenOperation.from_xml(operation.xml)
     op2.validate_tag([event], [interval])
     print()
     print(op2.krl)
     print()
-    print(tostring(op2.xml, encoding='unicode'))
+    print(tostring(op2.xml, encoding="unicode"))
 
-    op3 = KBAllenOperation('d', event.id, interval.id)
+    op3 = KBAllenOperation("d", event.id, interval.id)
     print(op3.krl)
     op3.get_tag_by_events_and_intervals(events=[event], intervals=[interval])
     print(op3)
-    
-    
