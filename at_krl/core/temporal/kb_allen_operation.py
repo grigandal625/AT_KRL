@@ -160,7 +160,8 @@ class KBAllenOperation(KBOperation):
                     raise ValueError(f"Can not apply operation {self._left} {sign} {self._right} (interval-interval)")
             else:
                 raise ReferenceError(
-                    f"Expected (event, event) or (interval, interval) or (event, interval) for ({self._left}, {self._right}) in operation {self._left} {sign} {self._right}"
+                    f"Expected (event, event) or (interval, interval) or (event, interval) "
+                    f"for ({self._left}, {self._right}) in operation {self._left} {sign} {self._right}"
                 )
 
             self._validated = True
@@ -173,21 +174,24 @@ class KBAllenOperation(KBOperation):
         if self.tag == "IntRel":
             if (self._left not in interval_ids) or (self._right not in interval_ids):
                 raise ReferenceError(
-                    f"Expected (interval, interval) for ({self._left}, {self._right}) in operation {self._left} {self.op} {self._right}"
+                    f"Expected (interval, interval) for ({self._left}, {self._right}) "
+                    f"in operation {self._left} {self.op} {self._right}"
                 )
             self._left_kb = [i for i in intervals if i.id == self._left][0]
             self._right_kb = [i for i in intervals if i.id == self._right][0]
         elif self.tag == "EvRel":
             if (self._left not in event_ids) or (self._right not in event_ids):
                 raise ReferenceError(
-                    f"Expected (event, event) for ({self._left}, {self._right}) in operation {self._left} {self.op} {self._right}"
+                    f"Expected (event, event) for ({self._left}, {self._right}) "
+                    f"in operation {self._left} {self.op} {self._right}"
                 )
             self._left_kb = [e for e in events if e.id == self._left][0]
             self._right_kb = [e for e in events if e.id == self._right][0]
         elif self.tag == "EvIntRel":
             if (self._left not in event_ids) or (self._right not in interval_ids):
                 raise ReferenceError(
-                    f"Expected (event, interval) for ({self._left}, {self._right}) in operation {self._left} {self.op} {self._right}"
+                    f"Expected (event, interval) for ({self._left}, {self._right}) "
+                    f"in operation {self._left} {self.op} {self._right}"
                 )
             self._left_kb = [e for e in events if e.id == self._left][0]
             self._right_kb = [i for i in intervals if i.id == self._right][0]

@@ -118,7 +118,8 @@ class KBOperation(Evaluatable):
     ):
         super().__init__(non_factor=non_factor)
 
-        get_is_binary = lambda l, r: l is not None and r is not None
+        def get_is_binary(left, right):
+            return left is not None and right is not None
 
         for op in TAGS_SIGNS:
             if sign in TAGS_SIGNS[op]["values"]:

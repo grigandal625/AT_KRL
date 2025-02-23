@@ -145,7 +145,7 @@ class KBValue(Evaluatable):
     def inner_krl(self) -> str:
         try:
             result = json.dumps(self.content, ensure_ascii=False)
-        except:
+        except Exception:
             result = json.dumps(str(self.content), ensure_ascii=False)
         return result
 

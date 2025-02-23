@@ -26,7 +26,10 @@ parser.add_argument(
     "-a",
     "--allen",
     required=False,
-    help="[NOT REQUIRED] Input or output file path to convert from or to XML temporal (Allen) objects: events and intervals definitions",
+    help=(
+        "[NOT REQUIRED] Input or output file path to convert from or "
+        + "to XML temporal (Allen) objects: events and intervals definitions"
+    ),
 )
 parser.add_argument(
     "-f", "--force", required=False, default=False, help="[NOT REQUIRED] A flag to force converting without validation"

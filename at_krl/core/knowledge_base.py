@@ -66,7 +66,7 @@ class KnowledgeBase(KBEntity):
 
     def get_free_class_id(self, initial: str = None, from_object_id: bool = True) -> str:
         initial = (f"КЛАСС_{initial}" if from_object_id else initial) if initial else "КЛАСС_0"
-        if not initial in [cls.id for cls in self.classes.all]:
+        if initial not in [cls.id for cls in self.classes.all]:
             return initial
         if initial == "КЛАСС_0":
             initial = "КЛАСС"

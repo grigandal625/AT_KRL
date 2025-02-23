@@ -35,7 +35,7 @@ repos:
     rev: 7.1.1
     hooks:
     -   id: flake8
-        exclude: tests/fixtures/,at_krl/grammar
+        exclude: at_krl/grammar/
         args:
           - --max-line-length=120
           - --extend-ignore=W503,E203
