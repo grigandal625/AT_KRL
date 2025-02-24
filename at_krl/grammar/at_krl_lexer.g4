@@ -16,12 +16,15 @@ INTERVAL              : 'ИНТЕРВАЛ';
 CASED_INTERVAL        : 'Интервал';
 EVENT                 : 'СОБЫТИЕ';
 CASED_EVENT           : 'Событие';
-OCCURANCE_CONDITION   : 'АТРИБУТ УслВозн';
-OPEN                  : 'АТРИБУТ УслНач';
-CLOSE                 : 'АТРИБУТ УслОконч';
+OCCURANCE_CONDITION   : 'УслВозн';
+OPEN                  : 'УслНач';
+CLOSE                 : 'УслОконч';
 DURATION              : 'ДЛИТЕЛЬНОСТЬ';
 OCCURANCE_COUNT       : 'КОЛ_ВОЗН';
-SIMPLE_EXP_TYPE       : 'ТИП ЛогВыр';
+SIMPLE_EXP_TYPE       : 'ЛогВыр';
+SIMPLE                : 'ОБЫЧНОЕ';
+PERIODIC              : 'ПЕРИОДИЧЕСКОЕ';
+PERIOD                : 'ПЕРИОД'; 
 
 SYM: 'СИМВОЛ';
 NUM: 'ЧИСЛО';
@@ -40,6 +43,8 @@ COLON            : ':';
 COMMA            : ',';
 SEMI             : ';';
 PLUS             : '+';
+LEFT_ASSIGN      : '<-';
+RIGHT_ASSIGN     : '->';
 MINUS            : '-';
 STAR             : '*';
 SLASH            : '/';
@@ -49,6 +54,7 @@ DOUBLEAMPER      : '&&';
 AMPER            : '&';
 LESS             : '<';
 GREATER          : '>';
+COLON_EQ         : ':=';
 EQUAL            : '=';
 DOT              : '.';
 PERCENT          : '%';
@@ -99,17 +105,16 @@ COMMENT: 'КОММЕНТАРИЙ' -> pushMode(COMMENT_MODE);
 NAME : IDENTIFIER;
 
 NUMBER
-   : INTEGER
-   | LONG_INTEGER
+   : '-'? (INTEGER
    | FLOAT_NUMBER
-   | IMAG_NUMBER
+   | IMAG_NUMBER)
    ;
 
 STRING : STRING_LITERAL;
-LANG_COMMENT : '#' ~[\r\n]* -> channel(HIDDEN);
+LANG_COMMENT : '#' ~[\r\n]* -> skip;
 WS : [ \t\f]+ -> channel(HIDDEN);
 
-NEWLINE : ('\r'? '\n')+;
+NEWLINE : ('\r'? '\n');
 
 mode COMMENT_MODE;
 COMMENT_DATA : ~[\r\n]+ -> popMode;
@@ -142,16 +147,9 @@ fragment ESCAPE_SEQ_NEWLINE : BACKSLASH_NEWLINE;
 
 fragment BACKSLASH_NEWLINE : '\\' NEWLINE;
 
-fragment LONG_INTEGER    : INTEGER ('l' | 'L');
-fragment INTEGER         : DECIMAL_INTEGER | OCT_INTEGER | HEX_INTEGER | BIN_INTEGER;
+fragment INTEGER         : DECIMAL_INTEGER;
 fragment DECIMAL_INTEGER : NON_ZERO_DIGIT DIGIT* | '0';
-fragment OCT_INTEGER     : '0' ('o' | 'O') OCT_DIGIT+ | '0' OCT_DIGIT+;
-fragment HEX_INTEGER     : '0' ('x' | 'X') HEX_DIGIT+;
-fragment BIN_INTEGER     : '0' ('b' | 'B') BIN_DIGIT+;
 fragment NON_ZERO_DIGIT  : [1-9];
-fragment OCT_DIGIT       : [0-7];
-fragment BIN_DIGIT       : '0' | '1';
-fragment HEX_DIGIT       : DIGIT | [a-f] | [A-F];
 
 fragment FLOAT_NUMBER   : POINT_FLOAT;
 fragment POINT_FLOAT    : INT_PART? FRACTION | INT_PART '.';

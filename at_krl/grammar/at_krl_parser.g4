@@ -2,24 +2,28 @@ parser grammar at_krl_parser;
 
 options { tokenVocab=at_krl_lexer; }
 
-knowledge_base: kb_types kb_classes;
+lang_comment: LANG_COMMENT?; // нечувствительость к коментариям #
+newline: NEWLINE+;
 
-kb_types: (kb_type NEWLINE)*?;
-kb_classes: (kb_class NEWLINE)*?;
+knowledge_base: kb_types kb_classes kb_rules;
+
+kb_types: (kb_type newline)*?;
+kb_classes: (kb_class newline)*?;
+kb_rules: (kb_rule newline)*?;
 
 // ТИПЫ
 
 kb_type:
     TYPE NAME
-    NEWLINE kb_type_body
-    (NEWLINE commentary)?;
+    newline kb_type_body
+    (newline commentary)?;
 
 kb_type_body: numeric_type_body | symbolic_type_body | symbolic_type_body? fuzzy_type_body;
 
 fuzzy_type_body:
     FUZ
-    (NEWLINE NUMBER)?
-    (NEWLINE membership_function)+?;
+    (newline NUMBER)?
+    (newline membership_function)+?;
 
 membership_function: mf_def mf_body;
 
@@ -31,41 +35,113 @@ mf_point: NUMBER VBAR NUMBER;
 
 symbolic_type_body:
     SYM
-    (NEWLINE STRING)+?;
+    (newline STRING)+?;
 
 numeric_type_body:
     NUM
-    NEWLINE FROM NUMBER
-    NEWLINE TO NUMBER;
+    newline FROM NUMBER
+    newline TO NUMBER;
 
 // ОБЪЕКТЫ
 
 kb_class:
     OBJECT NAME
-    NEWLINE kb_class_body
-    (NEWLINE commentary)?;
+    newline kb_class_body
+    (newline commentary)?;
 
-kb_class_body: object_body;
+kb_class_body: object_body | event_body | interval_body;
 
 object_body:
-    (GROUP NAME)?
-    NEWLINE attributes
-    (NEWLINE commentary)?;
+    (GROUP NAME)? attributes
+    (newline commentary)?;
 
 attributes:
-    ATTRS?
-    (NEWLINE attribute)+?;
+    (newline ATTRS)?
+    (newline attribute)+?;
 
-attribute: long_attribute | short_attribute;
+attribute: attr_declaration (long_attribute | short_attribute);
 
 short_attribute:
-    ATTR? NAME COLON TYPE? NAME (EQUAL evaluatable)?;
+    COLON TYPE? NAME (EQUAL evaluatable)?;
 
 long_attribute:
-    ATTR NAME
-    NEWLINE TYPE NAME
-    (NEWLINE VALUE evaluatable)?
-    (NEWLINE commentary)?;
+    newline TYPE NAME
+    (newline VALUE newline? evaluatable)?
+    (newline commentary)?;
+
+event_body:
+    GROUP (EVENT | CASED_EVENT)
+    (newline ATTRS)?
+    newline occurance_condition
+    (newline commentary)?;
+
+occurance_condition: 
+    occurance_condition_declaration temporal_attribute_condition
+    (newline commentary)?;
+
+interval_body:
+    GROUP (INTERVAL | CASED_INTERVAL)
+    (newline ATTRS)?
+    newline open
+    newline close
+    (newline commentary)?;
+
+open:
+    open_declaration temporal_attribute_condition
+    (newline commentary)?;
+
+close:
+    close_declaration temporal_attribute_condition
+    (newline commentary)?;
+
+occurance_condition_declaration: ATTR? OCCURANCE_CONDITION;
+open_declaration: ATTR? OPEN;
+close_declaration: ATTR? CLOSE;
+attr_declaration: ATTR? NAME;
+
+temporal_attribute_condition
+    : (
+        ((COLON TYPE? SIMPLE_EXP_TYPE)? EQUAL simple_evaluatable)  // short_open
+        |
+        (
+            newline TYPE SIMPLE_EXP_TYPE 
+            newline VALUE newline? simple_evaluatable
+        )  // long_open
+    );
+
+// правила
+
+kb_rule:
+    RULE NAME
+    (newline TYPE rule_type)?
+    newline kb_rule_condition
+    newline kb_rule_instructions
+    (newline kb_rule_else_instructions)?
+    (newline commentary)?;
+
+rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) simple_evaluatable);
+
+kb_rule_condition: 
+    IF 
+    newline evaluatable;
+
+kb_rule_instructions:
+    THEN 
+    (newline instruction)+;
+
+kb_rule_else_instructions:
+    ELSE 
+    (newline instruction)+;
+
+assign_instruction
+    : (ref_path left_assign evaluatable non_factor?) 
+    | (evaluatable right_assign ref_path non_factor?)
+    ;
+
+instruction: assign_instruction; // | другие типы инструкций
+
+left_assign: LEFT_ASSIGN | EQUAL | COLON_EQ;
+right_assign: RIGHT_ASSIGN;
 
 // простое вычисляемое
 
@@ -87,7 +163,7 @@ simple_operation
     | simple_operation compare simple_operation
     | simple_operation logical_binary simple_operation
     | MINUS simple_operation
-    | LPAR NEWLINE? simple_operation NEWLINE? RPAR
+    | LPAR newline? simple_operation newline? RPAR
     ;
 
 simple_evaluatable: simple_operation;
@@ -102,7 +178,7 @@ non_factor: belief accuracy | belief | accuracy;
 
 // вычисляемое с НЕ-факторами и логикой аллена
 
-kb_value: LPAR NEWLINE? kb_value non_factor NEWLINE? RPAR | STRING | NUMBER;
+kb_value: (LPAR newline? kb_value non_factor newline? RPAR) | simple_value;
 
 kb_reference: LPAR ref_path non_factor? RPAR | ref_path;
 
@@ -112,15 +188,16 @@ kb_operation
     | kb_value EQUAL kb_value non_factor?
     | kb_reference
     | kb_value
-    | LPAR NEWLINE? kb_operation NEWLINE? RPAR
+    | LPAR newline? kb_operation newline? RPAR
     | MINUS kb_operation non_factor?
     | logical_unary kb_operation non_factor?
-    | kb_operation high_p_math non_factor?
-    | kb_operation low_p_math non_factor?
-    | kb_operation compare non_factor?
+    | kb_operation high_p_math kb_operation non_factor?
+    | kb_operation low_p_math kb_operation non_factor?
+    | kb_operation compare kb_operation non_factor?
+    | kb_operation logical_binary kb_operation non_factor?
     | kb_allen_operation;
 
-allen_reference: NAME index?;
+allen_reference: simple_ref index?;
 
 index: LSQB NUMBER RSQB;
 

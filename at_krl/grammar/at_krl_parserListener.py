@@ -8,6 +8,24 @@ else:
 # This class defines a complete listener for a parse tree produced by at_krl_parser.
 class at_krl_parserListener(ParseTreeListener):
 
+    # Enter a parse tree produced by at_krl_parser#lang_comment.
+    def enterLang_comment(self, ctx:at_krl_parser.Lang_commentContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#lang_comment.
+    def exitLang_comment(self, ctx:at_krl_parser.Lang_commentContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#newline.
+    def enterNewline(self, ctx:at_krl_parser.NewlineContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#newline.
+    def exitNewline(self, ctx:at_krl_parser.NewlineContext):
+        pass
+
+
     # Enter a parse tree produced by at_krl_parser#knowledge_base.
     def enterKnowledge_base(self, ctx:at_krl_parser.Knowledge_baseContext):
         pass
@@ -32,6 +50,15 @@ class at_krl_parserListener(ParseTreeListener):
 
     # Exit a parse tree produced by at_krl_parser#kb_classes.
     def exitKb_classes(self, ctx:at_krl_parser.Kb_classesContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#kb_rules.
+    def enterKb_rules(self, ctx:at_krl_parser.Kb_rulesContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#kb_rules.
+    def exitKb_rules(self, ctx:at_krl_parser.Kb_rulesContext):
         pass
 
 
@@ -176,6 +203,177 @@ class at_krl_parserListener(ParseTreeListener):
 
     # Exit a parse tree produced by at_krl_parser#long_attribute.
     def exitLong_attribute(self, ctx:at_krl_parser.Long_attributeContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#event_body.
+    def enterEvent_body(self, ctx:at_krl_parser.Event_bodyContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#event_body.
+    def exitEvent_body(self, ctx:at_krl_parser.Event_bodyContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#occurance_condition.
+    def enterOccurance_condition(self, ctx:at_krl_parser.Occurance_conditionContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#occurance_condition.
+    def exitOccurance_condition(self, ctx:at_krl_parser.Occurance_conditionContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#interval_body.
+    def enterInterval_body(self, ctx:at_krl_parser.Interval_bodyContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#interval_body.
+    def exitInterval_body(self, ctx:at_krl_parser.Interval_bodyContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#open.
+    def enterOpen(self, ctx:at_krl_parser.OpenContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#open.
+    def exitOpen(self, ctx:at_krl_parser.OpenContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#close.
+    def enterClose(self, ctx:at_krl_parser.CloseContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#close.
+    def exitClose(self, ctx:at_krl_parser.CloseContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#occurance_condition_declaration.
+    def enterOccurance_condition_declaration(self, ctx:at_krl_parser.Occurance_condition_declarationContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#occurance_condition_declaration.
+    def exitOccurance_condition_declaration(self, ctx:at_krl_parser.Occurance_condition_declarationContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#open_declaration.
+    def enterOpen_declaration(self, ctx:at_krl_parser.Open_declarationContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#open_declaration.
+    def exitOpen_declaration(self, ctx:at_krl_parser.Open_declarationContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#close_declaration.
+    def enterClose_declaration(self, ctx:at_krl_parser.Close_declarationContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#close_declaration.
+    def exitClose_declaration(self, ctx:at_krl_parser.Close_declarationContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#attr_declaration.
+    def enterAttr_declaration(self, ctx:at_krl_parser.Attr_declarationContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#attr_declaration.
+    def exitAttr_declaration(self, ctx:at_krl_parser.Attr_declarationContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#temporal_attribute_condition.
+    def enterTemporal_attribute_condition(self, ctx:at_krl_parser.Temporal_attribute_conditionContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#temporal_attribute_condition.
+    def exitTemporal_attribute_condition(self, ctx:at_krl_parser.Temporal_attribute_conditionContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#kb_rule.
+    def enterKb_rule(self, ctx:at_krl_parser.Kb_ruleContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#kb_rule.
+    def exitKb_rule(self, ctx:at_krl_parser.Kb_ruleContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#rule_type.
+    def enterRule_type(self, ctx:at_krl_parser.Rule_typeContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#rule_type.
+    def exitRule_type(self, ctx:at_krl_parser.Rule_typeContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#kb_rule_condition.
+    def enterKb_rule_condition(self, ctx:at_krl_parser.Kb_rule_conditionContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#kb_rule_condition.
+    def exitKb_rule_condition(self, ctx:at_krl_parser.Kb_rule_conditionContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#kb_rule_instructions.
+    def enterKb_rule_instructions(self, ctx:at_krl_parser.Kb_rule_instructionsContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#kb_rule_instructions.
+    def exitKb_rule_instructions(self, ctx:at_krl_parser.Kb_rule_instructionsContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#kb_rule_else_instructions.
+    def enterKb_rule_else_instructions(self, ctx:at_krl_parser.Kb_rule_else_instructionsContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#kb_rule_else_instructions.
+    def exitKb_rule_else_instructions(self, ctx:at_krl_parser.Kb_rule_else_instructionsContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#assign_instruction.
+    def enterAssign_instruction(self, ctx:at_krl_parser.Assign_instructionContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#assign_instruction.
+    def exitAssign_instruction(self, ctx:at_krl_parser.Assign_instructionContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#instruction.
+    def enterInstruction(self, ctx:at_krl_parser.InstructionContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#instruction.
+    def exitInstruction(self, ctx:at_krl_parser.InstructionContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#left_assign.
+    def enterLeft_assign(self, ctx:at_krl_parser.Left_assignContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#left_assign.
+    def exitLeft_assign(self, ctx:at_krl_parser.Left_assignContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#right_assign.
+    def enterRight_assign(self, ctx:at_krl_parser.Right_assignContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#right_assign.
+    def exitRight_assign(self, ctx:at_krl_parser.Right_assignContext):
         pass
 
 

@@ -14,5 +14,5 @@ class ATKRLErrorListener(ErrorListener):
             msg = msg.replace(to_convert, "")
             to_convert = codecs.decode(to_convert, "unicode_escape")
             msg = msg + to_convert
-        logger.error(f"line {line}:{column} {msg}")
+        logger.error(f"line {line}:{column + 1} {msg}")
         exit(1)
