@@ -133,7 +133,7 @@ with open(input, 'r') as krl_file:
 2. Перегенерировать модули парсера следующей командой:
 
 ```bash
-docker run -it --rm -v $$(pwd)/at_krl/grammar:/app antlr/antlr4 -Dlanguage=Python3 /app/at_krl.g4
+docker run -it --rm -v $$(pwd)/at_krl/grammar:/app antlr/antlr4 -Dlanguage=Python3 /app/at_krl_lexer.g4 /app/at_krl_parser.g4
 ```
 
 **Действия из пункта "1. Подготовка" нужно выполнить только один раз, дальше можно всегда пользоваться этим образом**

@@ -2,13 +2,13 @@
 
 [[package]]
 name = "antlr4-python3-runtime"
-version = "4.13.1"
-description = "ANTLR 4.13.1 runtime for Python 3"
+version = "4.13.2"
+description = "ANTLR 4.13.2 runtime for Python 3"
 optional = false
 python-versions = "*"
 files = [
-    {file = "antlr4-python3-runtime-4.13.1.tar.gz", hash = "sha256:3cd282f5ea7cfb841537fe01f143350fdb1c0b1ce7981443a2fa8513fddb6d1a"},
-    {file = "antlr4_python3_runtime-4.13.1-py3-none-any.whl", hash = "sha256:78ec57aad12c97ac039ca27403ad61cb98aaec8a3f9bb8144f889aa0fa28b943"},
+    {file = "antlr4_python3_runtime-4.13.2-py3-none-any.whl", hash = "sha256:fe3835eb8d33daece0e799090eda89719dbccee7aa39ef94eed3818cafa5a7e8"},
+    {file = "antlr4_python3_runtime-4.13.2.tar.gz", hash = "sha256:909b647e1d2fc2b70180ac586df3933e38919c85f98ccc656a96cd3f25ef3916"},
 ]
 
 [[package]]
@@ -288,4 +288,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "fa9dfff8350a2da79b90be57afc11a4687206eaa25a0df8e726a70ab299917b1"
+content-hash = "9bf15b639506efb3a41207b46b2e9857092a334c75bf3b0d07737d82f8ecf53c"
