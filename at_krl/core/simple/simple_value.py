@@ -12,7 +12,7 @@ logger = getLogger(__name__)
 
 @dataclass(kw_only=True)
 class SimpleValue(SimpleEvaluatable):
-    tag: str = field(default="value", init=False)
+    tag: Literal["value"] = field(default="value", init=False)
     content: Any
 
     legacy_tag: Literal["TruthVal", "Number", "String"] = field(
