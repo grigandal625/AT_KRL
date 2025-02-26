@@ -199,12 +199,12 @@ kb_operation
 
 allen_reference: simple_ref index?;
 
-index: LSQB NUMBER RSQB;
+index: LSQB evaluatable RSQB;
 
 kb_allen_operation
     : allen_reference allen allen_reference
-    | allen_reference DOT DURATION
-    | NAME DOT OCCURANCE_COUNT;
+    | allen_reference DOT (DURATION | OPEN_TACT | CLOSE_TACT | OCCURANCE_TACT)
+    | ref_path DOT (OCCURANCE_COUNT | OPEN_COUNT | CLOSE_COUNT);
 
 evaluatable: kb_operation;
 
