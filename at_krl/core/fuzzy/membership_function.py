@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from dataclasses import field
 from typing import Iterable
 from typing import List
 from xml.etree.ElementTree import Element
@@ -5,14 +7,15 @@ from xml.etree.ElementTree import Element
 from at_krl.core.kb_entity import KBEntity
 
 
+@dataclass(kw_only=True)
 class MFPoint(KBEntity):
-    x: float | int = None
-    y: float | int = None
+    x: float | int = field(default=None)
+    y: float | int = field(default=None)
 
-    def __init__(self, x: float | int, y: float | int):
-        self.tag = "point"
-        self.x = x
-        self.y = y
+    # def __init__(self, x: float | int, y: float | int):
+    #     self.tag = "point"
+    #     self.x = x
+    #     self.y = y
 
     @property
     def attrs(self) -> dict:
@@ -22,8 +25,8 @@ class MFPoint(KBEntity):
     def krl(self) -> str:
         return f"{self.x}|{self.y}"
 
-    def __dict__(self) -> dict:
-        return dict(x=self.x, y=self.y, **(super().__dict__()))
+    # def __dict__(self) -> dict:
+    #     return dict(x=self.x, y=self.y, **(super().__dict__()))
 
     @staticmethod
     def from_xml(xml: Element) -> "MFPoint":
@@ -35,17 +38,19 @@ class MFPoint(KBEntity):
 
 
 class MembershipFunction(KBEntity):
-    points: List[MFPoint] | Iterable[MFPoint] = None
-    name: str = None
-    min: float = None
-    max: float = None
+    points: List[MFPoint] | Iterable[MFPoint] = field(default_factory=list)
+    name: str = field(default=None)
+    min: float = field(default=None)
+    max: float = field(default=None)
+    tag: str = "parameter"
 
-    def __init__(self, name: str, min: float, max: float, points: List[MFPoint] | Iterable[MFPoint]):
-        self.tag = "parameter"
-        self.name = name
-        self.min = min
-        self.max = max
-        self.points = points
+    # def __init__(self, name: str, min: float, max: float, points: List[MFPoint] | Iterable[MFPoint]):
+    #     self.tag = "parameter"
+    #     self.name = name
+    #     self.min = min
+    #     self.max = max
+    # self.points = points
+    def __post_init__(self):
         for point in self.points:
             point.owner = self
 
@@ -65,13 +70,13 @@ class MembershipFunction(KBEntity):
             mf.append(point.xml)
         return [value, mf]
 
-    def __dict__(self) -> dict:
-        res = super().__dict__()
-        res["name"] = self.name
-        res["min"] = self.min
-        res["max"] = self.max
-        res["points"] = [p.__dict__() for p in self.points]
-        return res
+    # def __dict__(self) -> dict:
+    #     res = super().__dict__()
+    #     res["name"] = self.name
+    #     res["min"] = self.min
+    #     res["max"] = self.max
+    #     res["points"] = [p.__dict__() for p in self.points]
+    #     return res
 
     @staticmethod
     def from_xml(xml: Element) -> "MembershipFunction":

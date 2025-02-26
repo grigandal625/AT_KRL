@@ -14,16 +14,9 @@ if TYPE_CHECKING:
 
 @dataclass(kw_only=True)
 class KBType(KBEntity):
-    id: str = field(init=False, default=False, repr=False)
-    desc: str = field(init=False, default=False, repr=False)
-
-    # def __init__(self, id: str, desc: str = None):
-    #     self.id = id
-    #     self.desc = desc or id
-    #     self.tag = "type"
-
-    def __post_init__(self):
-        self.tag = "type"
+    id: str = field(default=None)
+    desc: str = field(default=None)
+    tag: str = "type"
 
     @property
     def meta(self):
@@ -48,9 +41,6 @@ class KBType(KBEntity):
     @property
     def attrs(self) -> dict:
         return {"id": self.id, "meta": self.meta, "desc": self.desc, **super().attrs}
-
-    def __dict__(self) -> dict:
-        return self.attrs
 
     @staticmethod
     def from_xml(xml: Element) -> "KBType":
@@ -79,14 +69,10 @@ class KBType(KBEntity):
         return owner.xml_owner_path + f"/types/type[{[t.id for t in owner.types].index(self.id)}]"
 
 
+@dataclass(kw_only=True)
 class KBNumericType(KBType):
-    _from: float | int = None
-    _to: float | int = None
-
-    def __init__(self, id: str, from_: float | int, to_: float | int, desc: str = None):
-        super().__init__(id, desc=desc)
-        self._from = from_
-        self._to = to_
+    _from: float | int = field(default=None)
+    _to: float | int = field(default=None)
 
     @property
     def meta(self):
@@ -108,16 +94,6 @@ class KBNumericType(KBType):
         t = Element("to")
         t.text = str(self._to)
         return [f, t]
-
-    def __dict__(self) -> dict:
-        res = super().__dict__()
-        res.update(
-            {
-                "from": self._from,
-                "to": self._to,
-            }
-        )
-        return res
 
     @staticmethod
     def from_xml(xml: Element) -> "KBNumericType":
@@ -148,12 +124,9 @@ class KBNumericType(KBType):
         return isinstance(value, int) or isinstance(value, float)
 
 
+@dataclass(kw_only=True)
 class KBSymbolicType(KBType):
-    values: List[str] = None
-
-    def __init__(self, id: str, values: List[str], desc: str = None):
-        super().__init__(id, desc=desc)
-        self.values = values
+    values: List[str] = field(default_factory=list)
 
     @property
     def meta(self):
@@ -176,11 +149,6 @@ class KBSymbolicType(KBType):
             res.append(value)
         return res
 
-    def __dict__(self) -> dict:
-        res = super().__dict__()
-        res.update({"values": self.values})
-        return res
-
     @staticmethod
     def from_xml(xml: Element) -> "KBSymbolicType":
         return KBSymbolicType(id=xml.attrib.get("id"), desc=xml.attrib.get("desc", None), values=[v.text for v in xml])
@@ -197,12 +165,11 @@ class KBSymbolicType(KBType):
         return True
 
 
+@dataclass(kw_only=True)
 class KBFuzzyType(KBType):
-    membership_functions: List[MembershipFunction] = None
+    membership_functions: List[MembershipFunction] = field(default_factory=list)
 
-    def __init__(self, id: str, membership_functions: List[MembershipFunction], desc: str = None):
-        super().__init__(id, desc=desc)
-        self.membership_functions = membership_functions
+    def __post_init__(self):
         for mf in self.membership_functions:
             mf.owner = self
 
@@ -221,9 +188,6 @@ class KBFuzzyType(KBType):
     @property
     def inner_xml(self) -> List[Element] | Iterable[Element]:
         return [mf.xml for mf in self.membership_functions]
-
-    def __dict__(self) -> dict:
-        return dict(membership_functions=[mf.__dict__() for mf in self.membership_functions], **(super().__dict__()))
 
     @staticmethod
     def from_xml(xml: Element) -> "KBFuzzyType":
