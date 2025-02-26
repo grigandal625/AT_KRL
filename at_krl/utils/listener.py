@@ -17,9 +17,9 @@ from at_krl.core.kb_type import KBSymbolicType
 from at_krl.core.kb_value import KBValue
 from at_krl.core.kb_value import NonFactor
 from at_krl.core.knowledge_base import KnowledgeBase
-from at_krl.core.temporal.kb_allen_operation import KBAllenOperation
-from at_krl.core.temporal.kb_event import KBEvent
-from at_krl.core.temporal.kb_interval import KBInterval
+from at_krl.core.temporal.allen_event import KBEvent
+from at_krl.core.temporal.allen_interval import KBInterval
+from at_krl.core.temporal.allen_operation import AllenOperation
 from at_krl.core.temporal.utils import SimpleOperation
 from at_krl.core.temporal.utils import SimpleReference
 from at_krl.core.temporal.utils import SimpleValue
@@ -359,7 +359,7 @@ class ATKRLListener(at_krlListener):
         ctx.content = ctx.children[0].content
         return super().exitSimple_evaluatable(ctx)
 
-    def exitKb_allen_operation(self, ctx: at_krlParser.Kb_allen_operationContext | Any):
+    def exitallen_operation(self, ctx: at_krlParser.allen_operationContext | Any):
         sign = ctx.children[1].getText()
         left_id = ctx.children[0].getText()
         right_id = ctx.children[2].getText()
@@ -367,8 +367,8 @@ class ATKRLListener(at_krlListener):
         left = self._search_interval_or_event(left_id)
         right = self._search_interval_or_event(right_id)
 
-        ctx.content = KBAllenOperation(sign, left, right)
-        return super().exitKb_allen_operation(ctx)
+        ctx.content = AllenOperation(sign, left, right)
+        return super().exitallen_operation(ctx)
 
     def _search_interval_or_event(self, class_id):
         res = self.KB.get_interval_by_id(class_id)

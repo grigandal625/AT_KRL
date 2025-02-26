@@ -1,5 +1,7 @@
 import json
 from copy import deepcopy
+from dataclasses import dataclass
+from dataclasses import field
 from typing import Union
 from xml.etree.ElementTree import Element
 
@@ -7,22 +9,13 @@ from at_krl.core.kb_entity import KBEntity
 from at_krl.core.non_factor import NonFactor
 
 
+@dataclass(kw_only=True)
 class Evaluatable(KBEntity):
-    non_factor: NonFactor = None
-    convert_non_factor: bool = None
+    non_factor: NonFactor = field(default_factory=NonFactor)
 
-    def __init__(self, non_factor: Union["NonFactor", None] = None):
-        self.convert_non_factor = non_factor is not None
-        if non_factor is None:
-            non_factor = NonFactor()
-        self.non_factor = non_factor
-        self.non_factor.owner = self
-
-    def __dict__(self) -> dict:
-        result = super().__dict__()
-        if self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized:
-            result.update({"non_factor": self.non_factor.__dict__()})
-        return result
+    def __post_init__(self):
+        if self.non_factor:
+            self.non_factor.owner = self
 
     @property
     def xml(self) -> Element:
@@ -44,10 +37,10 @@ class Evaluatable(KBEntity):
         if xml.tag in TAGS_SIGNS:
             return KBOperation.from_xml(xml)
 
-        from at_krl.core.temporal.kb_allen_operation import KBAllenOperation
+        from at_krl.core.temporal.allen_operation import AllenOperation
 
         if xml.tag in ["EvRel", "IntRel", "EvIntRel"]:
-            return KBAllenOperation.from_xml(xml)
+            return AllenOperation.from_xml(xml)
         raise ValueError("Unknown evaluatable tag: " + xml.tag)
 
     @staticmethod
@@ -62,14 +55,14 @@ class Evaluatable(KBEntity):
 
         if d["tag"] in TAGS_SIGNS:
             return KBOperation.from_dict(d)
-        from at_krl.core.temporal.kb_allen_operation import TEMPORAL_TAGS_SIGNS, KBAllenOperation
+        from at_krl.core.temporal.allen_operation import TEMPORAL_TAGS_SIGNS, AllenOperation
 
         if (
             d.get("tag", None) in ["EvRel", "IntRel", "EvIntRel"]
             or d.get("Value", None) in TEMPORAL_TAGS_SIGNS
             or d.get("sign", None) in TEMPORAL_TAGS_SIGNS
         ):
-            return KBAllenOperation.from_dict(d)
+            return AllenOperation.from_dict(d)
         raise ValueError("Unknown evaluatable tag: " + d["tag"])
 
     def evaluate(self, *args, **kwargs) -> "KBValue":

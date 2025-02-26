@@ -476,12 +476,39 @@ class at_krl_parserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by at_krl_parser#kb_evaluatable.
+    def enterKb_evaluatable(self, ctx:at_krl_parser.Kb_evaluatableContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#kb_evaluatable.
+    def exitKb_evaluatable(self, ctx:at_krl_parser.Kb_evaluatableContext):
+        pass
+
+
     # Enter a parse tree produced by at_krl_parser#allen_reference.
     def enterAllen_reference(self, ctx:at_krl_parser.Allen_referenceContext):
         pass
 
     # Exit a parse tree produced by at_krl_parser#allen_reference.
     def exitAllen_reference(self, ctx:at_krl_parser.Allen_referenceContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#allen_indexed_reference.
+    def enterAllen_indexed_reference(self, ctx:at_krl_parser.Allen_indexed_referenceContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#allen_indexed_reference.
+    def exitAllen_indexed_reference(self, ctx:at_krl_parser.Allen_indexed_referenceContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#allen_attribute_expression.
+    def enterAllen_attribute_expression(self, ctx:at_krl_parser.Allen_attribute_expressionContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#allen_attribute_expression.
+    def exitAllen_attribute_expression(self, ctx:at_krl_parser.Allen_attribute_expressionContext):
         pass
 
 
@@ -494,12 +521,21 @@ class at_krl_parserListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by at_krl_parser#kb_allen_operation.
-    def enterKb_allen_operation(self, ctx:at_krl_parser.Kb_allen_operationContext):
+    # Enter a parse tree produced by at_krl_parser#allen_operation.
+    def enterAllen_operation(self, ctx:at_krl_parser.Allen_operationContext):
         pass
 
-    # Exit a parse tree produced by at_krl_parser#kb_allen_operation.
-    def exitKb_allen_operation(self, ctx:at_krl_parser.Kb_allen_operationContext):
+    # Exit a parse tree produced by at_krl_parser#allen_operation.
+    def exitAllen_operation(self, ctx:at_krl_parser.Allen_operationContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#allen_evaluatable.
+    def enterAllen_evaluatable(self, ctx:at_krl_parser.Allen_evaluatableContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#allen_evaluatable.
+    def exitAllen_evaluatable(self, ctx:at_krl_parser.Allen_evaluatableContext):
         pass
 
 

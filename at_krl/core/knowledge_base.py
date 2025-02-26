@@ -6,8 +6,8 @@ from at_krl.core.kb_class import KBClass
 from at_krl.core.kb_rule import KBRule
 from at_krl.core.kb_type import KBType
 from at_krl.core.kb_value import KBEntity
-from at_krl.core.temporal.kb_event import KBEvent
-from at_krl.core.temporal.kb_interval import KBInterval
+from at_krl.core.temporal.allen_event import KBEvent
+from at_krl.core.temporal.allen_interval import KBInterval
 
 
 class KBClasses:

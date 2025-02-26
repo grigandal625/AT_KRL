@@ -1,9 +1,9 @@
 from xml.etree.ElementTree import fromstring
 from xml.etree.ElementTree import tostring
 
-from at_krl.core.temporal.kb_allen_operation import KBAllenOperation
-from at_krl.core.temporal.kb_allen_operation import KBEvent
-from at_krl.core.temporal.kb_allen_operation import KBInterval
+from at_krl.core.temporal.allen_operation import AllenOperation
+from at_krl.core.temporal.allen_operation import KBEvent
+from at_krl.core.temporal.allen_operation import KBInterval
 
 
 def test_event_interval():
@@ -56,19 +56,19 @@ def test_event_interval():
     print()
     print(tostring(ev2.xml, encoding="unicode"))
 
-    operation = KBAllenOperation("d", event, interval)
+    operation = AllenOperation("d", event, interval)
     print()
     print(operation.krl)
     print()
     print(tostring(operation.xml, encoding="unicode"))
-    op2 = KBAllenOperation.from_xml(operation.xml)
+    op2 = AllenOperation.from_xml(operation.xml)
     op2.validate_tag([event], [interval])
     print()
     print(op2.krl)
     print()
     print(tostring(op2.xml, encoding="unicode"))
 
-    op3 = KBAllenOperation("d", event.id, interval.id)
+    op3 = AllenOperation("d", event.id, interval.id)
     print(op3.krl)
     op3.get_tag_by_events_and_intervals(events=[event], intervals=[interval])
     print(op3)

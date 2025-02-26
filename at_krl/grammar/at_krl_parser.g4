@@ -62,11 +62,11 @@ attributes:
 attribute: attr_declaration (long_attribute | short_attribute);
 
 short_attribute:
-    COLON TYPE? NAME (EQUAL evaluatable)?;
+    COLON TYPE? NAME (EQUAL kb_operation)?;
 
 long_attribute:
     newline TYPE NAME
-    (newline VALUE newline? evaluatable)?
+    (newline VALUE newline? kb_operation)?
     (newline commentary)?;
 
 event_body:
@@ -119,7 +119,7 @@ kb_rule:
     (newline kb_rule_else_instructions)?
     (newline commentary)?;
 
-rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) simple_evaluatable);
+rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) evaluatable);
 
 kb_rule_condition: 
     IF 
@@ -182,7 +182,7 @@ kb_value: (LPAR newline? kb_value non_factor newline? RPAR) | simple_value;
 
 kb_reference: LPAR ref_path non_factor? RPAR | ref_path;
 
-kb_operation
+kb_operation // для значений атрибутов объектов (без логики Аллена)
     : ref_path EQUAL kb_value non_factor?
     | kb_value EQUAL ref_path non_factor?
     | kb_value EQUAL kb_value non_factor?
@@ -194,19 +194,35 @@ kb_operation
     | kb_operation high_p_math kb_operation non_factor?
     | kb_operation low_p_math kb_operation non_factor?
     | kb_operation compare kb_operation non_factor?
-    | kb_operation logical_binary kb_operation non_factor?
-    | kb_allen_operation;
+    | kb_operation logical_binary kb_operation non_factor?;
 
-allen_reference: simple_ref index?;
+kb_evaluatable // для значений в правилах (с логикой Аллена)
+    : ref_path EQUAL kb_value non_factor?
+    | kb_value EQUAL ref_path non_factor?
+    | kb_value EQUAL kb_value non_factor?
+    | kb_reference
+    | kb_value
+    | LPAR newline? kb_evaluatable newline? RPAR
+    | MINUS kb_evaluatable non_factor?
+    | logical_unary kb_evaluatable non_factor?
+    | kb_evaluatable high_p_math kb_evaluatable non_factor?
+    | kb_evaluatable low_p_math kb_evaluatable non_factor?
+    | kb_evaluatable compare kb_evaluatable non_factor?
+    | kb_evaluatable logical_binary kb_evaluatable non_factor? 
+    | allen_evaluatable;
+
+allen_reference: simple_ref;
+allen_indexed_reference: allen_reference index?;
+allen_attribute_expression
+    : allen_indexed_reference DOT (DURATION | OPEN_TACT | CLOSE_TACT | OCCURANCE_TACT)
+    | allen_reference DOT (OCCURANCE_COUNT | OPEN_COUNT | CLOSE_COUNT);
 
 index: LSQB evaluatable RSQB;
 
-kb_allen_operation
-    : allen_reference allen allen_reference
-    | allen_reference DOT (DURATION | OPEN_TACT | CLOSE_TACT | OCCURANCE_TACT)
-    | ref_path DOT (OCCURANCE_COUNT | OPEN_COUNT | CLOSE_COUNT);
+allen_operation: allen_indexed_reference allen allen_reference;
+allen_evaluatable: allen_operation | allen_attribute_expression;
 
-evaluatable: kb_operation;
+evaluatable: kb_evaluatable;
 
 logical_binary
     : DOUBLEVBAR

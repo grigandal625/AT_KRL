@@ -15,16 +15,27 @@ if TYPE_CHECKING:
 @dataclass(kw_only=True)
 class KBEntity:
     tag: str = field(init=False)
-    _validated: bool = field(init=False, default=False, repr=False)
     owner: "KBEntity" = field(init=False, default=None, repr=False)
+
+    _validated: bool = field(init=False, default=False, repr=False)
 
     @property
     def __dict__(self):
-        return {f.name: getattr(self, f.name) for f in fields(self) if f.repr}
+        return {f.name: self._represent(getattr(self, f.name)) for f in fields(self) if f.repr}
+
+    @staticmethod
+    def _represent(item):
+        if isinstance(item, KBEntity):
+            return item.__dict__
+        if isinstance(item, list):
+            return [KBEntity._represent(i) for i in item]
+        if isinstance(item, dict):
+            return {key: KBEntity._represent(value) for key, value in item.items()}
+        return item
 
     @staticmethod
     def from_dict(d: dict) -> "KBEntity":
-        pass
+        raise NotImplementedError("Not implemented")
 
     @property
     def attrs(self) -> dict:
@@ -36,7 +47,7 @@ class KBEntity:
 
     @property
     def krl(self) -> str:
-        pass
+        raise NotImplementedError("Not implemented")
 
     def getText(self) -> str:
         return self.krl
@@ -57,14 +68,14 @@ class KBEntity:
 
     @staticmethod
     def from_xml(xml: Element) -> "KBEntity":
-        pass
+        raise NotImplementedError("Not implemented")
 
     def validate(self, kb: "KnowledgeBase", *args, **kwargs):
-        self._validated = True
+        raise NotImplementedError("Not implemented")
 
     @property
     def xml_owner_path(self) -> str:
-        pass
+        raise NotImplementedError("Not implemented")
 
     @property
     def _unknown_ownership(self):

@@ -4,9 +4,9 @@ from xml.etree.ElementTree import Element
 
 from at_krl.core.kb_operation import KBOperation
 from at_krl.core.non_factor import NonFactor
-from at_krl.core.temporal.kb_event import KBClass
-from at_krl.core.temporal.kb_event import KBEvent
-from at_krl.core.temporal.kb_interval import KBInterval
+from at_krl.core.temporal.allen_event import KBClass
+from at_krl.core.temporal.allen_event import KBEvent
+from at_krl.core.temporal.allen_interval import KBInterval
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
@@ -31,7 +31,7 @@ TEMPORAL_TAGS_SIGNS = {
 }
 
 
-class KBAllenOperation(KBOperation):
+class AllenOperation(KBOperation):
     _left: str = None
     _right: str = None
     _left_kb: KBEvent | KBInterval = None
@@ -259,21 +259,21 @@ class KBAllenOperation(KBOperation):
         return res
 
     @staticmethod
-    def from_xml(xml: Element) -> "KBAllenOperation":
+    def from_xml(xml: Element) -> "AllenOperation":
         rel_type = xml.tag
         left = xml[0].attrib.get("Name")
         right = xml[1].attrib.get("Name")
         sign = xml.attrib.get("Value")
-        return KBAllenOperation(sign, left, right, rel_type=rel_type)
+        return AllenOperation(sign, left, right, rel_type=rel_type)
 
     @staticmethod
-    def from_dict(d: dict) -> "KBAllenOperation":
+    def from_dict(d: dict) -> "AllenOperation":
         rel_type = d.get("tag")
         left = d.get("left").get("Name")
         right = d.get("right").get("Name")
         sign = d.get("Value")
 
-        return KBAllenOperation(sign, left, right, rel_type=rel_type)
+        return AllenOperation(sign, left, right, rel_type=rel_type)
 
     @property
     def left(self) -> KBEvent | KBInterval | None:
