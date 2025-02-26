@@ -1,4 +1,7 @@
 from collections.abc import Iterable as ITR
+from dataclasses import dataclass
+from dataclasses import field
+from dataclasses import fields
 from typing import Iterable
 from typing import List
 from typing import TYPE_CHECKING
@@ -9,13 +12,15 @@ if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
 
 
+@dataclass(kw_only=True)
 class KBEntity:
-    tag: str = None
-    _validated: bool = False
-    owner: "KBEntity" = None
+    tag: str = field(init=False)
+    _validated: bool = field(init=False, default=False, repr=False)
+    owner: "KBEntity" = field(init=False, default=None, repr=False)
 
-    def __dict__(self) -> dict:
-        return dict(tag=self.tag)
+    @property
+    def __dict__(self):
+        return {f.name: getattr(self, f.name) for f in fields(self) if f.repr}
 
     @staticmethod
     def from_dict(d: dict) -> "KBEntity":

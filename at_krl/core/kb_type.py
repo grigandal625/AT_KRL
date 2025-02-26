@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from dataclasses import field
 from typing import Iterable
 from typing import List
 from typing import TYPE_CHECKING
@@ -10,13 +12,17 @@ if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
 
 
+@dataclass(kw_only=True)
 class KBType(KBEntity):
-    id: str = None
-    desc: str = None
+    id: str = field(init=False, default=False, repr=False)
+    desc: str = field(init=False, default=False, repr=False)
 
-    def __init__(self, id: str, desc: str = None):
-        self.id = id
-        self.desc = desc or id
+    # def __init__(self, id: str, desc: str = None):
+    #     self.id = id
+    #     self.desc = desc or id
+    #     self.tag = "type"
+
+    def __post_init__(self):
         self.tag = "type"
 
     @property
