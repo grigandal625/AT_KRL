@@ -1,10 +1,11 @@
 import json
 from dataclasses import dataclass
 from dataclasses import field
-from typing import Any, Literal
+from logging import getLogger
+from typing import Any
+from typing import Literal
 
 from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
-from logging import getLogger
 
 logger = getLogger(__name__)
 
@@ -13,8 +14,10 @@ logger = getLogger(__name__)
 class SimpleValue(SimpleEvaluatable):
     tag: str = field(default="value", init=False)
     content: Any
-    
-    legacy_tag: Literal["TruthVal", "Number", "String"] = field(init=False, default=None) # для совместимости со старым темпоральным решателем
+
+    legacy_tag: Literal["TruthVal", "Number", "String"] = field(
+        init=False, default=None
+    )  # для совместимости со старым темпоральным решателем
 
     def __post_init__(self):
         if isinstance(self.content, bool):
@@ -25,7 +28,7 @@ class SimpleValue(SimpleEvaluatable):
             self.legacy_tag = "String"
         else:
             logger.warning(f'Unsupported content type "{type(self.content)}" of {self.content} for legacy value')
-    
+
     @property
     def legacy_avalible(self) -> bool:
         return self.legacy_tag in ["TruthVal", "Number", "String"]

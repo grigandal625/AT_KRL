@@ -17,7 +17,7 @@ class KBEvent(AllenClass):
     occurance_condition: SimpleEvaluatable
 
     legacy_tag = Literal["Event"] = field(init=False, repr=False, default="Event")
-    
+
     def __post_init__(self):
         self.occurance_condition.owner = self
         return super().__post_init__()
@@ -25,7 +25,7 @@ class KBEvent(AllenClass):
     @property
     def inner_xml(self) -> Element:
         result = Element(tag="properties")
-        occurance_condition = Element(tag="property", attrib={'id': 'УслВозн', 'type': 'ЛогВыр'})
+        occurance_condition = Element(tag="property", attrib={"id": "УслВозн", "type": "ЛогВыр"})
         value = Element(tag="value")
         value.append(self.occurance_condition.xml)
         occurance_condition.append(value)

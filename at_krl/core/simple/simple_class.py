@@ -18,4 +18,4 @@ class SimpleClass(KBEntity):
 
     @property
     def attrs(self) -> dict:
-        return {'id': self.id, 'desc': self.desc, 'group': self.group}
+        return {"id": self.id, "desc": self.desc, "group": self.group}

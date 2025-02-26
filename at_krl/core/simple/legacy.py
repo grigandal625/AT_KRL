@@ -1,7 +1,10 @@
-from dataclasses import dataclass, field
-from typing import Union, List
 from collections.abc import Iterable
+from dataclasses import dataclass
+from dataclasses import field
+from typing import List
+from typing import Union
 from xml.etree.ElementTree import Element
+
 
 @dataclass(kw_only=True)
 class LegacyMixin:

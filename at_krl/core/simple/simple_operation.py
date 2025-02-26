@@ -1,18 +1,19 @@
 from dataclasses import dataclass
 from dataclasses import field
+from logging import getLogger
 from typing import List
 from typing import Optional
 from xml.etree.ElementTree import Element
 
 from at_krl.core.simple.operation_tags import TAGS_SIGNS
 from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
-from logging import getLogger
 
 logger = getLogger(__name__)
 
 EQ_OPERATION_NAMES = [s for s, v in TAGS_SIGNS.items() if v.get("meta", None) == "eq"]
 LOG_OPERATION_NAMES = [s for s, v in TAGS_SIGNS.items() if v.get("meta", None) == "log"]
 AR_OPERATION_NAMES = [s for s, v in TAGS_SIGNS.items() if v.get("meta", None) == "math"]
+
 
 def is_binary(left, right):
     return left is not None and right is not None
@@ -50,8 +51,7 @@ class SimpleOperation(SimpleEvaluatable):
         elif self.operation_name in AR_OPERATION_NAMES:
             self.legacy_tag = "ArOp"
         else:
-            logger.warning(f'Unknown operation {self.sign} for legacy operation {self.operation_name}')
-
+            logger.warning(f"Unknown operation {self.sign} for legacy operation {self.operation_name}")
 
     @property
     def legacy_avalible(self) -> bool:

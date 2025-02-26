@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from dataclasses import field
-from typing import Optional, Literal
+from typing import Literal
+from typing import Optional
 from xml.etree.ElementTree import Element
 
 from at_krl.core.kb_entity import KBEntity
@@ -15,7 +16,9 @@ class SimpleReference(SimpleEvaluatable):
 
     target: KBEntity = field(default=None, init=False, repr=False)
 
-    legacy_tag: Literal["Attribute"] = field(init=False, default="Attribute") # для совместимости со старым темпоральным решателем
+    legacy_tag: Literal["Attribute"] = field(
+        init=False, default="Attribute"
+    )  # для совместимости со старым темпоральным решателем
 
     def __post_init__(self):
         self.ref.owner = self
