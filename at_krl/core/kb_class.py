@@ -1,4 +1,5 @@
 import logging
+from dataclasses import dataclass
 from typing import Iterable
 from typing import List
 from typing import TYPE_CHECKING
@@ -317,12 +318,14 @@ class KBInstance(KBEntity):
         return isinstance(self._type_or_class, KBClass)
 
 
+@dataclass(kw_only=True)
 class KBProperty(KBInstance):
     source: str = None
     # устанавливается при валидации или в конструкторе родительского класса
     owner_class: KBClass = None
     # устанавливается при вызове create_instance родительского класса
     owner: KBInstance = None
+    tag = "property"
 
     def __init__(
         self, id: str, type_or_class_id: str, desc: str = None, source: str = None, value: Evaluatable = None
