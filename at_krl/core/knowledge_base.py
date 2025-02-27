@@ -15,7 +15,7 @@ from at_krl.core.temporal.allen_interval import KBInterval
 
 @dataclass(kw_only=True)
 class KBClasses(KBEntity):
-    tag: Literal["classes"] = field(init=False, default_factory="classes")
+    tag: Literal["classes"] = field(init=False, default="classes")
     objects: List[KBClass] = field(init=False, default_factory=list)
     events: List[KBEvent] = field(init=False, default_factory=list)
     intervals: List[KBInterval] = field(init=False, default_factory=list)
