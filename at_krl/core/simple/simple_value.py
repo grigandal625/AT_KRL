@@ -30,7 +30,7 @@ class SimpleValue(SimpleEvaluatable):
             logger.warning(f'Unsupported content type "{type(self.content)}" of {self.content} for legacy value')
 
     @property
-    def legacy_avalible(self) -> bool:
+    def legacy_available(self) -> bool:
         return self.legacy_tag in ["TruthVal", "Number", "String"]
 
     @property

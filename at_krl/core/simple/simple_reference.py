@@ -37,7 +37,7 @@ class SimpleReference(SimpleEvaluatable):
         return None
 
     @property
-    def legacy_avalible(self) -> bool:
+    def legacy_available(self) -> bool:
         return True
 
     @property

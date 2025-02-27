@@ -1,7 +1,10 @@
 import logging
 from dataclasses import dataclass
+from dataclasses import field
 from typing import Iterable
 from typing import List
+from typing import Literal
+from typing import Optional
 from typing import TYPE_CHECKING
 from typing import Union
 from xml.etree.ElementTree import Element
@@ -10,8 +13,10 @@ from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_rule import KBRule
 from at_krl.core.kb_type import KBType
 from at_krl.core.kb_value import Evaluatable
-from at_krl.core.kb_value import KBValue
-from at_krl.exceptions.kb_exception import KBValidationError
+from at_krl.core.simple.legacy import LegacyMixin
+from at_krl.core.simple.simple_class import SimpleClass
+from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
+from at_krl.core.simple.simple_reference import SimpleReference
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
@@ -19,26 +24,10 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class KBClass(KBEntity):
-    id: str = None
-    desc: str = None
-    properties: List["KBProperty"] = None
-    rules: List[KBRule] = None
-    group: str = None
-
-    def __init__(
-        self, id: str, properties: List["KBProperty"], rules: List[KBRule] = None, group: str = None, desc: str = None
-    ):
-        self.id = id
-        self.desc = desc or id
-        self.properties = properties
-        for prop in self.properties:
-            prop.owner_class = self
-        self.rules = rules or []
-        for rule in self.rules:
-            rule.owner = self
-        self.tag = "class"
-        self.group = group or "ГРУППА1"
+@dataclass(kw_only=True)
+class KBClass(SimpleClass):
+    properties: Optional[List["PropertyDefinition"]] = field(default_factory=list)
+    rules: Optional[List[KBRule]] = field(default_factory=list)
 
     @property
     def attrs(self) -> dict:
@@ -60,320 +49,198 @@ class KBClass(KBEntity):
             return [properties, rules]
         return [properties]
 
-    def __dict__(self) -> dict:
-        return dict(
-            **(super().__dict__()),
-            **(self.attrs),
-            properties=[p.__dict__() for p in self.properties],
-            rules=[r.__dict__() for r in self.rules],
-        )
-
-    @property
-    def krl(self) -> str:
-        group = self.group or "ГРУППА1"
-
-        return f"""ОБЪЕКТ {self.id}
-ГРУППА {group}
-{self.inner_krl}КОММЕНТАРИЙ {self.desc}
-"""
-
     @property
     def inner_krl(self):
-        properties_krl = "АТРИБУТЫ\n" + "\n".join([p.krl for p in self.properties])
-        rules_krl = ("ПРАВИЛА\n" + "\n".join([r.krl for r in self.rules]) + "\n") if len(self.rules) else ""
-        return properties_krl + "\n" + rules_krl
-
-    @staticmethod
-    def from_xml(xml: Element) -> "KBClass":
-        id = xml.attrib.get("id")
-        desc = xml.attrib.get("desc", id)
-        group = xml.attrib.get("desc", id)
-        properties = []
-        ps = xml.find("properties")
-        if ps:
-            properties = [KBProperty.from_xml(p) for p in ps]
-        rules = []
-        rs = xml.find("rules")
-        if rs:
-            rules = [KBRule.from_xml(r) for r in rs]
-        return KBClass(id, properties, rules=rules, desc=desc, group=group)
-
-    @staticmethod
-    def from_dict(d: dict):
-        id = d.get("id")
-        desc = d.get("desc", id)
-        group = d.get("group", "ГРУППА1")
-        properties = [KBProperty.from_dict(p) for p in d.get("properties", [])]
-        rules = [KBRule.from_dict(r) for r in d.get("rules", [])]
-        return KBClass(id, properties, rules, desc=desc, group=group)
-
-    def validate_properties(self, kb: "KnowledgeBase"):
-        for prop in self.properties:
-            prop.validate(kb, self)
-
-    def validate_rules(self, kb: "KnowledgeBase"):
+        krl = f"""    АТРИБУТЫ
+{self.properties_krl}"""
         if self.rules:
-            inst = self.create_instance(kb, self.id + "_instance", self.desc, ignore_validation=True)
-            for rule in self.rules:
-                rule.validate(kb, inst=inst)
+            krl += f"""
+    ПРАВИЛА
+{self.rules_krl}"""
+        krl += f"""
+    КОММЕНТАРИЙ {self.desc or self.id}"""
+        return krl
 
-    def validate(self, kb: "KnowledgeBase", *args, **kwargs):
-        if not self._validated:
-            self.validate_properties(kb)
-            self.validate_rules(kb)
-            self._validated = True
+    @property
+    def properties_krl(self) -> str:
+        indent = " " * 4
+        properties_krl = ""
+        for p in self.properties:
+            property_krl_lines = p.krl.split("\n")
+            property_krl = "\n".join([indent + line for line in property_krl_lines])
+            properties_krl += property_krl + "\n"
+        return properties_krl
 
-    def create_instance(
-        self,
-        kb: "KnowledgeBase",
-        _id: str,
-        desc: str = None,
-        source: str = None,
-        as_property: bool = False,
-        ignore_validation: bool = False,
-    ) -> Union["KBInstance", "KBProperty"]:
-        if (not self._validated) and (not ignore_validation):
-            self.validate(kb)
-
-        if as_property:
-            inst = KBProperty(_id, self.id, desc, source)
-        else:
-            inst = KBInstance(_id, self.id, desc=desc)
-        inst.value = KBValue(id(inst))
-        inst._type_or_class = self
-        inst._validated = True
-        for prop in self.properties:
-            if prop.is_type_instance:
-                prop_inst = KBProperty(prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
-            elif prop.is_class_instance:
-                prop_inst = prop._type_or_class.create_instance(
-                    kb, prop.id, prop.desc, prop.source, as_property=True, ignore_validation=ignore_validation
-                )
-            prop_inst._type_or_class = prop.type_or_class
-            prop_inst.owner_class = self
-            prop_inst.owner = inst
-            prop_inst._validated = True
-
-            inst.properties_instances.append(prop_inst)
-        return inst
+    @property
+    def rules_krl(self) -> str:
+        indent = " " * 4
+        rules_krl = ""
+        for r in self.rules:
+            rule_krl_lines = r.krl.split("\n")
+            rule_krl = "\n".join([indent + line for line in rule_krl_lines])
+            rules_krl += "\n" + rule_krl + "\n"
+        return rules_krl
 
     @property
     def xml_owner_path(self):
-        from at_krl.core.knowledge_base import KnowledgeBase
-
-        owner: KnowledgeBase = self.owner
+        owner: "KnowledgeBase" = self.owner
         if (owner.world == self) and not owner.with_world:
             return owner.xml_owner_path + f"/classes/class[{len(owner.classes.objects)}]"
         return owner.xml_owner_path + f"/classes/class[{owner.classes.objects.index(self)}]"
 
 
-class KBInstance(KBEntity):
-    id: str = None
-    type_or_class_id: str = None
-    _type_or_class: Union["KBType", KBClass] = None
-    desc: str = None
-    value: Evaluatable = None
-    properties_instances: List["KBProperty"] = None
+@dataclass(kw_only=True)
+class TypeOrClassReference(SimpleReference):
+    target: Union[KBType, KBClass] = field(default=None, init=False, repr=False)
 
-    def __init__(self, id: str, type_or_class_id: str, desc: str = None, value: Evaluatable = None) -> None:
-        self.id = id
-        self.type_or_class_id = type_or_class_id
-        self.desc = desc or id
-        self.tag = "instance"
-        self.value = value
-        self.properties_instances = []  # наполнятся при валидации
+
+@dataclass(kw_only=True)
+class PropertyDefinition(KBEntity, LegacyMixin):  # LegacyMixin для совместимости со старым АТ-РЕШАТЕЛЕМ
+    tag: Literal["property"] = field(init=False, default="property")
+    id: str
+    type: TypeOrClassReference
+    desc: Optional[str] = field(default=None)
+    value: Optional[SimpleEvaluatable] = field(default=None)
+    source: Optional[str] = field(default="asked")
+    question: Optional[str] = field(default=None)
+    query: Optional[str] = field(default=None)
+
+    legacy_tag: Literal["property"] = field(init=False, default="property")
+
+    @property
+    def krl(self):
+        krl = f"""    АТРИБУТ {self.id}
+        ТИП {self.type.target.id}"""
+        if self.value:
+            krl += f"""
+        ЗНАЧЕНИЕ
+            {self.value.krl}"""
+
+        krl += f"""
+        КОММЕНТАРИЙ {self.desc or self.id}"""
+        return krl
+
+    @property
+    def attrs(self):
+        return {"id": self.id, "desc": self.desc, "source": self.source}
+
+    @property
+    def legacy_attrs(self):
+        return {"id": self.id, "type": self.type.krl, "desc": self.desc, "source": self.source}
+
+    @property
+    def inner_xml(self):
+        type_element = Element("type")
+        type_element.append(self.type.xml)
+        result = [type_element]
+        if self.value:
+            result.append(self.value.xml)
+        if self.question:
+            question = Element("question")
+            question.text = self.question
+            result.append(question)
+        if self.query:
+            query = Element("query")
+            query.text = self.query
+            result.append(query)
+        return result
+
+    @property
+    def legacy_inner_xml(self):
+        result = []
+        if self.value:
+            result.append(self.value.xml)
+        if self.question:
+            question = Element("question")
+            question.text = self.question
+            result.append(question)
+        if self.query:
+            query = Element("query")
+            query.text = self.query
+            result.append(query)
+        return result
+
+    @property
+    def legacy_available(self):
+        return True
+
+
+@dataclass(kw_only=True)
+class KBInstance(KBEntity, LegacyMixin):
+    tag: Literal["instance"] = field(init=False, default="instance")
+    id: str
+    type: TypeOrClassReference
+    desc: Optional[str] = field(default=None)
+    value: Optional[Evaluatable] = field(default=None)
+    create: bool = field(default=True)
+    properties: Optional[List["KBProperty"]] = field(default_factory=list)
+
+    legacy_tag: Literal["instance"] = field(init=False, default="instance", repr=False)
 
     @property
     def attrs(self) -> dict:
-        return {"id": self.id, "type": self.type_or_class_id, "desc": self.desc}
+        return {"id": self.id, "desc": self.desc, "create": self.create}
 
     @property
-    def type_or_class(self) -> Union["KBType", KBClass, None]:
-        return self._type_or_class
+    def legacy_attrs(self) -> dict:
+        return {"id": self.id, "type": self.type.krl, "desc": self.desc, "create": self.create}
+
+    @property
+    def inner_xml(self) -> List[Element]:
+        type_element = Element("type")
+        type_element.append(self.type.xml)
+        result = [type_element]
+        if self.value:
+            result.append(self.value.xml)
+        if self.properties:
+            properties = Element("properties")
+            for prop in self.properties:
+                properties.append(prop.xml)
+            result.append(properties)
+        return result
+
+    @property
+    def legacy_inner_xml(self) -> List[Element]:
+        result = []
+        if self.value:
+            result.append(self.value.xml)
+        if self.properties:
+            properties = Element("properties")
+            for prop in self.properties:
+                properties.append(prop.xml)
+            result.append(properties)
+        return result
 
     @property
     def krl(self) -> str:
-        value_krl = ""
+        krl = f"""ЭКЗЕМПЛЯР {self.id}
+ТИП {self.type.id}"""
         if self.value:
-            value_krl = f"\nЗНАЧЕНИЕ\n{self.value.krl}"
-        return f"""{self.krl_type} {self.id}
-ТИП {self.type_or_class_id}{value_krl}
-КОММЕНТАРИЙ {self.desc}"""
+            krl += f"""
+ЗНАЧЕНИЕ
+    {self.value.krl}"""
+
+        if self.properties:
+            krl += f"""
+АТРИБУТЫ
+{self.properties_krl}"""
+
+        krl += f"""
+КОММЕНТАРИЙ {self.desc or self.id}"""
+        return krl
 
     @property
-    def krl_type(self):
-        return "ЭКЗЕМПЛЯР"
-
-    @property
-    def inner_xml(self) -> List[Element] | None:
-        if self.value is None:
-            return None
-
-        prop_inst_xml = Element("properties_instances")
-        for prop in self.properties_instances:
-            prop_inst_xml.append(prop.xml)
-        return [self.value.xml, prop_inst_xml]
-
-    def __dict__(self) -> dict:
-        res = dict(**(self.attrs), **(super().__dict__()))
-        if self.value is not None:
-            res["value"] = self.value.__dict__()
-        res["properties_instances"] = []
-        for prop in self.properties_instances:
-            res["properties_instances"].append(prop.__dict__())
-        return res
-
-    @staticmethod
-    def from_xml(xml: Element) -> "KBInstance":
-        value = None
-        if xml.find("value"):
-            value = Evaluatable.from_xml(xml.find("value"))
-        res = KBInstance(
-            id=xml.attrib.get("id"),
-            type_or_class_id=xml.attrib.get("type"),
-            desc=xml.attrib.get("desc", None),
-            value=value,
-        )
-        if xml.find("properties_instances"):
-            for prop_inst_xml in xml.find("properties_instances"):
-                prop_inst = KBProperty.from_xml(prop_inst_xml)
-                res.properties_instances.append(prop_inst)
-        return res
-
-    @staticmethod
-    def from_dict(d: dict) -> "KBInstance":
-        value = None
-        if d.get("value", None) is not None:
-            value = Evaluatable.from_dict(d.get("value"))
-        res = KBInstance(id=d.get("id"), type_or_class_id=d.get("type"), desc=d.get("desc", None), value=value)
-        for prop_inst_dict in d.get("properties_instances", []):
-            prop_inst = KBProperty.from_dict(prop_inst_dict)
-            res.properties_instances.append(prop_inst)
-        return res
-
-    def validate(self, kb: "KnowledgeBase", *args, **kwargs):
-        if not self._validated:
-            for t in kb.types:
-                if t.id == self.type_or_class_id:
-                    self._type_or_class = t
-                    if (self.value is not None) and (not self._type_or_class.validate_value(self.value)):
-                        self._validated = False
-                    else:
-                        self._validated = True
-                    if not self._validated:
-                        msg = f'"{self.id}" Failed on {self.tag} validation'
-                        logger.warning(msg)
-                        if kb._raise_on_validation:
-                            raise KBValidationError(msg, kb_entity=self)
-                    return
-
-            if self.type_or_class_id == "world":
-                self._validate_by_obj(kb.world, kb)
-            else:
-                for obj in kb.classes.objects:
-                    self._validate_by_obj(obj, kb)
-
-            if not self._validated:
-                msg = f'Failed validation on {self.tag} "{self.id}"'
-                logger.warning(msg)
-                if kb._raise_on_validation:
-                    raise KBValidationError(msg, kb_entity=self)
-
-    def _validate_by_obj(self, obj: "KBClass", kb: "KnowledgeBase"):
-        if obj.id == self.type_or_class_id:
-            self._type_or_class = obj
-            if not obj._validated:
-                obj.validate_properties(kb)
-            for prop in obj.properties:
-                having_prop_instances = [p for p in self.properties_instances if p.id == prop.id]
-                if len(having_prop_instances) == 1:
-                    having_prop = having_prop_instances[0]
-                    having_prop.owner_class = self._type_or_class
-                    having_prop.owner = self
-                    having_prop.validate(kb)
-                elif len(having_prop_instances) > 1:
-                    msg = f'Found more than one property instance "{prop.id}"'
-                    logger.warning(msg)
-                    if kb._raise_on_validation:
-                        raise KBValidationError(msg, kb_entity=self)
-                else:
-                    if prop.is_type_instance:
-                        prop_inst = KBProperty(prop.id, prop.type_or_class_id, prop.desc, prop.source, prop.value)
-                    elif prop.is_class_instance:
-                        prop_inst = prop._type_or_class.create_instance(
-                            kb, prop.id, prop.desc, prop.source, as_property=True
-                        )
-                    prop_inst.owner_class = self._type_or_class
-                    prop_inst.owner = self
-                    prop_inst._validated = True
-                    self.properties_instances.append(prop_inst)
-            self._validated = True
-
-    @property
-    def is_type_instance(self):
-        return isinstance(self._type_or_class, KBType)
-
-    @property
-    def is_class_instance(self):
-        return isinstance(self._type_or_class, KBClass)
+    def properties_krl(self) -> str:
+        indent = " " * 4
+        properties_krl = ""
+        for prop in self.properties:
+            property_krl_lines = prop.krl.split("\n")
+            property_krl = "\n".join([indent + line for line in property_krl_lines])
+            properties_krl += property_krl + "\n"
+        return properties_krl
 
 
 @dataclass(kw_only=True)
 class KBProperty(KBInstance):
-    source: str = None
-    # устанавливается при валидации или в конструкторе родительского класса
-    owner_class: KBClass = None
-    # устанавливается при вызове create_instance родительского класса
-    owner: KBInstance = None
-    tag = "property"
-
-    def __init__(
-        self, id: str, type_or_class_id: str, desc: str = None, source: str = None, value: Evaluatable = None
-    ) -> None:
-        super().__init__(id, type_or_class_id, desc=desc, value=value)
-        self.tag = "property"
-        self.source = source
-
-    @property
-    def attrs(self) -> dict:
-        return dict(**(super().attrs), source=self.source or "asked")
-
-    @property
-    def krl_type(self):
-        return "АТРИБУТ"
-
-    @staticmethod
-    def from_xml(xml: Element) -> "KBProperty":
-        value = None
-        if xml.find("value") is not None:
-            value = Evaluatable.from_xml(xml.find("value"))
-        res = KBProperty(
-            id=xml.attrib.get("id"),
-            type_or_class_id=xml.attrib.get("type"),
-            desc=xml.attrib.get("desc"),
-            source=xml.attrib.get("source"),
-            value=value,
-        )
-        if xml.find("properties_instances"):
-            for prop_inst_xml in xml.find("properties_instances"):
-                prop_inst = KBProperty.from_xml(prop_inst_xml)
-                res.properties_instances.append(prop_inst)
-        return res
-
-    @staticmethod
-    def from_dict(d: dict) -> "KBProperty":
-        value = None
-        if d.get("value", None) is not None:
-            value = Evaluatable.from_dict(d.get("value"))
-        res = KBProperty(
-            id=d.get("id"), type_or_class_id=d.get("type"), desc=d.get("desc"), source=d.get("source"), value=value
-        )
-        for prop_inst_dict in d.get("properties_instances", []):
-            prop_inst = KBProperty.from_dict(prop_inst_dict)
-            res.properties_instances.append(prop_inst)
-        return res
-
-    @property
-    def xml_owner_path(self):
-        idx = self.owner_class.properties.index(self)
-        return self.owner_class.xml_owner_path + f"/properties/property[{idx}]"
+    tag: Literal["property"] = field(init=False, default="property")
+    legacy_tag: Literal["property"] = field(init=False, default="property", repr=False)

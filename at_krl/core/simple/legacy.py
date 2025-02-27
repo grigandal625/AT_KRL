@@ -20,7 +20,7 @@ class LegacyMixin:
 
     @property
     def legacy_xml(self) -> Element:
-        if not self.legacy_avalible:
+        if not self.legacy_available:
             raise ValueError(f"Legacy representation is not avalible for {self.krl}")
         result = Element(self.legacy_tag, self.legacy_attrs)
         inner_xml = self.legacy_inner_xml
@@ -35,5 +35,5 @@ class LegacyMixin:
         return result
 
     @property
-    def legacy_avalible(self) -> bool:
+    def legacy_available(self) -> bool:
         raise NotImplementedError("Not implemented")

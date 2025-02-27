@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 class KBType(KBEntity):
     id: str = field(default=None)
     desc: str = field(default=None)
-    tag: str = "type"
+    tag: str = field(init=False, default="type")
 
     @property
     def meta(self):
@@ -41,24 +41,6 @@ class KBType(KBEntity):
     @property
     def attrs(self) -> dict:
         return {"id": self.id, "meta": self.meta, "desc": self.desc, **super().attrs}
-
-    @staticmethod
-    def from_xml(xml: Element) -> "KBType":
-        if (xml.attrib.get("meta") == "numeric") or (xml.attrib.get("meta") == "number"):
-            return KBNumericType.from_xml(xml)
-        elif (xml.attrib.get("meta") == "string") or (xml.attrib.get("meta") == "symbolic"):
-            return KBSymbolicType.from_xml(xml)
-        elif xml.attrib.get("meta") == "fuzzy":
-            return KBFuzzyType.from_xml(xml)
-
-    @staticmethod
-    def from_dict(d: dict) -> "KBType":
-        if (d.get("meta") == "numeric") or (d.get("meta") == "number"):
-            return KBNumericType.from_dict(d)
-        elif (d.get("meta") == "string") or (d.get("meta") == "symbolic"):
-            return KBSymbolicType.from_dict(d)
-        elif d.get("meta") == "fuzzy":
-            return KBFuzzyType.from_dict(d)
 
     def validate_value(self, value) -> bool:
         return False

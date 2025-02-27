@@ -33,10 +33,6 @@ class KBEntity:
             return {key: KBEntity._represent(value) for key, value in item.items()}
         return item
 
-    @staticmethod
-    def from_dict(d: dict) -> "KBEntity":
-        raise NotImplementedError("Not implemented")
-
     @property
     def attrs(self) -> dict:
         return {}
@@ -65,10 +61,6 @@ class KBEntity:
                 for e in inner_xml:
                     result.append(e)
         return result
-
-    @staticmethod
-    def from_xml(xml: Element) -> "KBEntity":
-        raise NotImplementedError("Not implemented")
 
     def validate(self, kb: "KnowledgeBase", *args, **kwargs):
         raise NotImplementedError("Not implemented")

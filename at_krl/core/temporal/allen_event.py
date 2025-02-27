@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 class KBEvent(AllenClass):
     tag: Literal["event"] = field(init=False, default="event")
     occurance_condition: SimpleEvaluatable
+    group: Literal["СОБЫТИЕ"] = field(init=False, default="СОБЫТИЕ")
 
     legacy_tag = Literal["Event"] = field(init=False, repr=False, default="Event")
 
@@ -37,6 +38,14 @@ class KBEvent(AllenClass):
         formula = Element("Formula")
         formula.append(self.occurance_condition.legacy_xml)
         return formula
+
+    @property
+    def legacy_attrs(self) -> dict:
+        return {"Name": self.id}
+
+    @property
+    def legacy_available(self) -> bool:
+        raise True
 
     @property
     def inner_krl(self):

@@ -27,8 +27,6 @@ class SimpleOperation(SimpleEvaluatable):
     right: Optional[SimpleEvaluatable] = field(default=None)
     operation_name: str = field(init=False, repr=False)
 
-    legacy_tag: str = field(init=False)
-
     def __post_init__(self):
         for op in TAGS_SIGNS:
             if self.sign in TAGS_SIGNS[op]["values"]:
@@ -54,7 +52,7 @@ class SimpleOperation(SimpleEvaluatable):
             logger.warning(f"Unknown operation {self.sign} for legacy operation {self.operation_name}")
 
     @property
-    def legacy_avalible(self) -> bool:
+    def legacy_available(self) -> bool:
         return self.legacy_tag in ["EqOp", "LogOp", "ArOp"]
 
     @property

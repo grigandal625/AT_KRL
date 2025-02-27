@@ -19,3 +19,17 @@ class SimpleClass(KBEntity):
     @property
     def attrs(self) -> dict:
         return {"id": self.id, "desc": self.desc, "group": self.group}
+
+    @property
+    def krl(self) -> str:
+        group = self.group or "ГРУППА1"
+
+        return f"""ОБЪЕКТ {self.id}
+ГРУППА {group}
+{self.inner_krl}
+КОММЕНТАРИЙ {self.desc}
+"""
+
+    @property
+    def inner_krl(self):
+        raise NotImplementedError("Not implemented")
