@@ -14,7 +14,7 @@ class SimpleReference(SimpleEvaluatable):
     id: str
     ref: "SimpleReference" = field(default=None)
 
-    target: KBEntity = field(default=None, init=False, repr=False)
+    target: KBEntity = field(default=None, init=False, metadata={"serialize": False})
 
     legacy_tag: Literal["Attribute"] = field(
         init=False, default="Attribute"

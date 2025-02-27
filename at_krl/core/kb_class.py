@@ -91,7 +91,7 @@ class KBClass(SimpleClass):
 
 @dataclass(kw_only=True)
 class TypeOrClassReference(SimpleReference):
-    target: Union[KBType, KBClass] = field(default=None, init=False, repr=False)
+    target: Union[KBType, KBClass] = field(default=None, init=False, metadata={"serialize": False})
 
 
 @dataclass(kw_only=True)
@@ -175,7 +175,7 @@ class KBInstance(KBEntity, LegacyMixin):
     create: bool = field(default=True)
     properties: Optional[List["KBProperty"]] = field(default_factory=list)
 
-    legacy_tag: Literal["instance"] = field(init=False, default="instance", repr=False)
+    legacy_tag: Literal["instance"] = field(init=False, default="instance", metadata={"serialize": False})
 
     @property
     def attrs(self) -> dict:
@@ -243,4 +243,4 @@ class KBInstance(KBEntity, LegacyMixin):
 @dataclass(kw_only=True)
 class KBProperty(KBInstance):
     tag: Literal["property"] = field(init=False, default="property")
-    legacy_tag: Literal["property"] = field(init=False, default="property", repr=False)
+    legacy_tag: Literal["property"] = field(init=False, default="property", metadata={"serialize": False})

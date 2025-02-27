@@ -16,9 +16,9 @@ logger = getLogger(__name__)
 
 @dataclass(kw_only=True)
 class AllenReference(SimpleReference, AllenEvaluatable):
-    ref: Any = field(init=False, repr=False, default=None)
+    ref: Any = field(init=False, metadata={"serialize": False}, default=None)
     index: Optional["SimpleEvaluatable"] = field(default=None)
-    target: "AllenClass" = field(init=False, repr=False)
+    target: "AllenClass" = field(init=False, metadata={"serialize": False})
     meta: Literal["allen_reference"] = field(init=False, default="allen_reference")
 
     def __post_init__(self):

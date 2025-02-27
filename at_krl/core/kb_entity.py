@@ -15,13 +15,16 @@ if TYPE_CHECKING:
 @dataclass(kw_only=True)
 class KBEntity:
     tag: str = field(init=False)
-    owner: "KBEntity" = field(init=False, default=None, repr=False)
+    owner: "KBEntity" = field(init=False, default=None, metadata={"serialize": False})
 
-    _validated: bool = field(init=False, default=False, repr=False)
+    _validated: bool = field(init=False, default=False, metadata={"serialize": False})
 
-    @property
-    def __dict__(self):
-        return {f.name: self._represent(getattr(self, f.name)) for f in fields(self) if f.repr}
+    def to_representation(self):
+        return {
+            (f.metadata.get("alias") or f.name): self._represent(getattr(self, f.name))
+            for f in fields(self)
+            if f.metadata.get("serialize", True)
+        }
 
     @staticmethod
     def _represent(item):

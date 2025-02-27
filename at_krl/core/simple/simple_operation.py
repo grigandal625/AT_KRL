@@ -22,10 +22,10 @@ def is_binary(left, right):
 @dataclass(kw_only=True)
 class SimpleOperation(SimpleEvaluatable):
     tag: str = field(init=False)
-    sign: str = field(repr=False)
+    sign: str = field(metadata={"serialize": False})
     left: SimpleEvaluatable
     right: Optional[SimpleEvaluatable] = field(default=None)
-    operation_name: str = field(init=False, repr=False)
+    operation_name: str = field(init=False, metadata={"serialize": False})
 
     def __post_init__(self):
         for op in TAGS_SIGNS:

@@ -1,4 +1,6 @@
-from xml.etree.ElementTree import Element
+from dataclasses import dataclass
+from dataclasses import field
+from typing import Literal
 
 from at_krl.core.kb_entity import KBEntity
 
@@ -12,27 +14,12 @@ def num(v):
     return f
 
 
+@dataclass
 class NonFactor(KBEntity):
-    belief: float = None
-    probability: float = None
-    accuracy: float = None
-    initialized: bool = None
-
-    def __init__(self, belief: float = None, probability: float = None, accuracy: float = None, *args, **kwargs):
-        self.belief = num(belief if belief is not None else 50)
-        self.probability = num(probability if probability is not None else 100)
-        self.accuracy = num(accuracy if accuracy is not None else 0)
-        self.tag = "with"
-        self.initialized = (belief is not None) and (probability is not None) or (accuracy is not None)
-
-    def __dict__(self) -> dict:
-        return dict(belief=self.belief, probability=self.probability, accuracy=self.accuracy, **super().__dict__())
-
-    @staticmethod
-    def from_dict(d: dict | None) -> "NonFactor":
-        if d is None:
-            return NonFactor()
-        return NonFactor(**d)
+    tag: Literal["with"] = field(init=False, default="with")
+    belief: float = field(default=50)
+    probability: float = field(default=100)
+    accuracy: float = field(default=0)
 
     @property
     def is_default(self):
@@ -41,18 +28,6 @@ class NonFactor(KBEntity):
     @property
     def attrs(self) -> dict:
         return {"belief": str(self.belief), "probability": str(self.probability), "accuracy": str(self.accuracy)}
-
-    @staticmethod
-    def from_xml(xml: Element | None) -> "NonFactor":
-        return (
-            NonFactor(
-                belief=xml.attrib.get("belief", None),
-                probability=xml.attrib.get("probability", None),
-                accuracy=xml.attrib.get("accuracy", None),
-            )
-            if xml is not None
-            else NonFactor()
-        )
 
     @property
     def krl(self) -> str:

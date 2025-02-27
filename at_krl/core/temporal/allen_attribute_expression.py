@@ -29,7 +29,7 @@ NAME_TO_ID = {
 
 @dataclass(kw_only=True)
 class AllenAttributeExpression(SimpleReference, AllenEvaluatable):
-    ref: AllenReference = field(repr=False)
+    ref: AllenReference = field(metadata={"serialize": False})
     id: Literal["ДЛИТЕЛЬНОСТЬ", "КОЛ_ВОЗН", "КОЛ_НАЧ", "КОЛ_ОКОНЧ", "ТАКТ_НАЧ", "ТАКТ_ОКОНЧ", "ТАКТ_ВОЗН"]
     meta: Literal["allen_attribute_expression"] = field(init=False, default="allen_attribute_expression")
 

@@ -119,7 +119,7 @@ kb_rule:
     (newline kb_rule_else_instructions)?
     (newline commentary)?;
 
-rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) evaluatable);
+rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) NUMBER);
 
 kb_rule_condition: 
     IF 

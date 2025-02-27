@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from dataclasses import field
 from typing import Iterable
 from typing import List
+from typing import Literal
 from typing import TYPE_CHECKING
 from xml.etree.ElementTree import Element
 
@@ -17,14 +18,8 @@ class KBType(KBEntity):
     id: str = field(default=None)
     desc: str = field(default=None)
     tag: str = field(init=False, default="type")
-
-    @property
-    def meta(self):
-        return "abstract"
-
-    @property
-    def krl_type(self):
-        return "АБСТРАКТНЫЙ"
+    meta: str = field(init=False, default="abstract")
+    krl_type: str = field(init=False, default="АБСТРАКТНЫЙ", metadata={"serialize": False})
 
     @property
     def krl(self):
@@ -36,14 +31,14 @@ class KBType(KBEntity):
 
     @property
     def inner_krl(self):
-        return ""
+        raise NotImplementedError("Not implemented")
 
     @property
     def attrs(self) -> dict:
-        return {"id": self.id, "meta": self.meta, "desc": self.desc, **super().attrs}
+        return {"id": self.id, "meta": self.meta, "desc": self.desc}
 
     def validate_value(self, value) -> bool:
-        return False
+        raise NotImplementedError("Not implemented")
 
     @property
     def xml_owner_path(self):
@@ -53,74 +48,53 @@ class KBType(KBEntity):
 
 @dataclass(kw_only=True)
 class KBNumericType(KBType):
-    _from: float | int = field(default=None)
-    _to: float | int = field(default=None)
-
-    @property
-    def meta(self):
-        return "number"
-
-    @property
-    def krl_type(self):
-        return "ЧИСЛО"
+    from_: float | int = field(metadata={"alias": "from"})
+    to_: float | int = field(metadata={"alias": "to"})
+    meta: Literal["number"] = field(init=False, default="number")
+    krl_type: str = field(init=False, default="ЧИСЛО", metadata={"serialize": False})
 
     @property
     def inner_krl(self):
-        return f"""ОТ {self._from}
-ДО {self._to}"""
+        return f"""    ОТ {self.from_}
+    ДО {self.to_}"""
 
     @property
     def inner_xml(self) -> List[Element]:
         f = Element("from")
-        f.text = str(self._from)
+        f.text = str(self.from_)
         t = Element("to")
-        t.text = str(self._to)
+        t.text = str(self.to_)
         return [f, t]
 
-    @staticmethod
-    def from_xml(xml: Element) -> "KBNumericType":
-        from_ = float(xml.find("from").text)
-        to_ = float(xml.find("to").text)
-        id = xml.attrib.get("id")
-        desc = xml.attrib.get("desc", None)
-        return KBNumericType(id, from_, to_, desc=desc)
-
-    @staticmethod
-    def from_dict(d: dict) -> "KBNumericType":
-        id = d.get("id")
-        desc = d.get("desc", None)
-        from_ = d.get("from")
-        to_ = d.get("to")
-        return KBNumericType(id, from_, to_, desc=desc)
-
     def validate_value(self, value) -> bool:
-        from at_krl.core.kb_value import Evaluatable
+        from at_krl.core.simple.simple_value import SimpleValue
+        from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
 
-        if isinstance(value, Evaluatable):
+        if isinstance(value, SimpleValue):
+            try:
+                float(value.content)
+            except ValueError:
+                return False
+        elif isinstance(value, SimpleEvaluatable):
             return True
+
         try:
-            value = float(value)
+            value = float(value.content)
         except ValueError:
-            pass
+            return False
 
         return isinstance(value, int) or isinstance(value, float)
 
 
 @dataclass(kw_only=True)
 class KBSymbolicType(KBType):
-    values: List[str] = field(default_factory=list)
-
-    @property
-    def meta(self):
-        return "string"
-
-    @property
-    def krl_type(self):
-        return "СИМВОЛ"
+    values: List[str]
+    meta: Literal["string"] = field(init=False, default="string")
+    krl_type: str = field(init=False, default="СИМВОЛ", metadata={"serialize": False})
 
     @property
     def inner_krl(self):
-        return '"' + '"\n"'.join(self.values) + '"'
+        return '    "' + '"\n"'.join(self.values) + '"'
 
     @property
     def inner_xml(self) -> List[Element]:
@@ -131,70 +105,34 @@ class KBSymbolicType(KBType):
             res.append(value)
         return res
 
-    @staticmethod
-    def from_xml(xml: Element) -> "KBSymbolicType":
-        return KBSymbolicType(id=xml.attrib.get("id"), desc=xml.attrib.get("desc", None), values=[v.text for v in xml])
-
-    @staticmethod
-    def from_dict(d: dict) -> "KBSymbolicType":
-        return KBSymbolicType(
-            id=d.get("id"),
-            desc=d.get("desc", None),
-            values=d.get("values", []),
-        )
-
     def validate_value(self, value) -> bool:
         return True
 
 
 @dataclass(kw_only=True)
 class KBFuzzyType(KBType):
-    membership_functions: List[MembershipFunction] = field(default_factory=list)
+    membership_functions: List[MembershipFunction]
+    meta: Literal["fuzzy"] = field(init=False, default="fuzzy")
+    krl_type: str = field(init=False, default="НЕЧЕТКИЙ", metadata={"serialize": False})
 
     def __post_init__(self):
         for mf in self.membership_functions:
             mf.owner = self
 
     @property
-    def meta(self):
-        return "fuzzy"
-
-    @property
-    def krl_type(self):
-        return "НЕЧЕТКИЙ"
-
-    @property
     def inner_krl(self):
-        return f"{len(self.membership_functions)}\n" + "\n".join([mf.krl for mf in self.membership_functions])
+        return f"{len(self.membership_functions)}\n" + "    \n".join([mf.krl for mf in self.membership_functions])
 
     @property
     def inner_xml(self) -> List[Element] | Iterable[Element]:
         return [mf.xml for mf in self.membership_functions]
 
-    @staticmethod
-    def from_xml(xml: Element) -> "KBFuzzyType":
-        return KBFuzzyType(
-            id=xml.attrib.get("id"),
-            desc=xml.attrib.get("desc", None),
-            membership_functions=[MembershipFunction.from_xml(parameter) for parameter in xml],
-        )
-
-    @staticmethod
-    def from_dict(d: dict) -> "KBFuzzyType":
-        return KBFuzzyType(
-            id=d.get("id"),
-            desc=d.get("desc", None),
-            membership_functions=[
-                MembershipFunction.from_dict(parameter) for parameter in d.get("membership_functions", [])
-            ],
-        )
-
     def validate_value(self, value) -> bool:
         from at_krl.core.kb_value import Evaluatable
 
-        if isinstance(value, Evaluatable):
-            return True
         if isinstance(value, MembershipFunction):
             return True
-        else:
+        if not isinstance(value, Evaluatable):
             return str(value) in [mf.name for mf in self.membership_functions]
+        else:
+            return True

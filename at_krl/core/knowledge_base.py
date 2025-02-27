@@ -1,26 +1,25 @@
+from dataclasses import dataclass
+from dataclasses import field
 from datetime import datetime
 from typing import List
+from typing import Literal
 from xml.etree.ElementTree import Element
 
 from at_krl.core.kb_class import KBClass
+from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_rule import KBRule
 from at_krl.core.kb_type import KBType
-from at_krl.core.kb_value import KBEntity
 from at_krl.core.temporal.allen_event import KBEvent
 from at_krl.core.temporal.allen_interval import KBInterval
 
 
-class KBClasses:
-    tag = "classes"
-    objects: List[KBClass]
-    events: List[KBEvent]
-    intervals: List[KBInterval]
-    owner: "KnowledgeBase" = None
-
-    def __init__(self):
-        self.objects = []
-        self.events = []
-        self.intervals = []
+@dataclass(kw_only=True)
+class KBClasses(KBEntity):
+    tag: Literal["classes"] = field(init=False, default_factory="classes")
+    objects: List[KBClass] = field(init=False, default_factory=list)
+    events: List[KBEvent] = field(init=False, default_factory=list)
+    intervals: List[KBInterval] = field(init=False, default_factory=list)
+    owner: None = field(init=False, default=None)
 
     @property
     def all(self):
@@ -31,12 +30,12 @@ class KBClasses:
         return self.intervals + self.events
 
 
+@dataclass
 class KnowledgeBase(KBEntity):
-    types: List[KBType]
-    classes: KBClasses
-    rules: List[KBRule]
-    with_world: bool
-    _world: KBClass
+    types: List[KBType] = field(init=False, default_factory=list)
+    classes: KBClasses = field(init=False, default_factory=KBClasses)
+    rules: List[KBRule] = field(init=False, default_factory=list)
+    _world: bool = field(default=None)
 
     _raise_on_validation: bool = False
     _validated: bool = False
@@ -117,7 +116,7 @@ class KnowledgeBase(KBEntity):
         res = "\n".join([t.krl for t in self.types])
         for property in self.world.properties:
             object_id = property.id
-            class_id = property.type_or_class_id
+            class_id = property.type.krl
 
             cls = self.get_object_by_id(class_id)
             cls.id = object_id

@@ -186,8 +186,8 @@ def serializedATN():
         0,0,424,421,1,0,0,0,424,425,1,0,0,0,425,65,1,0,0,0,426,436,5,28,
         0,0,427,432,5,29,0,0,428,429,3,2,1,0,429,430,5,30,0,0,430,433,1,
         0,0,0,431,433,5,42,0,0,432,428,1,0,0,0,432,431,1,0,0,0,433,434,1,
-        0,0,0,434,436,3,118,59,0,435,426,1,0,0,0,435,427,1,0,0,0,436,67,
-        1,0,0,0,437,438,5,4,0,0,438,439,3,2,1,0,439,440,3,118,59,0,440,69,
+        0,0,0,434,436,5,103,0,0,435,426,1,0,0,0,435,427,1,0,0,0,436,67,1,
+        0,0,0,437,438,5,4,0,0,438,439,3,2,1,0,439,440,3,118,59,0,440,69,
         1,0,0,0,441,445,5,5,0,0,442,443,3,2,1,0,443,444,3,76,38,0,444,446,
         1,0,0,0,445,442,1,0,0,0,446,447,1,0,0,0,447,445,1,0,0,0,447,448,
         1,0,0,0,448,71,1,0,0,0,449,453,5,6,0,0,450,451,3,2,1,0,451,452,3,
@@ -2967,9 +2967,8 @@ class at_krl_parser ( Parser ):
         def PERIODIC(self):
             return self.getToken(at_krl_parser.PERIODIC, 0)
 
-        def evaluatable(self):
-            return self.getTypedRuleContext(at_krl_parser.EvaluatableContext,0)
-
+        def NUMBER(self):
+            return self.getToken(at_krl_parser.NUMBER, 0)
 
         def COLON(self):
             return self.getToken(at_krl_parser.COLON, 0)
@@ -3029,7 +3028,7 @@ class at_krl_parser ( Parser ):
                     raise NoViableAltException(self)
 
                 self.state = 434
-                self.evaluatable()
+                self.match(at_krl_parser.NUMBER)
                 pass
             else:
                 raise NoViableAltException(self)
