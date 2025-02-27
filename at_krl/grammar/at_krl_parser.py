@@ -224,7 +224,7 @@ def serializedATN():
         95,1,0,0,0,551,552,3,92,46,0,552,553,3,94,47,0,553,557,1,0,0,0,554,
         557,3,92,46,0,555,557,3,94,47,0,556,551,1,0,0,0,556,554,1,0,0,0,
         556,555,1,0,0,0,557,97,1,0,0,0,558,560,5,36,0,0,559,561,3,2,1,0,
-        560,559,1,0,0,0,560,561,1,0,0,0,561,562,1,0,0,0,562,563,3,98,49,
+        560,559,1,0,0,0,560,561,1,0,0,0,561,562,1,0,0,0,562,563,3,82,41,
         0,563,565,3,96,48,0,564,566,3,2,1,0,565,564,1,0,0,0,565,566,1,0,
         0,0,566,567,1,0,0,0,567,568,5,39,0,0,568,571,1,0,0,0,569,571,3,82,
         41,0,570,558,1,0,0,0,570,569,1,0,0,0,571,99,1,0,0,0,572,573,5,36,
@@ -4108,8 +4108,8 @@ class at_krl_parser ( Parser ):
         def LPAR(self):
             return self.getToken(at_krl_parser.LPAR, 0)
 
-        def kb_value(self):
-            return self.getTypedRuleContext(at_krl_parser.Kb_valueContext,0)
+        def simple_value(self):
+            return self.getTypedRuleContext(at_krl_parser.Simple_valueContext,0)
 
 
         def non_factor(self):
@@ -4124,10 +4124,6 @@ class at_krl_parser ( Parser ):
                 return self.getTypedRuleContexts(at_krl_parser.NewlineContext)
             else:
                 return self.getTypedRuleContext(at_krl_parser.NewlineContext,i)
-
-
-        def simple_value(self):
-            return self.getTypedRuleContext(at_krl_parser.Simple_valueContext,0)
 
 
         def getRuleIndex(self):
@@ -4166,7 +4162,7 @@ class at_krl_parser ( Parser ):
 
 
                 self.state = 562
-                self.kb_value()
+                self.simple_value()
                 self.state = 563
                 self.non_factor()
                 self.state = 565

@@ -21,7 +21,8 @@ class SimpleReference(SimpleEvaluatable):
     )  # для совместимости со старым темпоральным решателем
 
     def __post_init__(self):
-        self.ref.owner = self
+        if self.ref:
+            self.ref.owner = self
 
     @property
     def krl(self) -> str:

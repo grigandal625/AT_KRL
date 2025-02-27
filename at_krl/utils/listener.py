@@ -1,13 +1,10 @@
-import json
-from typing import Any
 from typing import Union
 
-from at_krl.core.kb_value import KBValue
-from at_krl.core.kb_value import NonFactor
 from at_krl.core.knowledge_base import KnowledgeBase
-from at_krl.core.simple.simple_value import SimpleValue
-from at_krl.grammar.at_krl_parser import at_krl_parser
 from at_krl.grammar.at_krl_parserListener import at_krl_parserListener
+from at_krl.utils.listener_parts import evaluatable
+from at_krl.utils.listener_parts import non_factor
+from at_krl.utils.listener_parts import simple
 
 
 def uni(s: str) -> Union[str, int, float]:
@@ -23,47 +20,27 @@ def uni(s: str) -> Union[str, int, float]:
             return res
 
 
-class ATKRLListener(at_krl_parserListener):
+class ATKRLListener(
+    non_factor.ListenerForNonFactorMixin,
+    simple.ListenerForSimpleMixin,
+    evaluatable.ListenerForEvaluatableMixin,
+    at_krl_parserListener,
+):
     KB = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        at_krl_parserListener.__init__(self, *args, **kwargs)
         self.KB = KnowledgeBase()
 
-    def exitBelief(self, ctx: at_krl_parser.BeliefContext | Any):
-        ctx.content = {"belief": float(ctx.children[2].getText()), "probability": float(ctx.children[4].getText())}
+    @staticmethod
+    def search_context_by_type(children, ctx_type):
+        for child in children:
+            if isinstance(child, ctx_type):
+                return child
 
-    def exitAccuracy(self, ctx: at_krl_parser.AccuracyContext | Any):
-        ctx.content = {"accuracy": float(ctx.children[1].getText())}
-
-    def exitNon_factor(self, ctx: at_krl_parser.Non_factorContext | Any):
-        ctx.content = NonFactor(
-            **{
-                k: v
-                for child in ctx.children
-                if hasattr(child, "content") and isinstance(child.content, dict)
-                for k, v in child.content.items()
-            }
-        )
-
-    def exitSimple_value(self, ctx: at_krl_parser.Simple_valueContext):
-        ctx.content = SimpleValue(content=json.loads(ctx.getText()))
-
-    def exitKb_value(self, ctx: at_krl_parser.Kb_valueContext | Any):
-        non_factor = None
-
-        if len(ctx.children) > 2:
-            non_factor = ctx.children[2].content
-
-        kb_value = KBValue.from_simple(ctx.children[0])
-        kb_value.non_factor = non_factor
-        ctx.content = kb_value
-
-    # def exitRef_path(self, ctx: at_krl_parser.Ref_pathContext | Any):
-    #     if len(ctx.children) == 1:
-    #         ctx.content = KBReference(ctx.getText())
-    #     else:
-    #         ctx.content = KBReference(ctx.children[0].getText(), ctx.children[2].content)
+    @staticmethod
+    def filter_by_type(children, ctx_type):
+        return [child for child in children if isinstance(child, ctx_type)]
 
     # def exitKb_rule(self, ctx: at_krl_parser.Kb_ruleContext | Any):
     #     if ctx.children:

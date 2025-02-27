@@ -178,7 +178,7 @@ non_factor: belief accuracy | belief | accuracy;
 
 // вычисляемое с НЕ-факторами и логикой аллена
 
-kb_value: (LPAR newline? kb_value non_factor newline? RPAR) | simple_value;
+kb_value: (LPAR newline? simple_value non_factor newline? RPAR) | simple_value;
 
 kb_reference: LPAR ref_path non_factor? RPAR | ref_path;
 

@@ -35,7 +35,7 @@ class KnowledgeBase(KBEntity):
     types: List[KBType] = field(init=False, default_factory=list)
     classes: KBClasses = field(init=False, default_factory=KBClasses)
     rules: List[KBRule] = field(init=False, default_factory=list)
-    _world: bool = field(default=None)
+    _world: KBClass = field(default=None)
 
     _raise_on_validation: bool = False
     _validated: bool = False
@@ -48,9 +48,9 @@ class KnowledgeBase(KBEntity):
         self.rules = []
         self.with_world = with_world
         self._world = KBClass(
-            "world",
-            [],
-            self.rules,
+            id="world",
+            properties=[],
+            rules=self.rules,
             desc="Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила",
         )
         self._world.owner = self.classes

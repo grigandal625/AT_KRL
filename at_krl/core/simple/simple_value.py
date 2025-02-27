@@ -43,7 +43,7 @@ class SimpleValue(SimpleEvaluatable):
 
     @property
     def krl(self) -> str:
-        return json.dumps(self.content)
+        return json.dumps(self.content, ensure_ascii=False)
 
     @property
     def inner_xml(self) -> str:
