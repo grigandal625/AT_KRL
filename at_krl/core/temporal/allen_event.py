@@ -17,7 +17,7 @@ class KBEvent(AllenClass):
     occurance_condition: SimpleEvaluatable
     group: Literal["СОБЫТИЕ"] = field(init=False, default="СОБЫТИЕ")
 
-    legacy_tag = Literal["Event"] = field(init=False, metadata={"serialize": False}, default="Event")
+    legacy_tag: Literal["Event"] = field(init=False, metadata={"serialize": False}, default="Event")
 
     def __post_init__(self):
         self.occurance_condition.owner = self

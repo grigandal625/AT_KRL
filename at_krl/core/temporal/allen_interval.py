@@ -19,7 +19,7 @@ class KBInterval(AllenClass):
     close: SimpleEvaluatable
     group: Literal["ИНТЕРВАЛ"] = field(init=False, default="ИНТЕРВАЛ")
 
-    legacy_tag = Literal["Interval"] = field(init=False, metadata={"serialize": False}, default="Interval")
+    legacy_tag: Literal["Interval"] = field(init=False, metadata={"serialize": False}, default="Interval")
 
     def __post_init__(self):
         self.open.owner = self
