@@ -1,16 +1,17 @@
-import json
 from copy import deepcopy
 from dataclasses import dataclass
 from dataclasses import field
-from typing import Union
+from typing import Any
+from typing import Literal
 from xml.etree.ElementTree import Element
 
-from at_krl.core.kb_entity import KBEntity
 from at_krl.core.non_factor import NonFactor
+from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
+from at_krl.core.simple.simple_value import SimpleValue
 
 
 @dataclass(kw_only=True)
-class Evaluatable(KBEntity):
+class Evaluatable(SimpleEvaluatable):
     non_factor: NonFactor = field(default_factory=NonFactor)
 
     def __post_init__(self):
@@ -20,66 +21,15 @@ class Evaluatable(KBEntity):
     @property
     def xml(self) -> Element:
         result = super().xml
-        if self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized:
+        if self.non_factor:
             result.append(self.non_factor.xml)
         return result
 
-    @staticmethod
-    def from_xml(xml: Element) -> "Evaluatable":
-        if xml.tag == "value":
-            return KBValue.from_xml(xml)
-        if xml.tag == "ref":
-            from at_krl.core.kb_reference import KBReference
-
-            return KBReference.from_xml(xml)
-        from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
-
-        if xml.tag in TAGS_SIGNS:
-            return KBOperation.from_xml(xml)
-
-        from at_krl.core.temporal.allen_operation import AllenOperation
-
-        if xml.tag in ["EvRel", "IntRel", "EvIntRel"]:
-            return AllenOperation.from_xml(xml)
-        raise ValueError("Unknown evaluatable tag: " + xml.tag)
-
-    @staticmethod
-    def from_dict(d: dict) -> "Evaluatable":
-        if d["tag"] == "value":
-            return KBValue.from_dict(d)
-        if d["tag"] == "ref":
-            from at_krl.core.kb_reference import KBReference
-
-            return KBReference.from_dict(d)
-        from at_krl.core.kb_operation import KBOperation, TAGS_SIGNS
-
-        if d["tag"] in TAGS_SIGNS:
-            return KBOperation.from_dict(d)
-        from at_krl.core.temporal.allen_operation import TEMPORAL_TAGS_SIGNS, AllenOperation
-
-        if (
-            d.get("tag", None) in ["EvRel", "IntRel", "EvIntRel"]
-            or d.get("Value", None) in TEMPORAL_TAGS_SIGNS
-            or d.get("sign", None) in TEMPORAL_TAGS_SIGNS
-        ):
-            return AllenOperation.from_dict(d)
-        raise ValueError("Unknown evaluatable tag: " + d["tag"])
-
-    def evaluate(self, *args, **kwargs) -> "KBValue":
-        pass
-
     @property
     def krl(self):
-        result = self.inner_krl
-        if (
-            self.non_factor.initialized or self.convert_non_factor and not self.non_factor.initialized
-        ) and not self.non_factor.is_default:
-            result = result + " " + self.non_factor.krl
-        return result
-
-    @property
-    def inner_krl(self) -> str:
-        pass
+        if not self.non_factor:
+            return super().krl
+        return super().krl + " " + self.non_factor.krl
 
     @property
     def xml_owner_path(self) -> str:
@@ -112,48 +62,19 @@ class Evaluatable(KBEntity):
         return self.owner.xml_owner_path + "/" + self.tag
 
 
-class KBValue(Evaluatable):
-    content = None
-
-    def __init__(self, content, non_factor: Union["NonFactor", None] = None):
-        super().__init__(non_factor)
-        self.content = content
-        self.tag = "value"
-
-    def __dict__(self) -> dict:
-        return dict(content=self.content, **(super().__dict__()))
-
-    def evaluate(self, *args, **kwargs) -> "KBValue":
-        return self
-
-    @staticmethod
-    def from_dict(d: dict) -> "KBValue":
-        nf_dict = d.get("non_factor", None)
-        nf = None
-        if nf_dict is not None:
-            nf = NonFactor.from_dict(nf_dict)
-        return KBValue(d["content"], non_factor=nf)
-
-    @property
-    def inner_krl(self) -> str:
-        try:
-            result = json.dumps(self.content, ensure_ascii=False)
-        except Exception:
-            result = json.dumps(str(self.content), ensure_ascii=False)
-        return result
+@dataclass
+class KBValue(Evaluatable, SimpleValue):
+    tag: Literal["value"] = field(init=False, default="value")
+    content: Any
 
     @property
     def inner_xml(self) -> str:
         return str(self.content)
 
-    @staticmethod
-    def from_xml(xml: Element) -> "KBValue":
-        return KBValue(xml.text)  # TODO: non_factor ???
-
     def copy(self):
         if self.non_factor is not None:
             return KBValue(
-                deepcopy(self.content),
-                NonFactor(self.non_factor.belief, self.non_factor.probability, self.non_factor.accuracy),
+                content=deepcopy(self.content),
+                non_factor=NonFactor(self.non_factor.belief, self.non_factor.probability, self.non_factor.accuracy),
             )
-        return KBValue(deepcopy(self.content))
+        return KBValue(content=deepcopy(self.content))
