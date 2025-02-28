@@ -1,6 +1,9 @@
 from typing import Union
 
+from at_krl.core.kb_operation import KBOperation
+from at_krl.core.kb_operation import NonFactor
 from at_krl.core.knowledge_base import KnowledgeBase
+from at_krl.grammar.at_krl_parser import at_krl_parser
 from at_krl.grammar.at_krl_parserListener import at_krl_parserListener
 from at_krl.utils.listener_parts import evaluatable
 from at_krl.utils.listener_parts import non_factor
@@ -41,6 +44,46 @@ class ATKRLListener(
     @staticmethod
     def filter_by_type(children, ctx_type):
         return [child for child in children if isinstance(child, ctx_type)]
+
+    def exitKb_operation(self, ctx):
+        if len(ctx.children) == 1:
+            ctx.content = ctx.children[0].content
+            return
+        non_factor_child = self.search_context_by_type(ctx.children, at_krl_parser.Non_factorContext)
+
+        operation_children = self.filter_by_type(ctx.children, at_krl_parser.Kb_operationContext)
+
+        is_unary_operation = (
+            (len(ctx.children) == 2) and not non_factor_child or (len(ctx.children) == 3) and non_factor_child
+        ) and (len(operation_children) == 1)
+
+        is_binary_operation = (
+            (len(ctx.children) == 3) and not non_factor_child or (len(ctx.children) == 4) and non_factor_child
+        ) and (len(operation_children) == 2)
+
+        if is_unary_operation:
+            left = operation_children[0].content
+            sign = ctx.children[0].content
+            ctx.content = KBOperation(
+                sign=sign, left=left, non_factor=non_factor_child.content if non_factor_child else NonFactor()
+            )
+        elif is_binary_operation:
+            left = operation_children[0].content
+            sign = ctx.children[1].getText()
+            right = operation_children[1].content
+            ctx.content = KBOperation(
+                sign=sign,
+                left=left,
+                right=right,
+                non_factor=non_factor_child.content if non_factor_child else NonFactor(),
+            )
+        elif len(operation_children) == 1:
+            ctx.content = operation_children[0].content
+        else:
+            raise ValueError(f"Bad operation {ctx.getText()}")
+
+    def exitKb_evaluatable(self, ctx):
+        return super().exitKb_evaluatable(ctx)
 
     # def exitKb_rule(self, ctx: at_krl_parser.Kb_ruleContext | Any):
     #     if ctx.children:

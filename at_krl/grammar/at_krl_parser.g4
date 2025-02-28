@@ -5,7 +5,7 @@ options { tokenVocab=at_krl_lexer; }
 lang_comment: LANG_COMMENT?; // нечувствительость к коментариям #
 newline: NEWLINE+;
 
-knowledge_base: kb_types kb_classes kb_rules;
+knowledge_base: newline*? kb_types kb_classes kb_rules;
 
 kb_types: (kb_type newline)*?;
 kb_classes: (kb_class newline)*?;
@@ -109,40 +109,6 @@ temporal_attribute_condition
         )  // long_open
     );
 
-// правила
-
-kb_rule:
-    RULE NAME
-    (newline TYPE rule_type)?
-    newline kb_rule_condition
-    newline kb_rule_instructions
-    (newline kb_rule_else_instructions)?
-    (newline commentary)?;
-
-rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) NUMBER);
-
-kb_rule_condition: 
-    IF 
-    newline evaluatable;
-
-kb_rule_instructions:
-    THEN 
-    (newline instruction)+;
-
-kb_rule_else_instructions:
-    ELSE 
-    (newline instruction)+;
-
-assign_instruction
-    : (ref_path left_assign evaluatable non_factor?) 
-    | (evaluatable right_assign ref_path non_factor?)
-    ;
-
-instruction: assign_instruction; // | другие типы инструкций
-
-left_assign: LEFT_ASSIGN | EQUAL | COLON_EQ;
-right_assign: RIGHT_ASSIGN;
-
 // простое вычисляемое
 
 simple_value: STRING | NUMBER;
@@ -152,10 +118,7 @@ ref_path: NAME (DOT ref_path)?;
 simple_ref: ref_path;
 
 simple_operation
-    : simple_value EQUAL ref_path
-    | ref_path EQUAL ref_path
-	| ref_path EQUAL simple_value
-	| simple_ref
+    : simple_ref
 	| simple_value
     | logical_unary simple_operation
     | simple_operation high_p_math simple_operation
@@ -183,33 +146,27 @@ kb_value: (LPAR newline? simple_value non_factor newline? RPAR) | simple_value;
 kb_reference: LPAR ref_path non_factor? RPAR | ref_path;
 
 kb_operation // для значений атрибутов объектов (без логики Аллена)
-    : ref_path EQUAL kb_value non_factor?
-    | kb_value EQUAL ref_path non_factor?
-    | kb_value EQUAL kb_value non_factor?
-    | kb_reference
+    : kb_reference
     | kb_value
-    | LPAR newline? kb_operation newline? RPAR
     | MINUS kb_operation non_factor?
     | logical_unary kb_operation non_factor?
     | kb_operation high_p_math kb_operation non_factor?
     | kb_operation low_p_math kb_operation non_factor?
     | kb_operation compare kb_operation non_factor?
-    | kb_operation logical_binary kb_operation non_factor?;
+    | kb_operation logical_binary kb_operation non_factor?
+    | LPAR newline? kb_operation newline? RPAR;
 
 kb_evaluatable // для значений в правилах (с логикой Аллена)
-    : ref_path EQUAL kb_value non_factor?
-    | kb_value EQUAL ref_path non_factor?
-    | kb_value EQUAL kb_value non_factor?
-    | kb_reference
+    : kb_reference
     | kb_value
-    | LPAR newline? kb_evaluatable newline? RPAR
     | MINUS kb_evaluatable non_factor?
     | logical_unary kb_evaluatable non_factor?
     | kb_evaluatable high_p_math kb_evaluatable non_factor?
     | kb_evaluatable low_p_math kb_evaluatable non_factor?
     | kb_evaluatable compare kb_evaluatable non_factor?
     | kb_evaluatable logical_binary kb_evaluatable non_factor? 
-    | allen_evaluatable;
+    | allen_evaluatable
+    | LPAR newline? kb_evaluatable newline? RPAR;
 
 allen_reference: simple_ref;
 allen_indexed_reference: allen_reference index?;
@@ -292,3 +249,37 @@ allen
     ;
 
 commentary: COMMENT COMMENT_DATA;
+
+// правила
+
+kb_rule:
+    RULE NAME
+    (newline TYPE rule_type)?
+    newline kb_rule_condition
+    newline kb_rule_instructions
+    (newline kb_rule_else_instructions)?
+    (newline commentary)?;
+
+rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) NUMBER);
+
+kb_rule_condition: 
+    IF 
+    newline evaluatable;
+
+kb_rule_instructions:
+    THEN 
+    (newline instruction)+;
+
+kb_rule_else_instructions:
+    ELSE 
+    (newline instruction)+;
+
+assign_instruction
+    : (ref_path left_assign evaluatable non_factor?) 
+    | (evaluatable right_assign ref_path non_factor?)
+    ;
+
+instruction: assign_instruction; // | другие типы инструкций
+
+left_assign: LEFT_ASSIGN | EQUAL | COLON_EQ;
+right_assign: RIGHT_ASSIGN;
