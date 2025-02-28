@@ -67,10 +67,6 @@ class KBValue(Evaluatable, SimpleValue):
     tag: Literal["value"] = field(init=False, default="value")
     content: Any
 
-    @property
-    def inner_xml(self) -> str:
-        return str(self.content)
-
     def copy(self):
         if self.non_factor is not None:
             return KBValue(

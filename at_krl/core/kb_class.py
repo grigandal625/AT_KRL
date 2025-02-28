@@ -244,3 +244,4 @@ class KBInstance(KBEntity, LegacyMixin):
 class KBProperty(KBInstance):
     tag: Literal["property"] = field(init=False, default="property")
     legacy_tag: Literal["property"] = field(init=False, default="property", metadata={"serialize": False})
+    definition: PropertyDefinition = property(init=False, metadata={"serialize": False})
