@@ -51,14 +51,10 @@ class KBClass(SimpleClass):
 
     @property
     def inner_krl(self):
-        krl = f"""    АТРИБУТЫ
-{self.properties_krl}"""
+        krl = f"""    АТРИБУТЫ{self.properties_krl}"""
         if self.rules:
             krl += f"""
-    ПРАВИЛА
-{self.rules_krl}"""
-        krl += f"""
-    КОММЕНТАРИЙ {self.desc or self.id}"""
+    ПРАВИЛА{self.rules_krl}"""
         return krl
 
     @property
@@ -68,13 +64,13 @@ class KBClass(SimpleClass):
         for p in self.properties:
             property_krl_lines = p.krl.split("\n")
             property_krl = "\n".join([indent + line for line in property_krl_lines])
-            properties_krl += property_krl + "\n"
+            properties_krl += "\n" + property_krl
         return properties_krl
 
     @property
     def rules_krl(self) -> str:
         indent = " " * 4
-        rules_krl = ""
+        rules_krl = "\n"
         for r in self.rules:
             rule_krl_lines = r.krl.split("\n")
             rule_krl = "\n".join([indent + line for line in rule_krl_lines])
@@ -109,15 +105,15 @@ class PropertyDefinition(KBEntity, LegacyMixin):  # LegacyMixin для совм�
 
     @property
     def krl(self):
-        krl = f"""    АТРИБУТ {self.id}
-        ТИП {self.type.krl}"""
+        krl = f"""АТРИБУТ {self.id}
+    ТИП {self.type.krl}"""
         if self.value:
             krl += f"""
-        ЗНАЧЕНИЕ
-            {self.value.krl}"""
+    ЗНАЧЕНИЕ
+        {self.value.krl}"""
 
         krl += f"""
-        КОММЕНТАРИЙ {self.desc or self.id}"""
+    КОММЕНТАРИЙ {self.desc or self.id}"""
         return krl
 
     @property

@@ -103,3 +103,6 @@ class AllenOperation(SimpleOperation):
     @property
     def is_binary(self) -> bool:
         return True
+
+    def to_simple(self):
+        return self

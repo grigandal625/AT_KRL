@@ -79,6 +79,7 @@ class KBValue(Evaluatable, SimpleValue):
     def from_simple(simple_value: SimpleValue) -> "KBValue":
         return KBValue(content=simple_value.content, non_factor=NonFactor())
 
+    @property
     def krl(self):
         if self.non_factor:
             return f"{self.to_simple().krl}{self.non_factor.not_default_krl}"

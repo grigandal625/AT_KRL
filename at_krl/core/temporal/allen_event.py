@@ -53,8 +53,7 @@ class KBEvent(AllenClass):
     АТРИБУТ УслВозн
         ТИП ЛогВыр
         ЗНАЧЕНИЕ
-            {self.occurance_condition.krl}
-"""
+            {self.occurance_condition.krl}"""
 
     def validate(self, kb: "KnowledgeBase", *args, **kwargs):
         if not self._validated:
