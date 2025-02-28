@@ -1,9 +1,13 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from at_krl.core.kb_reference import KBReference
 from at_krl.core.kb_value import Evaluatable
+from at_krl.core.kb_value import KBValue
 from at_krl.core.non_factor import NonFactor
 from at_krl.core.simple.simple_operation import SimpleOperation
+from at_krl.core.simple.simple_reference import SimpleReference
+from at_krl.core.simple.simple_value import SimpleValue
 
 if TYPE_CHECKING:
     pass
@@ -15,7 +19,17 @@ class KBOperation(Evaluatable, SimpleOperation):
     def from_simple(op: SimpleOperation):
         return KBOperation(
             sign=op.sign,
-            left=op.left.from_simple(op.left),
-            right=op.right.from_simple(op.right) if op.right else None,
+            left=SIMPLE_TO_EVALUATABLE[op.left.__class__].from_simple(op.left),
+            right=SIMPLE_TO_EVALUATABLE[op.right.__class__].from_simple(op.right) if op.right else None,
             non_factor=NonFactor(),
         )
+
+
+SIMPLE_TO_EVALUATABLE = {
+    SimpleOperation: KBOperation,
+    SimpleValue: KBValue,
+    SimpleReference: KBReference,
+    KBValue: KBValue,
+    KBReference: KBReference,
+    KBOperation: KBOperation,
+}
