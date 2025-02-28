@@ -30,29 +30,28 @@ class KBClasses(KBEntity):
         return self.intervals + self.events
 
 
+def get_world():
+    return KBClass(
+        id="world", desc="Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила"
+    )
+
+
 @dataclass(kw_only=True)
 class KnowledgeBase(KBEntity):
+    tag: Literal["knowledge-base"] = field(init=False, default="knowledge-base")
     types: List[KBType] = field(init=False, default_factory=list)
     classes: KBClasses = field(init=False, default_factory=KBClasses)
     rules: List[KBRule] = field(init=False, default_factory=list)
-    _world: KBClass = field(default=None)
+    with_world: bool = field(default=False)
+    _world: KBClass = field(init=False, default_factory=get_world)
 
     _raise_on_validation: bool = False
     _validated: bool = False
 
-    def __init__(self, with_world: bool = False) -> None:
-        self.tag = "knowledge-base"
-        self.types = []
-        self.classes = KBClasses()
+    def __post_init__(self) -> None:
         self.classes.owner = self
         self.rules = []
-        self.with_world = with_world
-        self._world = KBClass(
-            id="world",
-            properties=[],
-            rules=self.rules,
-            desc="Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила",
-        )
+        self._world.rules = self.rules
         self._world.owner = self.classes
 
     @property

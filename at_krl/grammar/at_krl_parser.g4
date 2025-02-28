@@ -56,8 +56,7 @@ kb_class:
 kb_class_body: object_body | event_body | interval_body;
 
 object_body:
-    (GROUP NAME)? attributes
-    (newline commentary)?;
+    (GROUP NAME)? attributes;
 
 attributes:
     (newline ATTRS)?
