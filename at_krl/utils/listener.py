@@ -42,9 +42,6 @@ class ATKRLListener(
     def filter_by_type(children, ctx_type):
         return [child for child in children if isinstance(child, ctx_type)]
 
-    def exitKb_reference(self, ctx):
-        return super().exitKb_reference(ctx)
-
     # def exitKb_rule(self, ctx: at_krl_parser.Kb_ruleContext | Any):
     #     if ctx.children:
     #         id = ctx.children[1].getText()
