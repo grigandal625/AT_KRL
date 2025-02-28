@@ -11,8 +11,8 @@ from at_krl.core.kb_entity import KBEntity
 @dataclass(kw_only=True)
 class MFPoint(KBEntity):
     tag: Literal["point"] = field(init=False, default="point")
-    x: float | int = field(default=None)
-    y: float | int = field(default=None)
+    x: float | int
+    y: float | int
 
     @property
     def attrs(self) -> dict:
@@ -26,7 +26,7 @@ class MFPoint(KBEntity):
 @dataclass(kw_only=True)
 class MembershipFunction(KBEntity):
     tag: Literal["parameter"] = field(init=False, default="parameter")
-    points: List[MFPoint] = field(default_factory=list)
+    points: List[MFPoint]
     name: str
     min: float
     max: float
