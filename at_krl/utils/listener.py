@@ -1,4 +1,9 @@
+from antlr4.tree.Tree import TerminalNodeImpl
+
+from at_krl.core.kb_class import PropertyDefinition
+from at_krl.core.kb_class import TypeOrClassReference
 from at_krl.core.knowledge_base import KnowledgeBase
+from at_krl.grammar.at_krl_parser import at_krl_parser
 from at_krl.grammar.at_krl_parserListener import at_krl_parserListener
 from at_krl.utils.listener_parts import evaluatable
 from at_krl.utils.listener_parts import general
@@ -7,9 +12,6 @@ from at_krl.utils.listener_parts import kb_type
 from at_krl.utils.listener_parts import non_factor
 from at_krl.utils.listener_parts import simple
 from at_krl.utils.listener_parts import temporal
-from at_krl.grammar.at_krl_parser import at_krl_parser
-from at_krl.core.kb_class import PropertyDefinition, TypeOrClassReference
-from antlr4.tree.Tree import TerminalNodeImpl
 
 
 def get_number(v: str):
@@ -55,10 +57,13 @@ class ATKRLListener(
     @staticmethod
     def filter_by_token_names(children, *token_names):
         return [
-            child for child in children 
+            child
+            for child in children
             if any(
-                [isinstance(child, TerminalNodeImpl) and at_krl_parser.symbolicNames[child.symbol.type] == token_name 
-                for token_name in token_names]
+                [
+                    isinstance(child, TerminalNodeImpl) and at_krl_parser.symbolicNames[child.symbol.type] == token_name
+                    for token_name in token_names
+                ]
             )
         ]
 
@@ -66,26 +71,32 @@ class ATKRLListener(
         ctx.content = self.search_context_by_type(ctx.children, at_krl_parser.Simple_evaluatableContext).content
 
     def exitOpen(self, ctx: at_krl_parser.OpenContext):
-        ctx.content = self.search_context_by_type(ctx.children, at_krl_parser.Temporal_attribute_conditionContext).content
+        ctx.content = self.search_context_by_type(
+            ctx.children, at_krl_parser.Temporal_attribute_conditionContext
+        ).content
 
     def exitClose(self, ctx: at_krl_parser.CloseContext):
-        ctx.content = self.search_context_by_type(ctx.children, at_krl_parser.Temporal_attribute_conditionContext).content
+        ctx.content = self.search_context_by_type(
+            ctx.children, at_krl_parser.Temporal_attribute_conditionContext
+        ).content
 
     def exitOccurance_condition(self, ctx: at_krl_parser.Occurance_conditionContext):
-        ctx.content = self.search_context_by_type(ctx.children, at_krl_parser.Temporal_attribute_conditionContext).content
+        ctx.content = self.search_context_by_type(
+            ctx.children, at_krl_parser.Temporal_attribute_conditionContext
+        ).content
 
     def exitInterval_body(self, ctx: at_krl_parser.Interval_bodyContext):
         ctx.content = {
-            'open': self.search_context_by_type(ctx.children, at_krl_parser.OpenContext).content,
-            'close': self.search_context_by_type(ctx.children, at_krl_parser.CloseContext).content,
+            "open": self.search_context_by_type(ctx.children, at_krl_parser.OpenContext).content,
+            "close": self.search_context_by_type(ctx.children, at_krl_parser.CloseContext).content,
         }
 
     def exitEvent_body(self, ctx: at_krl_parser.Event_bodyContext):
         ctx.content = self.search_context_by_type(ctx.children, at_krl_parser.Occurance_conditionContext).content
-    
+
     def exitLong_attribute(self, ctx: at_krl_parser.Long_attributeContext):
         type_reference = TypeOrClassReference(id=ctx.children[2].getText())
-        
+
         value_child = self.search_context_by_type(ctx.children, at_krl_parser.Kb_operationContext)
         value = value_child.content if value_child else None
 
@@ -93,40 +104,35 @@ class ATKRLListener(
         desc = commentary_child.content if commentary_child else None
 
         ctx.content = {
-            'type': type_reference,
-            'value': value,
-            'desc': desc,
+            "type": type_reference,
+            "value": value,
+            "desc": desc,
         }
 
     def exitShort_attribute(self, ctx: at_krl_parser.Short_attributeContext):
-        type_id = self.search_terminal_by_token_name(ctx.children, 'NAME').getText()
+        type_id = self.search_terminal_by_token_name(ctx.children, "NAME").getText()
         type_reference = TypeOrClassReference(id=type_id)
 
         value_child = self.search_context_by_type(ctx.children, at_krl_parser.Kb_operationContext)
         value = value_child.content if value_child else None
 
         ctx.content = {
-            'type': type_reference,
-            'value': value,
+            "type": type_reference,
+            "value": value,
         }
 
     def exitAttr_declaration(self, ctx: at_krl_parser.Attr_declarationContext):
-        ctx.content = self.search_terminal_by_token_name(ctx.children, 'NAME').getText()
+        ctx.content = self.search_terminal_by_token_name(ctx.children, "NAME").getText()
 
     def exitAttribute(self, ctx: at_krl_parser.AttributeContext):
         name = ctx.children[0].content
         body = ctx.children[1].content
 
-        attr = PropertyDefinition(
-            id=name,
-            **body
-        )
+        attr = PropertyDefinition(id=name, **body)
         ctx.content = attr
 
     def exitAttributes(self, ctx: at_krl_parser.AttributesContext):
         ctx.content = [child.content for child in self.filter_by_types(ctx.children, at_krl_parser.AttributeContext)]
-
-
 
     # def exitKb_class(self, ctx: at_krl_parser.Kb_classContext | Any):
     #     object_id = ctx.children[1].getText()
