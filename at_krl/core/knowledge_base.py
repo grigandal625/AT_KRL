@@ -30,7 +30,7 @@ class KBClasses(KBEntity):
         return self.intervals + self.events
 
 
-@dataclass
+@dataclass(kw_only=True)
 class KnowledgeBase(KBEntity):
     types: List[KBType] = field(init=False, default_factory=list)
     classes: KBClasses = field(init=False, default_factory=KBClasses)

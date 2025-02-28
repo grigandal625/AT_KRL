@@ -11,6 +11,6 @@ if TYPE_CHECKING:
     pass
 
 
-@dataclass
+@dataclass(kw_only=True)
 class KBReference(Evaluatable, SimpleReference):
     pass

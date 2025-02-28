@@ -14,7 +14,7 @@ def num(v):
     return f
 
 
-@dataclass
+@dataclass(kw_only=True)
 class NonFactor(KBEntity):
     tag: Literal["with"] = field(init=False, default="with")
     belief: float = field(default=50)

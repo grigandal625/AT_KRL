@@ -62,7 +62,7 @@ class Evaluatable(SimpleEvaluatable):
         return self.owner.xml_owner_path + "/" + self.tag
 
 
-@dataclass
+@dataclass(kw_only=True)
 class KBValue(Evaluatable, SimpleValue):
     tag: Literal["value"] = field(init=False, default="value")
     content: Any
