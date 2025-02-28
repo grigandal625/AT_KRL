@@ -110,7 +110,7 @@ class PropertyDefinition(KBEntity, LegacyMixin):  # LegacyMixin для совм�
     @property
     def krl(self):
         krl = f"""    АТРИБУТ {self.id}
-        ТИП {self.type.target.id}"""
+        ТИП {self.type.krl}"""
         if self.value:
             krl += f"""
         ЗНАЧЕНИЕ

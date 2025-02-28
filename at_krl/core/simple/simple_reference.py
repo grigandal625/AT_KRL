@@ -26,9 +26,12 @@ class SimpleReference(SimpleEvaluatable):
 
     @property
     def krl(self) -> str:
-        if self.ref:
-            return f"{self.id}.{self.ref.krl}"
-        return self.id
+        result = self.id
+        ref = self.ref
+        while ref:
+            result = f"{result}.{ref.id}"
+            ref = ref.ref
+        return result
 
     @property
     def legacy_attrs(self) -> dict:

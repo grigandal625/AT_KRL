@@ -28,8 +28,8 @@ class Evaluatable(SimpleEvaluatable):
     @property
     def krl(self):
         if not self.non_factor:
-            return super().krl
-        return super().krl + " " + self.non_factor.krl
+            return self.to_simple().krl
+        return self.to_simple().krl + " " + self.non_factor.krl
 
     @property
     def xml_owner_path(self) -> str:
@@ -74,3 +74,12 @@ class KBValue(Evaluatable, SimpleValue):
                 non_factor=NonFactor(self.non_factor.belief, self.non_factor.probability, self.non_factor.accuracy),
             )
         return KBValue(content=deepcopy(self.content))
+
+    @staticmethod
+    def from_simple(simple_value: SimpleValue) -> "KBValue":
+        return KBValue(content=simple_value.content, non_factor=NonFactor())
+
+    def krl(self):
+        if self.non_factor:
+            return f"{self.to_simple().krl}{self.non_factor.not_default_krl}"
+        return self.to_simple().krl

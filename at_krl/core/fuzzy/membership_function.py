@@ -10,7 +10,7 @@ from at_krl.core.kb_entity import KBEntity
 
 @dataclass(kw_only=True)
 class MFPoint(KBEntity):
-    tag: Literal["point"] = field(init=False, default_factory="point")
+    tag: Literal["point"] = field(init=False, default="point")
     x: float | int = field(default=None)
     y: float | int = field(default=None)
 

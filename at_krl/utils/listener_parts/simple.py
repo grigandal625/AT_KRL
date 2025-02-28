@@ -26,7 +26,7 @@ class ListenerForSimpleMixin:
         elif len(ctx.children) == 2:
             ctx.content = SimpleOperation(sign=ctx.children[0].getText(), left=ctx.children[1].content)
         elif len(ctx.children) == 3:
-            filtered = self.filter_by_type(ctx.children, at_krl_parser.Simple_operationContext)
+            filtered = self.filter_by_types(ctx.children, at_krl_parser.Simple_operationContext)
             if len(filtered) == 2:
                 ctx.content = SimpleOperation(
                     sign=ctx.children[1].getText(), left=ctx.children[0].content, right=ctx.children[2].content
@@ -36,8 +36,11 @@ class ListenerForSimpleMixin:
             else:
                 raise ValueError(f"Invalid simple operation {ctx.getText()}")
         elif len(ctx.children) > 3:
-            filtered = self.filter_by_type(ctx.children, at_krl_parser.Simple_operationContext)
+            filtered = self.filter_by_types(ctx.children, at_krl_parser.Simple_operationContext)
             if len(filtered) == 1:
                 ctx.content = filtered[0].content
             else:
                 raise ValueError(f"Invalid simple operation {ctx.getText()}")
+
+    def exitSimple_evaluatable(self, ctx: at_krl_parser.Simple_evaluatableContext):
+        ctx.content = ctx.children[0].content

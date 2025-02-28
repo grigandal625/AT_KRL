@@ -18,14 +18,16 @@ kb_type:
     newline kb_type_body
     (newline commentary)?;
 
-kb_type_body: numeric_type_body | symbolic_type_body | symbolic_type_body? fuzzy_type_body;
+kb_type_body: numeric_type_body | symbolic_type_body | fuzzy_type_body;
 
 fuzzy_type_body:
+    (symbolic_type_body newline)?
     FUZ
     (newline NUMBER)?
-    (newline membership_function)+?;
+    membership_functions;
 
 membership_function: mf_def mf_body;
+membership_functions: (newline membership_function)+?;
 
 mf_def: STRING NUMBER NUMBER NUMBER? EQUAL?;
 
@@ -35,7 +37,9 @@ mf_point: NUMBER VBAR NUMBER;
 
 symbolic_type_body:
     SYM
-    (newline STRING)+?;
+    symbolic_type_values;
+
+symbolic_type_values: (newline STRING)+?;
 
 numeric_type_body:
     NUM
@@ -72,8 +76,7 @@ long_attribute:
 event_body:
     GROUP (EVENT | CASED_EVENT)
     (newline ATTRS)?
-    newline occurance_condition
-    (newline commentary)?;
+    newline occurance_condition;
 
 occurance_condition: 
     occurance_condition_declaration temporal_attribute_condition
@@ -83,8 +86,7 @@ interval_body:
     GROUP (INTERVAL | CASED_INTERVAL)
     (newline ATTRS)?
     newline open
-    newline close
-    (newline commentary)?;
+    newline close;
 
 open:
     open_declaration temporal_attribute_condition
@@ -141,9 +143,9 @@ non_factor: belief accuracy | belief | accuracy;
 
 // вычисляемое с НЕ-факторами и логикой аллена
 
-kb_value: (LPAR newline? simple_value non_factor newline? RPAR) | simple_value;
+kb_value: simple_value non_factor?;
 
-kb_reference: LPAR ref_path non_factor? RPAR | ref_path;
+kb_reference: simple_ref non_factor?;
 
 kb_operation // для значений атрибутов объектов (без логики Аллена)
     : kb_reference
@@ -157,7 +159,8 @@ kb_operation // для значений атрибутов объектов (б�
     | LPAR newline? kb_operation newline? RPAR;
 
 kb_evaluatable // для значений в правилах (с логикой Аллена)
-    : kb_reference
+    : allen_evaluatable
+    | kb_reference
     | kb_value
     | MINUS kb_evaluatable non_factor?
     | logical_unary kb_evaluatable non_factor?
@@ -165,7 +168,6 @@ kb_evaluatable // для значений в правилах (с логикой
     | kb_evaluatable low_p_math kb_evaluatable non_factor?
     | kb_evaluatable compare kb_evaluatable non_factor?
     | kb_evaluatable logical_binary kb_evaluatable non_factor? 
-    | allen_evaluatable
     | LPAR newline? kb_evaluatable newline? RPAR;
 
 allen_reference: simple_ref;
@@ -260,7 +262,11 @@ kb_rule:
     (newline kb_rule_else_instructions)?
     (newline commentary)?;
 
-rule_type: SIMPLE | (PERIODIC ((newline PERIOD) | COLON) NUMBER);
+rule_type: rule_simple_type | rule_periodic_type;
+
+rule_simple_type: SIMPLE;
+rule_periodic_type: rule_periodic_type_def NUMBER;
+rule_periodic_type_def: PERIODIC ((newline PERIOD) | COLON);
 
 kb_rule_condition: 
     IF 

@@ -54,7 +54,7 @@ class AllenOperation(SimpleOperation):
         elif self.left.fullfiled and self.right.fullfiled:
             self.fullfill_legacy_tag()
         else:
-            logger.warning(f"Can't determine operation type for {self.krl}")
+            logger.warning(f"Can't now determine operation type for {self.krl}. Will be determined in KB validation.")
         # если не вышло, то вид операции определим во время валидации БЗ
 
     def fullfill_legacy_tag(self):
@@ -67,7 +67,7 @@ class AllenOperation(SimpleOperation):
         elif self.left.target.legacy_tag == "Event" and self.right.target.legacy_tag == "Event":
             self.legacy_tag = "EvRel"
         else:
-            logger.warning(f"Can't determine operation type for {self.krl}")
+            logger.warning(f"Can't now determine operation type for {self.krl}. Will be determined in KB validation.")
 
     @property
     def for_what(self) -> dict:

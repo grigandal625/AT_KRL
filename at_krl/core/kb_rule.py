@@ -25,11 +25,21 @@ class KBRule(KBEntity):
     condition: Evaluatable
     instructions: List[KBInstruction]
     else_instructions: Optional[List[KBInstruction]] = field(default_factory=list)
-    meta: Literal["simple", "periodic"] = field(default_factory="simple")
+    meta: Literal["simple", "periodic"] = field(default="simple")
     period: Optional[int] = field(default=None)
     desc: Optional[str] = field(default=None)
 
     evaluated_condition: Optional[KBValue] = field(default=None, init=False, metadata={"serialize": False})
+
+    def __post_init__(self):
+        if self.period:
+            self.meta = "periodic"
+        self.condition.owner = self
+        for instr in self.instructions:
+            instr.owner = self
+        if self.else_instructions:
+            for instr in self.else_instructions:
+                instr.owner = self
 
     @property
     def attrs(self) -> dict:
@@ -64,8 +74,10 @@ class KBRule(KBEntity):
             else_action_krl = (
                 "ИНАЧЕ\n    " + "\n    ".join([instruction.krl for instruction in self.else_instructions]) + "\n"
             )
-
-        return f"""ПРАВИЛО {self.id}
+        type_krl = "\nТИП ОБЫЧНОЕ"
+        if self.period:
+            type_krl = f"\nТИП ПЕРИОДИЧЕСКОЕ\nПЕРИОД {self.period}"
+        return f"""ПРАВИЛО {self.id}{type_krl}
 ЕСЛИ
     {self.condition.krl}
 {action_krl}

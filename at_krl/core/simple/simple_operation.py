@@ -86,7 +86,9 @@ class SimpleOperation(SimpleEvaluatable):
         return f"{self.sign} ({self.left.krl})"
 
     def to_simple(self) -> "SimpleOperation":
-        return SimpleOperation(self.sign, self.left.to_simple(), self.right.to_simple() if self.right else None)
+        return SimpleOperation(
+            sign=self.sign, left=self.left.to_simple(), right=self.right.to_simple() if self.right else None
+        )
 
     @staticmethod
     def from_simple(operation: "SimpleOperation") -> "SimpleOperation":

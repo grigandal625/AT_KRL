@@ -26,6 +26,12 @@ class NonFactor(KBEntity):
         return self.belief == 50 and self.probability == 100 and self.accuracy == 0
 
     @property
+    def not_default_krl(self):
+        if self.is_default:
+            return ""
+        return " " + self.krl
+
+    @property
     def attrs(self) -> dict:
         return {"belief": str(self.belief), "probability": str(self.probability), "accuracy": str(self.accuracy)}
 

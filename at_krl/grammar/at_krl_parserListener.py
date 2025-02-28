@@ -98,6 +98,15 @@ class at_krl_parserListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by at_krl_parser#membership_functions.
+    def enterMembership_functions(self, ctx:at_krl_parser.Membership_functionsContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#membership_functions.
+    def exitMembership_functions(self, ctx:at_krl_parser.Membership_functionsContext):
+        pass
+
+
     # Enter a parse tree produced by at_krl_parser#mf_def.
     def enterMf_def(self, ctx:at_krl_parser.Mf_defContext):
         pass
@@ -131,6 +140,15 @@ class at_krl_parserListener(ParseTreeListener):
 
     # Exit a parse tree produced by at_krl_parser#symbolic_type_body.
     def exitSymbolic_type_body(self, ctx:at_krl_parser.Symbolic_type_bodyContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#symbolic_type_values.
+    def enterSymbolic_type_values(self, ctx:at_krl_parser.Symbolic_type_valuesContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#symbolic_type_values.
+    def exitSymbolic_type_values(self, ctx:at_krl_parser.Symbolic_type_valuesContext):
         pass
 
 
@@ -545,6 +563,33 @@ class at_krl_parserListener(ParseTreeListener):
 
     # Exit a parse tree produced by at_krl_parser#rule_type.
     def exitRule_type(self, ctx:at_krl_parser.Rule_typeContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#rule_simple_type.
+    def enterRule_simple_type(self, ctx:at_krl_parser.Rule_simple_typeContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#rule_simple_type.
+    def exitRule_simple_type(self, ctx:at_krl_parser.Rule_simple_typeContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#rule_periodic_type.
+    def enterRule_periodic_type(self, ctx:at_krl_parser.Rule_periodic_typeContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#rule_periodic_type.
+    def exitRule_periodic_type(self, ctx:at_krl_parser.Rule_periodic_typeContext):
+        pass
+
+
+    # Enter a parse tree produced by at_krl_parser#rule_periodic_type_def.
+    def enterRule_periodic_type_def(self, ctx:at_krl_parser.Rule_periodic_type_defContext):
+        pass
+
+    # Exit a parse tree produced by at_krl_parser#rule_periodic_type_def.
+    def exitRule_periodic_type_def(self, ctx:at_krl_parser.Rule_periodic_type_defContext):
         pass
 
 

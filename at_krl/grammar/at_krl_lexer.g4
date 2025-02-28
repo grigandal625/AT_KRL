@@ -127,14 +127,10 @@ COMMENT_DATA : ~[\r\n]+ -> popMode;
 fragment STRING_LITERAL : SHORT_STRING | LONG_STRING;
 
 
-fragment SHORT_STRING
-    : ['] SHORT_STRING_ITEM_FOR_SINGLE_QUOTE* [']
-    | ["] SHORT_STRING_ITEM_FOR_DOUBLE_QUOTE* ["]
-    ;
+fragment SHORT_STRING: ["] SHORT_STRING_ITEM_FOR_DOUBLE_QUOTE* ["];
 
 fragment LONG_STRING
-    : ['][']['] LONG__STRING_ITEM*? ['][']['] // nongreede
-    | ["]["]["] LONG__STRING_ITEM*? ["]["]["] // nongreede
+    : ["]["]["] LONG__STRING_ITEM*? ["]["]["] // nongreede
     ;
 
 fragment SHORT_STRING_ITEM_FOR_SINGLE_QUOTE : SHORT_STRING_CHAR_NO_SINGLE_QUOTE | ESCAPE_SEQ;

@@ -6,7 +6,7 @@ from typing import Literal
 from typing import Optional
 from xml.etree.ElementTree import Element
 
-from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
+from at_krl.core.kb_value import Evaluatable
 from at_krl.core.simple.simple_reference import SimpleReference
 from at_krl.core.temporal.allen_class import AllenClass
 from at_krl.core.temporal.allen_evaluatable import AllenEvaluatable
@@ -17,12 +17,13 @@ logger = getLogger(__name__)
 @dataclass(kw_only=True)
 class AllenReference(SimpleReference, AllenEvaluatable):
     ref: Any = field(init=False, metadata={"serialize": False}, default=None)
-    index: Optional["SimpleEvaluatable"] = field(default=None)
+    index: Optional["Evaluatable"] = field(default=None)
     target: "AllenClass" = field(init=False, metadata={"serialize": False})
     meta: Literal["allen_reference"] = field(init=False, default="allen_reference")
 
     def __post_init__(self):
-        self.index.owner = self
+        if self.index:
+            self.index.owner = self
 
     @property
     def attrs(self) -> dict:
