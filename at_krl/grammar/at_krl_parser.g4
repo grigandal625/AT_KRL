@@ -149,25 +149,25 @@ kb_reference: simple_ref non_factor?;
 kb_operation // для значений атрибутов объектов (без логики Аллена)
     : kb_reference
     | kb_value
-    | MINUS kb_operation non_factor?
-    | logical_unary kb_operation non_factor?
-    | kb_operation high_p_math kb_operation non_factor?
-    | kb_operation low_p_math kb_operation non_factor?
-    | kb_operation compare kb_operation non_factor?
-    | kb_operation logical_binary kb_operation non_factor?
-    | LPAR newline? kb_operation newline? RPAR;
+    | MINUS kb_operation
+    | logical_unary kb_operation
+    | kb_operation high_p_math kb_operation
+    | kb_operation low_p_math kb_operation
+    | kb_operation compare kb_operation
+    | kb_operation logical_binary kb_operation
+    | LPAR newline? kb_operation newline? RPAR non_factor?;
 
 kb_evaluatable // для значений в правилах (с логикой Аллена)
     : allen_evaluatable
     | kb_reference
     | kb_value
-    | MINUS kb_evaluatable non_factor?
-    | logical_unary kb_evaluatable non_factor?
-    | kb_evaluatable high_p_math kb_evaluatable non_factor?
-    | kb_evaluatable low_p_math kb_evaluatable non_factor?
-    | kb_evaluatable compare kb_evaluatable non_factor?
-    | kb_evaluatable logical_binary kb_evaluatable non_factor? 
-    | LPAR newline? kb_evaluatable newline? RPAR;
+    | MINUS kb_evaluatable
+    | logical_unary kb_evaluatable
+    | kb_evaluatable high_p_math kb_evaluatable
+    | kb_evaluatable low_p_math kb_evaluatable
+    | kb_evaluatable compare kb_evaluatable
+    | kb_evaluatable logical_binary kb_evaluatable
+    | LPAR newline? kb_evaluatable newline? RPAR non_factor?;
 
 allen_reference: simple_ref;
 allen_indexed_reference: allen_reference index?;
@@ -183,13 +183,13 @@ allen_evaluatable: allen_operation | allen_attribute_expression;
 evaluatable: kb_evaluatable;
 
 logical_binary
-    : DOUBLEVBAR
-    | VBAR
-    | DOUBLEAMPER
-    | AMPER
-    | AND
-    | OR
-    | XOR
+    : (DOUBLEVBAR newline?)
+    | (VBAR newline?)
+    | (DOUBLEAMPER newline?)
+    | (AMPER newline?)
+    | (AND newline?)
+    | (OR newline?)
+    | (XOR newline?)
     ;
 
 logical_unary
@@ -198,55 +198,56 @@ logical_unary
     | EXCL;
 
 compare
-    : EQEQUAL
-    | EQUAL
-    | EQ
-    | GREATEREQUAL
-    | GREATER
-    | GT
-    | GE
-    | LESSEQUAL
-    | LESS
-    | LT
-    | LE
-    | NE
-    | NOTEQUAL
-    | INEQUAL
+    : (EQEQUAL newline?)
+    | (EQUAL newline?)
+    | (EQ newline?)
+    | (GREATEREQUAL newline?)
+    | (GREATER newline?)
+    | (GT newline?)
+    | (GE newline?)
+    | (LESSEQUAL newline?)
+    | (LESS newline?)
+    | (LT newline?)
+    | (LE newline?)
+    | (NE newline?)
+    | (NOTEQUAL newline?)
+    | (INEQUAL newline?)
     ;
 
 high_p_math
-    : DOUBLESTAR
-    | MUL
-    | SLASH
-    | DIV
-    | PERCENT
-    | MOD
-    | CIRCUMFLEX
-    | STAR
-    | POW;
+    : (DOUBLESTAR newline?)
+    | (MUL newline?)
+    | (SLASH newline?)
+    | (DIV newline?)
+    | (PERCENT newline?)
+    | (MOD newline?)
+    | (CIRCUMFLEX newline?)
+    | (STAR newline?)
+    | (POW newline?)
+    ;
 
 low_p_math
-    : PLUS
-    | ADD
-    | MINUS
-    | SUB
+    : (PLUS newline?)
+    | (ADD newline?)
+    | (MINUS newline?)
+    | (SUB newline?)
     ;
 
 allen
-    : ALLEN_B
-    | ALLEN_BI
-    | ALLEN_M
-    | ALLEN_MI
-    | ALLEN_S
-    | ALLEN_SI
-    | ALLEN_F
-    | ALLEN_FI
-    | ALLEN_D
-    | ALLEN_DI
-    | ALLEN_O
-    | ALLEN_OI
-    | ALLEN_E
-    | ALLEN_A
+    : (ALLEN_B newline?)
+    | (ALLEN_BI newline?)
+    | (ALLEN_M newline?)
+    | (ALLEN_MI newline?)
+    | (ALLEN_S newline?)
+    | (ALLEN_SI newline?)
+    | (ALLEN_F newline?)
+    | (ALLEN_FI newline?)
+    | (ALLEN_D newline?)
+    | (ALLEN_DI newline?)
+    | (ALLEN_O newline?)
+    | (ALLEN_OI newline?)
+    | (ALLEN_E newline?)
+    | (ALLEN_A newline?)
     ;
 
 commentary: COMMENT COMMENT_DATA;

@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from dataclasses import field
 from typing import Iterable
@@ -25,7 +26,7 @@ class KBRule(KBEntity):
     condition: Evaluatable
     instructions: List[KBInstruction]
     else_instructions: Optional[List[KBInstruction]] = field(default_factory=list)
-    meta: Literal["simple", "periodic"] = field(default="simple")
+    meta: Literal["simple", "periodic"] = field(init=False, default="simple")
     period: Optional[int] = field(default=None)
     desc: Optional[str] = field(default=None)
 
@@ -68,18 +69,29 @@ class KBRule(KBEntity):
 
     @property
     def krl(self) -> str:
-        action_krl = "ТО\n    " + "\n    ".join([instruction.krl for instruction in self.instructions])
+        os.environ["convert_default_non_factor"] = "false"
+        initial_instructions_krl_list = []
+        for instruction in self.instructions:
+            initial_instructions_krl_list.append(instruction.krl)
+        action_krl = "ТО\n    " + "\n    ".join(initial_instructions_krl_list)
         else_action_krl = ""
         if self.else_instructions is not None and len(self.else_instructions):
-            else_action_krl = (
-                "ИНАЧЕ\n    " + "\n    ".join([instruction.krl for instruction in self.else_instructions]) + "\n"
-            )
+            initial_else_instructions_krl_list = []
+            for instruction in self.else_instructions:
+                initial_else_instructions_krl_list.append(instruction.krl)
+            else_action_krl = "ИНАЧЕ\n    " + "\n    ".join(initial_else_instructions_krl_list) + "\n"
+
         type_krl = "\nТИП ОБЫЧНОЕ"
+
         if self.period:
             type_krl = f"\nТИП ПЕРИОДИЧЕСКОЕ\nПЕРИОД {self.period}"
+
+        os.environ["convert_default_non_factor"] = "true"
+        condition_krl = self.condition.krl
+
         return f"""ПРАВИЛО {self.id}{type_krl}
 ЕСЛИ
-    {self.condition.krl}
+    {condition_krl}
 {action_krl}
 {else_action_krl}КОММЕНТАРИЙ {self.desc}
 """

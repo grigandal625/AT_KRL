@@ -1,3 +1,4 @@
+import os
 from copy import deepcopy
 from dataclasses import dataclass
 from dataclasses import field
@@ -27,9 +28,12 @@ class Evaluatable(SimpleEvaluatable):
 
     @property
     def krl(self):
-        if not self.non_factor:
-            return self.to_simple().krl
-        return self.to_simple().krl + " " + self.non_factor.krl
+        if self.non_factor:
+            if os.getenv("convert_default_non_factor", "true") == "true":
+                os.environ["convert_default_non_factor"] = "false"
+                return f"{super().krl} {self.non_factor.krl}"
+            return f"{super().krl}{self.non_factor.not_default_krl}"
+        return super().krl
 
     @property
     def xml_owner_path(self) -> str:
@@ -78,9 +82,3 @@ class KBValue(Evaluatable, SimpleValue):
     @staticmethod
     def from_simple(simple_value: SimpleValue) -> "KBValue":
         return KBValue(content=simple_value.content, non_factor=NonFactor())
-
-    @property
-    def krl(self):
-        if self.non_factor:
-            return f"{self.to_simple().krl}{self.non_factor.not_default_krl}"
-        return self.to_simple().krl

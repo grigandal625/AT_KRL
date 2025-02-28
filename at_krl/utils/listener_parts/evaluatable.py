@@ -58,7 +58,7 @@ class ListenerForEvaluatableMixin:
                 )
             elif is_binary_operation:
                 left = operation_children[0].content
-                sign = ctx.children[1].getText()
+                sign = ctx.children[1].content
                 right = operation_children[1].content
                 ctx.content = KBOperation(
                     sign=sign,
@@ -68,8 +68,11 @@ class ListenerForEvaluatableMixin:
                 )
             elif len(operation_children) == 1:
                 ctx.content = operation_children[0].content
+                if non_factor_child:
+                    ctx.content.non_factor = non_factor_child.content
             else:
                 raise ValueError(f"Bad operation {ctx.getText()}")
+            return ctx
 
         return exiter
 

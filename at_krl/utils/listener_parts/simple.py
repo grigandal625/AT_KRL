@@ -29,7 +29,7 @@ class ListenerForSimpleMixin:
             filtered = self.filter_by_types(ctx.children, at_krl_parser.Simple_operationContext)
             if len(filtered) == 2:
                 ctx.content = SimpleOperation(
-                    sign=ctx.children[1].getText(), left=ctx.children[0].content, right=ctx.children[2].content
+                    sign=ctx.children[1].content, left=ctx.children[0].content, right=ctx.children[2].content
                 )
             elif len(filtered) == 1:
                 ctx.content = filtered[0].content
@@ -44,3 +44,15 @@ class ListenerForSimpleMixin:
 
     def exitSimple_evaluatable(self, ctx: at_krl_parser.Simple_evaluatableContext):
         ctx.content = ctx.children[0].content
+
+    def exitCompare(self, ctx: at_krl_parser.CompareContext):
+        ctx.content = ctx.children[0].getText()
+
+    def exitLogical_binary(self, ctx: at_krl_parser.Logical_binaryContext):
+        ctx.content = ctx.children[0].getText()
+
+    def exitHigh_p_math(self, ctx: at_krl_parser.High_p_mathContext):
+        ctx.content = ctx.children[0].getText()
+
+    def exitLow_p_math(self, ctx: at_krl_parser.Low_p_mathContext):
+        ctx.content = ctx.children[0].getText()

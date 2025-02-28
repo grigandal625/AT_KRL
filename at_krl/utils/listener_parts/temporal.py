@@ -9,7 +9,7 @@ class ListenerForTemporalMixin:
         ctx.content = AllenReference.from_simple(ctx.children[0].content)
 
     def exitAllen_indexed_reference(self, ctx: at_krl_parser.Allen_indexed_referenceContext):
-        ctx.content: AllenReference = ctx.children[0].content
+        ctx.content = ctx.children[0].content
         if len(ctx.children) == 2:
             index = ctx.children[1].content
             ctx.content.index = index
@@ -22,8 +22,11 @@ class ListenerForTemporalMixin:
 
     def exitAllen_operation(self, ctx: at_krl_parser.Allen_operationContext):
         ctx.content = AllenOperation(
-            sign=ctx.children[1].getText(), left=ctx.children[0].content, right=ctx.children[2].content
+            sign=ctx.children[1].content, left=ctx.children[0].content, right=ctx.children[2].content
         )
 
     def exitAllen_evaluatable(self, ctx: at_krl_parser.Allen_evaluatableContext):
         ctx.content = ctx.children[0].content
+
+    def exitAllen(self, ctx: at_krl_parser.AllenContext):
+        ctx.content = ctx.children[0].getText()
