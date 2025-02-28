@@ -65,8 +65,7 @@ class KBInterval(AllenClass):
     АТРИБУТ УслОконч
         ТИП ЛогВыр
         ЗНАЧЕНИЕ
-            {self.close.krl}
-"""
+            {self.close.krl}"""
 
     def validate(self, kb: "KnowledgeBase", *args, **kwargs):
         if not self._validated:

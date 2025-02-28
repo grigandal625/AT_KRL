@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from dataclasses import field
 from logging import getLogger
-from typing import Any
 from typing import Literal
 from typing import Optional
 from xml.etree.ElementTree import Element
@@ -16,7 +15,7 @@ logger = getLogger(__name__)
 
 @dataclass(kw_only=True)
 class AllenReference(SimpleReference, AllenEvaluatable):
-    ref: Any = field(init=False, metadata={"serialize": False}, default=None)
+    ref: None = field(init=False, metadata={"serialize": False}, default=None)
     index: Optional["Evaluatable"] = field(default=None)
     target: "AllenClass" = field(init=False, metadata={"serialize": False})
     meta: Literal["allen_reference"] = field(init=False, default="allen_reference")

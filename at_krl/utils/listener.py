@@ -66,3 +66,6 @@ class ATKRLListener(
                 ]
             )
         ]
+
+    def exitKnowledge_base(self, ctx):
+        print(self.KB.krl)
