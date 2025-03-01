@@ -15,21 +15,25 @@ if TYPE_CHECKING:
 
 TEMPORAL_TAGS_SIGNS = {
     # default: interval_interval: True, event_event: False, event_interval: False
-    "b": {"event_event": True, "event_interval": True},
-    "bi": {},
-    "m": {},
-    "mi": {},
-    "s": {"event_interval": True},
-    "si": {},
-    "f": {},
-    "fi": {},
-    "d": {"event_interval": True},
-    "di": {},
-    "o": {},
-    "oi": {},
-    "e": {"event_event": True},
-    "a": {"interval_interval": False, "event_interval": True},
+    "b": {"event_event": True, "event_interval": True, "inversion": "bi"},
+    "bi": {"inversion": "b"},
+    "m": {"inversion": "mi"},
+    "mi": {"inversion": "m"},
+    "s": {"event_interval": True, "inversion": "si"},
+    "si": {"inversion": "s"},
+    "f": {"inversion": "fi"},
+    "fi": {"inversion": "f"},
+    "d": {"event_interval": True, "inversion": "di"},
+    "di": {"inversion": "d"},
+    "o": {"inversion": "oi"},
+    "oi": {"inversion": "o"},
+    "e": {"event_event": True, "inversion": "e"},
+    "a": {"interval_interval": False, "event_interval": True, "inversion": "b"},
 }
+
+
+def get_inversion(op: str) -> str:
+    return TEMPORAL_TAGS_SIGNS.get(op, {}).get("inversion")
 
 
 @dataclass(kw_only=True)
@@ -62,12 +66,53 @@ class AllenOperation(SimpleOperation):
             return
         if self.left.target.legacy_tag == "Event" and self.right.target.legacy_tag == "Interval":
             self.legacy_tag = "EvIntRel"
+            self.validate_for_what()
         elif self.left.target.legacy_tag == "Interval" and self.right.target.legacy_tag == "Interval":
             self.legacy_tag = "IntRel"
+            self.validate_for_what()
         elif self.left.target.legacy_tag == "Event" and self.right.target.legacy_tag == "Event":
             self.legacy_tag = "EvRel"
+            self.validate_for_what()
+        elif self.left.target.legacy_tag == "Interval" and self.right.target.legacy_tag == "Event":
+            left = self.left
+            right = self.right
+            new_operation = get_inversion(self.sign)
+
+            self.sign = new_operation
+            self.left = right
+            self.right = left
+            self.__post_init__()
+            self.validate_for_what()
         else:
             logger.warning(f"Can't now determine operation type for {self.krl}. Will be determined in KB validation.")
+
+    def validate_for_what(self):
+        assert self.left.fullfiled, f"Expected fullfilled allen reference {self.left.id} for allen operation"
+        assert self.right.fullfiled, f"Expected fullfilled allen reference {self.right.id} for allen operation"
+        if self.legacy_tag == "EvIntRel":
+            assert self.left.target.legacy_tag == "Event", f'Expected left part of operation "{self.krl}" as event'
+            assert (
+                self.right.target.legacy_tag == "Interval"
+            ), f'Expected right part of operation "{self.krl}" as interval'
+            assert self.for_what[
+                "event_interval"
+            ], f'Expected supporting operation between event and interval for "{self.krl}"'
+        elif self.legacy_tag == "EvRel":
+            assert self.left.target.legacy_tag == "Event", f'Expected left part of operation "{self.krl}" as event'
+            assert self.right.target.legacy_tag == "Event", f'Expected right part of operation "{self.krl}" as event'
+            assert self.for_what[
+                "event_event"
+            ], f'Expected supporting operation between event and event for "{self.krl}"'
+        elif self.legacy_tag == "IntRel":
+            assert (
+                self.left.target.legacy_tag == "Interval"
+            ), f'Expected left part of operation "{self.krl}" as interval'
+            assert (
+                self.right.target.legacy_tag == "Interval"
+            ), f'Expected right part of operation "{self.krl}" as interval'
+            assert self.for_what[
+                "interval_interval"
+            ], f'Expected supporting operation between interval and interval for "{self.krl}"'
 
     @property
     def for_what(self) -> dict:

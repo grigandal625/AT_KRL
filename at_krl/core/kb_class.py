@@ -87,7 +87,14 @@ class KBClass(SimpleClass):
 
 @dataclass(kw_only=True)
 class TypeOrClassReference(SimpleReference):
+    meta: Literal["type_or_class"] = field(init=False, default="type_or_class")
     target: Union[KBType, KBClass] = field(default=None, init=False, metadata={"serialize": False})
+
+    @property
+    def attrs(self) -> dict:
+        result = super().attrs
+        result["meta"] = self.meta
+        return result
 
 
 @dataclass(kw_only=True)
