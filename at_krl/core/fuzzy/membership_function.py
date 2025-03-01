@@ -18,8 +18,7 @@ class MFPoint(KBEntity):
     def attrs(self) -> dict:
         return dict(x=str(self.x), y=str(self.y), **super().attrs)
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         return f"{self.x}|{self.y}"
 
 
@@ -51,7 +50,6 @@ class MembershipFunction(KBEntity):
             mf.append(point.xml)
         return [value, mf]
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         points_krl = "={" + "; ".join([p.krl for p in self.points]) + "}"
         return f'"{self.name}" {self.min} {self.max} {len(self.points)} {points_krl}'

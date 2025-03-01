@@ -37,8 +37,7 @@ class AllenAttributeExpression(SimpleReference, AllenEvaluatable):
         self.ref.owner = self
         self.target = FutureEvaluatingObject(NAME_TO_ID[self.id])
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         return f"{self.ref.krl}.{self.id}"
 
     @property

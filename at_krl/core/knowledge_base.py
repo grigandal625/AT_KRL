@@ -110,8 +110,7 @@ class KnowledgeBase(KBEntity):
                 self.world.rules.append(rule)
                 rule.owner = self.world
 
-    @property
-    def krl(self):
+    def get_krl(self, *args, **kwargs):
         res = "\n".join([t.krl for t in self.types])
         for property in self.world.properties:
             object_id = property.id

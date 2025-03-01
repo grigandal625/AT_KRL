@@ -45,8 +45,7 @@ class AllenReference(SimpleReference, AllenEvaluatable):
             return f"{self.owner.xml_owner_path}/{self.id}[{self.index.krl}]"
         return f"{self.owner.xml_owner_path}/{self.id}"
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         if self.index:
             return f"{self.id}[{self.index.krl}]"
         return self.id

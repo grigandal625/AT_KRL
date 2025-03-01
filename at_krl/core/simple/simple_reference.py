@@ -24,8 +24,7 @@ class SimpleReference(SimpleEvaluatable):
         if self.ref:
             self.ref.owner = self
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         result = self.id
         ref = self.ref
         while ref:

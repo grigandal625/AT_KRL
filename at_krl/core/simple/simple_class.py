@@ -20,8 +20,7 @@ class SimpleClass(KBEntity):
     def attrs(self) -> dict:
         return {"id": self.id, "desc": self.desc, "group": self.group}
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         group = self.group or "ГРУППА1"
 
         return f"""ОБЪЕКТ {self.id}

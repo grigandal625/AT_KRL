@@ -21,8 +21,7 @@ class KBType(KBEntity):
     meta: str = field(init=False, default="abstract")
     krl_type: str = field(init=False, default="АБСТРАКТНЫЙ", metadata={"serialize": False})
 
-    @property
-    def krl(self):
+    def get_krl(self, *args, **kwargs):
         return f"""ТИП {self.id}
 {self.krl_type}
 {self.inner_krl}

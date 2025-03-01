@@ -1,4 +1,3 @@
-import os
 from dataclasses import dataclass
 from dataclasses import field
 from typing import Iterable
@@ -67,26 +66,26 @@ class KBRule(KBEntity):
 
         return res
 
-    @property
-    def krl(self) -> str:
-        os.environ["convert_default_non_factor"] = "false"
-        initial_instructions_krl_list = []
-        for instruction in self.instructions:
-            initial_instructions_krl_list.append(instruction.krl)
-        action_krl = "ТО\n    " + "\n    ".join(initial_instructions_krl_list)
+    def get_krl(self, *args, **kwargs) -> str:
+        action_krl = "ТО\n    " + "\n    ".join(
+            [instruction.get_krl(convert_default_non_factor=False) for instruction in self.instructions]
+        )
         else_action_krl = ""
+
         if self.else_instructions is not None and len(self.else_instructions):
-            initial_else_instructions_krl_list = []
-            for instruction in self.else_instructions:
-                initial_else_instructions_krl_list.append(instruction.krl)
-            else_action_krl = "ИНАЧЕ\n    " + "\n    ".join(initial_else_instructions_krl_list) + "\n"
+            else_action_krl = (
+                "ИНАЧЕ\n    "
+                + "\n    ".join(
+                    [instruction.get_krl(convert_default_non_factor=False) for instruction in self.else_instructions]
+                )
+                + "\n"
+            )
 
         type_krl = "\nТИП ОБЫЧНОЕ"
 
         if self.period:
             type_krl = f"\nТИП ПЕРИОДИЧЕСКОЕ\nПЕРИОД {self.period}"
 
-        os.environ["convert_default_non_factor"] = "true"
         condition_krl = self.condition.krl
 
         return f"""ПРАВИЛО {self.id}{type_krl}

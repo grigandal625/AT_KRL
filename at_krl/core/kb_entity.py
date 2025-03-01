@@ -44,9 +44,12 @@ class KBEntity:
     def inner_xml(self) -> Union[str, Element, List[Element], Iterable[Element], None]:
         return None
 
+    def get_krl(self, *args, **kwargs) -> str:
+        raise NotImplementedError("Not implemented")
+
     @property
     def krl(self) -> str:
-        raise NotImplementedError("Not implemented")
+        return self.get_krl()
 
     def getText(self) -> str:
         return self.krl

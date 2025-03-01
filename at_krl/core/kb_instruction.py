@@ -36,9 +36,8 @@ class AssignInstruction(KBInstruction):
     def inner_xml(self) -> List[Element] | Iterable[Element]:
         return [self.ref.xml, self.value.xml, self.non_factor.xml]
 
-    @property
-    def krl(self) -> str:
-        return f"{self.ref.to_simple().krl} = ({self.value.krl}) {self.non_factor.krl}"
+    def get_krl(self, *args, **kwargs) -> str:
+        return f"{self.ref.to_simple().krl} = ({self.value.get_krl(*args, **kwargs)}) {self.non_factor.krl}"
 
     def validate(self, kb: "KnowledgeBase", *args, **kwargs):
         if not self._validated:

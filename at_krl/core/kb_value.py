@@ -1,4 +1,3 @@
-import os
 from copy import deepcopy
 from dataclasses import dataclass
 from dataclasses import field
@@ -26,14 +25,13 @@ class Evaluatable(SimpleEvaluatable):
             result.append(self.non_factor.xml)
         return result
 
-    @property
-    def krl(self):
+    def get_krl(self, *args, **kwargs):
         if self.non_factor:
-            if os.getenv("convert_default_non_factor", "true") == "true":
-                os.environ["convert_default_non_factor"] = "false"
-                return f"{super().krl} {self.non_factor.krl}"
-            return f"{super().krl}{self.non_factor.not_default_krl}"
-        return super().krl
+            if kwargs.get("convert_default_non_factor", True):
+                kwargs["convert_default_non_factor"] = False
+                return f"{super().get_krl(*args, **kwargs)} {self.non_factor.krl}"
+            return f"{super().get_krl(*args, **kwargs)}{self.non_factor.not_default_krl}"
+        return super().get_krl(*args, **kwargs)
 
     @property
     def xml_owner_path(self) -> str:

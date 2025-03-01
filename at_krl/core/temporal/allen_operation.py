@@ -78,8 +78,7 @@ class AllenOperation(SimpleOperation):
         for_what["event_interval"] = _for_what.get("event_interval", False)
         return for_what
 
-    @property
-    def krl(self):
+    def get_krl(self, *args, **kwargs):
         return f"{self.left.krl} {self.sign} {self.right.krl}"
 
     @property

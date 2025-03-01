@@ -79,11 +79,10 @@ class SimpleOperation(SimpleEvaluatable):
             result.append(self.right.xml)
         return result
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         if self.is_binary:
-            return f"({self.left.krl}) {self.sign} ({self.right.krl})"
-        return f"{self.sign} ({self.left.krl})"
+            return f"({self.left.get_krl(*args, **kwargs)}) {self.sign} ({self.right.get_krl(*args, **kwargs)})"
+        return f"{self.sign} ({self.left.get_krl(*args, **kwargs)})"
 
     def to_simple(self) -> "SimpleOperation":
         return SimpleOperation(

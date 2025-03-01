@@ -103,8 +103,7 @@ class PropertyDefinition(KBEntity, LegacyMixin):  # LegacyMixin для совм�
 
     legacy_tag: Literal["property"] = field(init=False, default="property")
 
-    @property
-    def krl(self):
+    def get_krl(self, *args, **kwargs):
         krl = f"""АТРИБУТ {self.id}
     ТИП {self.type.krl}"""
         if self.value:
@@ -207,8 +206,7 @@ class KBInstance(KBEntity, LegacyMixin):
             result.append(properties)
         return result
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         krl = f"""ЭКЗЕМПЛЯР {self.id}
 ТИП {self.type.id}"""
         if self.value:

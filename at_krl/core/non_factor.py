@@ -35,8 +35,7 @@ class NonFactor(KBEntity):
     def attrs(self) -> dict:
         return {"belief": str(self.belief), "probability": str(self.probability), "accuracy": str(self.accuracy)}
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         return f"УВЕРЕННОСТЬ [{self.belief}; {self.probability}] ТОЧНОСТЬ {self.accuracy}"
 
     @property

@@ -41,8 +41,7 @@ class SimpleValue(SimpleEvaluatable):
     def legacy_attrs(self) -> dict:
         return {"Value": str(self.content)}
 
-    @property
-    def krl(self) -> str:
+    def get_krl(self, *args, **kwargs) -> str:
         return json.dumps(self.content, ensure_ascii=False)
 
     @property
