@@ -15,4 +15,8 @@ class KBIntervalModel(AllenClassModel):
     def build_target(self, data, context: Context):
         data["open"] = self.open.to_internal()
         data["close"] = self.close.to_internal()
-        return KBInterval(**data)
+
+        result = KBInterval(**data)
+        if context.kb:
+            context.kb.classes.intervals.append(result)
+        return result

@@ -4,6 +4,7 @@ from typing import Optional
 
 from at_krl.core.kb_type import KBFuzzyType
 from at_krl.core.kb_type import KBNumericType
+from at_krl.core.kb_type import KBSymbolicType
 from at_krl.core.kb_type import KBType
 from at_krl.models.fuzzy.membership_function import MembershipFunctionModel
 from at_krl.models.kb_entity import KBEntityModel
@@ -11,7 +12,6 @@ from at_krl.models.kb_entity import KBRootModel
 from at_krl.utils.context import Context
 
 
-# ready
 class KBTypeModel(KBEntityModel):
     id: Optional[str]
     desc: Optional[str]
@@ -26,7 +26,21 @@ class KBNumericTypeModel(KBTypeModel):
     to_: float
 
     def build_target(self, data, context: Context):
-        return KBNumericType(**data)
+        result = KBNumericType(**data)
+        if context.kb:
+            context.kb.types.append(result)
+        return result
+
+
+class KBSymbolicTypeModel(KBTypeModel):
+    values: List[str]
+    meta: Literal["string"]
+
+    def build_target(self, data, context: Context):
+        result = KBSymbolicType(**data)
+        if context.kb:
+            context.kb.types.append(result)
+        return result
 
 
 class MFListModel(KBRootModel[List[MembershipFunctionModel]]):
@@ -39,4 +53,7 @@ class KBFuzzyTypeModel(KBTypeModel):
 
     def build_target(self, data, context: Context):
         data["membership_functions"] = self.membership_functions.to_internal()
-        return KBFuzzyType(**data)
+        result = KBFuzzyType(**data)
+        if context.kb:
+            context.kb.types.append(result)
+        return result
