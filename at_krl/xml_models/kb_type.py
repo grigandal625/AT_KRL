@@ -1,13 +1,16 @@
+from typing import List
 from typing import Literal
-from typing import Optional, List
+from typing import Optional
 
 from pydantic_xml import attr
 from pydantic_xml import element
 
-from at_krl.core.kb_type import KBNumericType, KBSymbolicType, KBFuzzyType
+from at_krl.core.kb_type import KBFuzzyType
+from at_krl.core.kb_type import KBNumericType
+from at_krl.core.kb_type import KBSymbolicType
 from at_krl.utils.context import Context
-from at_krl.xml_models.kb_entity import KBEntityXMLModel
 from at_krl.xml_models.fuzzy.membership_function import MembershipFunctionXMLModel
+from at_krl.xml_models.kb_entity import KBEntityXMLModel
 
 
 class KBTypeXMLModel(KBEntityXMLModel, tag="type"):
@@ -49,8 +52,8 @@ class KBFuzzyTypeXMLModel(KBTypeXMLModel):
     membership_functions: List[MembershipFunctionXMLModel] = element()
 
     def build_target(self, data, context: Context):
-        data['membership_functions'] = [
-            f.to_internal(context=context.create_child('membership_functions').create_child(i)) 
+        data["membership_functions"] = [
+            f.to_internal(context=context.create_child("membership_functions").create_child(i))
             for i, f in enumerate(self.membership_functions)
         ]
         return KBFuzzyType(**data)
