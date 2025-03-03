@@ -11,11 +11,12 @@ from at_krl.models.kb_instruction import KBInstructionModel
 from at_krl.models.kb_operation import KBOperationModel
 from at_krl.models.kb_reference import KBReferenceModel
 from at_krl.models.kb_value import KBValueModel
+from at_krl.utils.context import Context
 
 
 class KBInstructionListModel(KBRootModel[List[KBInstructionModel]]):
-    def build_target(self, data):
-        return [p.to_internal() for p in self.points]
+    def build_target(self, data, context: Context):
+        return [p.to_internal() for p in self.root]
 
 
 class KBRuleModel(KBEntityModel):
@@ -28,9 +29,13 @@ class KBRuleModel(KBEntityModel):
     period: Optional[int] = Field(default=None)
     desc: Optional[str] = Field(default=None)
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         data["condition"] = self.condition.to_internal()
         data["instructions"] = self.instructions.to_internal()
         if self.else_instructions:
             data["else_instructions"] = self.else_instructions.to_internal()
-        return KBRule(**data)
+
+        result = KBRule(**data)
+        if context.kb:
+            context.kb.rules.append(result)
+        return result

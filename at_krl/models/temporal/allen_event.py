@@ -13,4 +13,7 @@ class KBEventModel(AllenClassModel):
 
     def build_target(self, data, context: Context):
         data["occurance_condition"] = self.occurance_condition.to_internal()
-        return KBEvent(**data)
+        result = KBEvent(**data)
+        if context.kb:
+            context.kb.classes.events.append(result)
+        return result

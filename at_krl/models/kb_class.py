@@ -22,7 +22,7 @@ from at_krl.utils.context import Context
 
 
 class KBRuleListModel(KBRootModel[List[KBRuleModel]]):
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         return [p.to_internal() for p in self.points]
 
 
@@ -30,10 +30,13 @@ class KBClassModel(SimpleClassModel):
     properties: Optional["PropertyDefinitionListModel"] = Field(default_factory=list)
     rules: Optional[KBRuleListModel] = Field(default_factory=list)
 
-    def build_target(self, data):
-        # data["properties"] = self.properties.to_internal
+    def build_target(self, data, context: Context):
+        data["properties"] = self.properties.to_internal
         data["rules"] = self.rules.to_internal()
-        return KBClass(**data)
+        result = KBClass(**data)
+        if context.kb:
+            context.kb.classes.append(result)
+        return result
 
 
 class TypeOrClassReferenceModel(SimpleReferenceModel):
@@ -51,7 +54,7 @@ class PropertyDefinitionModel(KBEntityModel):  # LegacyMixin для совмес
     question: Optional[str] = Field(default=None)
     query: Optional[str] = Field(default=None)
 
-    def build_target(self, data, context):
+    def build_target(self, data, context: Context):
         return PropertyDefinition(**data)
 
 
@@ -69,7 +72,8 @@ class KBInstanceModel(KBEntityModel):
     create: bool = Field(default=True)
     properties: Optional["KBPropertyListModel"] = Field(default_factory=list)
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
+        # if self.properties:
         data["properties"] = self.properties.to_internal()
 
         return KBInstance(**data)
