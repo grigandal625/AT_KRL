@@ -13,7 +13,7 @@ class Context:
     kb: KnowledgeBase
     parent: Optional["Context"] = field(default=None)
 
-    def create_child(self, name, data):
+    def create_child(self, name, data=None):
         return Context(name=name, data=data, kb=self.kb, parent=self)
 
     @property
