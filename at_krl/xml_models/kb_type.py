@@ -33,6 +33,7 @@ class KBNumericTypeXMLModel(KBTypeXMLModel):
         result = KBNumericType(**data)
         if context.kb:
             context.kb.types.append(result)
+            result.owner = context.kb
         return result
 
 
@@ -44,6 +45,7 @@ class KBSymbolicTypeXMLModel(KBTypeXMLModel):
         result = KBSymbolicType(**data)
         if context.kb:
             context.kb.types.append(result)
+            result.owner = context.kb
         return result
 
 
@@ -51,9 +53,17 @@ class KBFuzzyTypeXMLModel(KBTypeXMLModel):
     meta: Literal["fuzzy"] = attr()
     membership_functions: List[MembershipFunctionXMLModel] = element()
 
-    def build_target(self, data, context: Context):
+    def get_data(self, context: Context):
+        data = super().get_data(context)
         data["membership_functions"] = [
             f.to_internal(context=context.create_child("membership_functions").create_child(i))
             for i, f in enumerate(self.membership_functions)
         ]
-        return KBFuzzyType(**data)
+        return data
+
+    def build_target(self, data, context: Context):
+        result = KBFuzzyType(**data)
+        if context.kb:
+            context.kb.types.append(result)
+            result.owner = context.kb
+        return result
