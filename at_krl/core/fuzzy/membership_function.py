@@ -41,8 +41,7 @@ class MembershipFunction(KBEntity):
         res["max-value"] = str(self.max)
         return res
 
-    @property
-    def inner_xml(self) -> List[Element] | Iterable[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> List[Element] | Iterable[Element]:
         value = Element("value")
         value.text = self.name
         mf = Element("mf")

@@ -130,7 +130,7 @@ class KnowledgeBase(KBEntity):
     def xml(self):
         return self.get_xml()
 
-    def get_xml(self, with_allen=True) -> Element:
+    def get_xml(self, *args, **kwargs):
         knowledge_base = Element("knowledge-base")
         knowledge_base.attrib["creation-date"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
@@ -138,32 +138,34 @@ class KnowledgeBase(KBEntity):
         types = Element("types")
 
         for t in self.types:
-            types.append(t.xml)
+            types.append(t.get_xml(*args, **kwargs))
 
         knowledge_base.append(types)
 
-        if with_allen:
-            knowledge_base.append(self.allen_xml)
+        if kwargs.get("legacy"):
+            knowledge_base.append(self.get_allen_xml(*args, **kwargs))
 
         classes = Element("classes")
         for c in self.classes.objects:
-            classes.append(c.xml)
+            classes.append(c.get_xml(*args, **kwargs))
+        if not kwargs.get("legacy"):
+            for c in self.classes.temporal_objects:
+                classes.append(c.get_xml(*args, **kwargs))
 
         if not self.with_world:
-            classes.append(self.world.xml)  # rules are here
+            classes.append(self.world.get_xml(*args, **kwargs))  # rules are here
         knowledge_base.append(classes)
 
         return knowledge_base
 
-    @property
-    def allen_xml(self) -> Element:
+    def get_allen_xml(self, *args, **kwargs) -> Element:
         intervals = Element("Intervals")
         for interval in self.classes.intervals:
-            intervals.append(interval.xml)
+            intervals.append(interval.get_xml(*args, **kwargs))
 
         events = Element("Events")
         for event in self.classes.events:
-            events.append(event.xml)
+            events.append(event.get_xml(*args, **kwargs))
 
         intervals_and_events = Element("IntervalsAndEvents")
         intervals_and_events.append(intervals)

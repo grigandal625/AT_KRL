@@ -5,7 +5,7 @@ from at_krl.core.simple.legacy import LegacyMixin
 
 
 @dataclass(kw_only=True)
-class SimpleEvaluatable(KBEntity, LegacyMixin):
+class SimpleEvaluatable(LegacyMixin, KBEntity):
     def to_simple(self) -> "SimpleEvaluatable":
         raise NotImplementedError("Not implemented")
 

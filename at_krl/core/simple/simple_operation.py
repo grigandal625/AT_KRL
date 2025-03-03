@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from dataclasses import field
 from logging import getLogger
 from typing import List
+from typing import Literal
 from typing import Optional
 from xml.etree.ElementTree import Element
 
@@ -26,6 +27,8 @@ class SimpleOperation(SimpleEvaluatable):
     left: SimpleEvaluatable
     right: Optional[SimpleEvaluatable] = field(default=None)
     operation_name: str = field(init=False, metadata={"serialize": False})
+
+    legacy_tag: Literal["EqOp", "LogOp", "ArOp"] = field(init=False)
 
     def __post_init__(self):
         for op in TAGS_SIGNS:
@@ -57,9 +60,9 @@ class SimpleOperation(SimpleEvaluatable):
 
     @property
     def legacy_inner_xml(self) -> List[Element]:
-        result = [self.left.legacy_inner_xml]
+        result = [self.left.get_xml(legacy=True)]
         if self.is_binary:
-            result.append(self.right.legacy_inner_xml)
+            result.append(self.right.get_xml(legacy=True))
         return result
 
     @property
@@ -72,8 +75,9 @@ class SimpleOperation(SimpleEvaluatable):
     def is_binary(self):
         return is_binary(self.left, self.right)
 
-    @property
-    def inner_xml(self) -> List[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> List[Element]:
+        if kwargs.get("legacy"):
+            return self.legacy_inner_xml
         result = [self.left.xml]
         if self.is_binary:
             result.append(self.right.xml)

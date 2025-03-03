@@ -14,7 +14,11 @@ if TYPE_CHECKING:
 
 
 @dataclass(kw_only=True)
-class KBOperation(Evaluatable, SimpleOperation):
+class KBOperation(SimpleOperation, Evaluatable):
+    def __post_init__(self):
+        super().__post_init__()
+        self.legacy_tag = self.tag
+
     @staticmethod
     def from_simple(op: SimpleOperation):
         return KBOperation(
@@ -23,6 +27,14 @@ class KBOperation(Evaluatable, SimpleOperation):
             right=SIMPLE_TO_EVALUATABLE[op.right.__class__].from_simple(op.right) if op.right else None,
             non_factor=NonFactor(),
         )
+
+    @property
+    def legacy_attrs(self):
+        return self.attrs
+
+    @property
+    def legacy_available(self) -> bool:
+        return True
 
 
 SIMPLE_TO_EVALUATABLE = {

@@ -5,6 +5,7 @@ from pydantic import Field
 
 from at_krl.core.simple.simple_operation import SimpleOperation
 from at_krl.models.simple.simple_evaluatable import SimpleEvaluatableModel
+from at_krl.utils.context import Context
 
 # from at_krl.models.simple.operation_tags import TAGS_SIGNS
 
@@ -17,7 +18,7 @@ class SimpleOperationModel(SimpleEvaluatableModel):
     left: SimpleEvaluatableModel
     right: Optional[SimpleEvaluatableModel] = Field(default=None)
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         data["left"] = self.left.to_internal()
         data["right"] = self.right.to_internal()
 

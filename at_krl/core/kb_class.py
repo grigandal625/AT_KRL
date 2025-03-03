@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass(kw_only=True)
-class KBClass(SimpleClass):
+class KBClass(LegacyMixin, SimpleClass):
     properties: Optional[List["PropertyDefinition"]] = field(default_factory=list)
     rules: Optional[List[KBRule]] = field(default_factory=list)
 
@@ -33,21 +33,24 @@ class KBClass(SimpleClass):
     def attrs(self) -> dict:
         return {
             "id": self.id,
-            "desc": self.desc,
+            "desc": self.desc or self.id,
             "group": self.group or "ГРУППА1",
         }
 
-    @property
-    def inner_xml(self) -> List[Element] | Iterable[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> List[Element] | Iterable[Element]:
         properties = Element("properties")
         for p in self.properties:
-            properties.append(p.xml)
+            properties.append(p.get_xml(*args, **kwargs))
         if len(self.rules):
             rules = Element("rules")
             for r in self.rules:
-                rules.append(r.xml)
+                rules.append(r.get_xml(*args, **kwargs))
             return [properties, rules]
         return [properties]
+
+    @property
+    def legacy_inner_xml(self) -> List[Element]:
+        return self.get_inner_xml(legacy=True)
 
     @property
     def inner_krl(self):
@@ -98,7 +101,7 @@ class TypeOrClassReference(SimpleReference):
 
 
 @dataclass(kw_only=True)
-class PropertyDefinition(KBEntity, LegacyMixin):  # LegacyMixin для совместимости со старым АТ-РЕШАТЕЛЕМ
+class PropertyDefinition(LegacyMixin, KBEntity):  # LegacyMixin для совместимости со старым АТ-РЕШАТЕЛЕМ
     tag: Literal["property"] = field(init=False, default="property")
     id: str
     type: TypeOrClassReference
@@ -124,14 +127,15 @@ class PropertyDefinition(KBEntity, LegacyMixin):  # LegacyMixin для совм�
 
     @property
     def attrs(self):
-        return {"id": self.id, "desc": self.desc, "source": self.source}
+        return {"id": self.id, "desc": self.desc or self.id, "source": self.source}
 
     @property
     def legacy_attrs(self):
-        return {"id": self.id, "type": self.type.krl, "desc": self.desc, "source": self.source}
+        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "source": self.source}
 
-    @property
-    def inner_xml(self):
+    def get_inner_xml(self, *args, **kwargs):
+        if kwargs.get("legacy"):
+            return self.legacy_inner_xml
         type_element = Element("type")
         type_element.append(self.type.xml)
         result = [type_element]
@@ -168,7 +172,7 @@ class PropertyDefinition(KBEntity, LegacyMixin):  # LegacyMixin для совм�
 
 
 @dataclass(kw_only=True)
-class KBInstance(KBEntity, LegacyMixin):
+class KBInstance(LegacyMixin, KBEntity):
     tag: Literal["instance"] = field(init=False, default="instance")
     id: str
     type: TypeOrClassReference
@@ -181,14 +185,15 @@ class KBInstance(KBEntity, LegacyMixin):
 
     @property
     def attrs(self) -> dict:
-        return {"id": self.id, "desc": self.desc, "create": self.create}
+        return {"id": self.id, "desc": self.desc or self.id, "create": self.create}
 
     @property
     def legacy_attrs(self) -> dict:
-        return {"id": self.id, "type": self.type.krl, "desc": self.desc, "create": self.create}
+        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "create": self.create}
 
-    @property
-    def inner_xml(self) -> List[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> List[Element]:
+        if kwargs.get("legacy"):
+            return self.legacy_inner_xml
         type_element = Element("type")
         type_element.append(self.type.xml)
         result = [type_element]
@@ -209,7 +214,7 @@ class KBInstance(KBEntity, LegacyMixin):
         if self.properties:
             properties = Element("properties")
             for prop in self.properties:
-                properties.append(prop.xml)
+                properties.append(prop.get_xml(legacy=True))
             result.append(properties)
         return result
 

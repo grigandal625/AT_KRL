@@ -45,23 +45,22 @@ class KBRule(KBEntity):
     def attrs(self) -> dict:
         return {"id": self.id, "meta": self.meta, "desc": self.desc or self.id}
 
-    @property
-    def inner_xml(self) -> str | Element | List[Element] | Iterable[Element] | None:
+    def get_inner_xml(self, *args, **kwargs) -> str | Element | List[Element] | Iterable[Element] | None:
         res = []
 
         condition = Element("condition")
-        condition.append(self.condition.xml)
+        condition.append(self.condition.get_xml(*args, **kwargs))
         res.append(condition)
 
         action = Element("action")
         for instruction in self.instructions:
-            action.append(instruction.xml)
+            action.append(instruction.get_xml(*args, **kwargs))
         res.append(action)
 
         if (self.else_instructions is not None) and len(self.else_instructions):
             else_action = Element("else-action")
             for instruction in self.else_instructions:
-                else_action.append(instruction.xml)
+                else_action.append(instruction.get_xml(*args, **kwargs))
             res.append(else_action)
 
         return res

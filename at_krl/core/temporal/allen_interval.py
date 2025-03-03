@@ -25,18 +25,19 @@ class KBInterval(AllenClass):
         self.open.owner = self
         return super().__post_init__()
 
-    @property
-    def inner_xml(self) -> Element:
-        result = Element(tag="properties")
+    def get_inner_xml(self, *args, **kwargs) -> Element:
+        if kwargs.get("legacy"):
+            return self.legacy_inner_xml
+        result = Element("properties")
 
-        open = Element(tag="property", attrib={"id": "УслНач", "type": "ЛогВыр"})
-        open_value = Element(tag="value")
+        open = Element("property", attrib={"id": "УслНач", "type": "ЛогВыр"})
+        open_value = Element("value")
         open_value.append(self.open.xml)
         open.append(open_value)
         result.append(open)
 
-        close = Element(tag="property", attrib={"id": "УслОконч", "type": "ЛогВыр"})
-        close_value = Element(tag="value")
+        close = Element("property", attrib={"id": "УслОконч", "type": "ЛогВыр"})
+        close_value = Element("value")
         close_value.append(self.close.xml)
         close.append(close_value)
         result.append(close)
@@ -46,14 +47,14 @@ class KBInterval(AllenClass):
     @property
     def legacy_inner_xml(self) -> List[Element]:
         open = Element("Open")
-        open.append(self.open.xml)
+        open.append(self.open.get_xml(legacy=True))
         close = Element("Close")
-        close.append(self.close.xml)
+        close.append(self.close.get_xml(legacy=True))
         return [open, close]
 
     @property
     def legacy_available(self) -> bool:
-        raise True
+        return True
 
     @property
     def inner_krl(self):

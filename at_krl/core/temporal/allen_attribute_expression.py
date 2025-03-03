@@ -46,8 +46,7 @@ class AllenAttributeExpression(SimpleReference, AllenEvaluatable):
         result["meta"] = self.meta
         return result
 
-    @property
-    def inner_xml(self) -> Element:
+    def get_inner_xml(self, *args, **kwargs) -> Element:
         result = super().inner_xml
         result.append(self.ref.xml)
         return result

@@ -12,6 +12,7 @@ class SimpleClass(KBEntity):
     id: str
     group: Optional[str] = field(default=None)
     desc: Optional[str] = field(default=None)
+    legacy_tag: Literal["class"] = field(init=False, default="class")
 
     def __post_init__(self):
         self.desc = self.desc or self.id

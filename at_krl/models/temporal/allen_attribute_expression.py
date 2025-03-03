@@ -2,6 +2,7 @@ from typing import Literal
 
 from at_krl.core.temporal.allen_attribute_expression import FutureEvaluatingObject
 from at_krl.models.kb_entity import KBEntityModel
+from at_krl.utils.context import Context
 
 
 class FutureEvaluatingObjectModel(KBEntityModel):
@@ -9,7 +10,7 @@ class FutureEvaluatingObjectModel(KBEntityModel):
         "DURATION", "OCCURANCE_COUNT", "OPEN_COUNT", "CLOSE_COUNT", "OPENT_TACT", "CLOSE_TACT", "OCCURANCE_TACT"
     ]
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         return FutureEvaluatingObject(**data)
 
 
@@ -19,7 +20,7 @@ class FutureEvaluatingObjectModel(KBEntityModel):
 #     meta: Literal["allen_attribute_expression"]
 #     target: FutureEvaluatingObjectModel
 
-#     def build_target(self, data):
+#     def build_target(self, data, context: Context):
 #         data['ref'] = self.ref.to_internal()
 #         data['target'] = self.target.to_internal()
 #         return AllenAttributeExpression(**data)

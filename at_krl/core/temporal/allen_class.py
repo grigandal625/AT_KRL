@@ -5,5 +5,5 @@ from at_krl.core.simple.simple_class import SimpleClass
 
 
 @dataclass(kw_only=True)
-class AllenClass(SimpleClass, LegacyMixin):
+class AllenClass(LegacyMixin, SimpleClass):
     pass

@@ -25,7 +25,7 @@ class KBType(KBEntity):
         return f"""ТИП {self.id}
 {self.krl_type}
 {self.inner_krl}
-КОММЕНТАРИЙ {self.desc}
+КОММЕНТАРИЙ {self.desc or self.id}
 """
 
     @property
@@ -34,7 +34,7 @@ class KBType(KBEntity):
 
     @property
     def attrs(self) -> dict:
-        return {"id": self.id, "meta": self.meta, "desc": self.desc}
+        return {"id": self.id, "meta": self.meta, "desc": self.desc or self.id}
 
     def validate_value(self, value) -> bool:
         raise NotImplementedError("Not implemented")
@@ -57,8 +57,7 @@ class KBNumericType(KBType):
         return f"""    ОТ {self.from_}
     ДО {self.to_}"""
 
-    @property
-    def inner_xml(self) -> List[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> List[Element]:
         f = Element("from")
         f.text = str(self.from_)
         t = Element("to")
@@ -95,8 +94,7 @@ class KBSymbolicType(KBType):
     def inner_krl(self):
         return '    "' + '"\n"'.join(self.values) + '"'
 
-    @property
-    def inner_xml(self) -> List[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> List[Element]:
         res = []
         for v in self.values:
             value = Element("value")
@@ -122,8 +120,7 @@ class KBFuzzyType(KBType):
     def inner_krl(self):
         return f"{len(self.membership_functions)}\n" + "    \n".join([mf.krl for mf in self.membership_functions])
 
-    @property
-    def inner_xml(self) -> List[Element] | Iterable[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> List[Element] | Iterable[Element]:
         return [mf.xml for mf in self.membership_functions]
 
     def validate_value(self, value) -> bool:

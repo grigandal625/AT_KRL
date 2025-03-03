@@ -23,11 +23,10 @@ class KBEvent(AllenClass):
         self.occurance_condition.owner = self
         return super().__post_init__()
 
-    @property
-    def inner_xml(self) -> Element:
-        result = Element(tag="properties")
-        occurance_condition = Element(tag="property", attrib={"id": "УслВозн", "type": "ЛогВыр"})
-        value = Element(tag="value")
+    def get_inner_xml(self, *args, **kwargs) -> Element:
+        result = Element("properties")
+        occurance_condition = Element("property", attrib={"id": "УслВозн", "type": "ЛогВыр"})
+        value = Element("value")
         value.append(self.occurance_condition.xml)
         occurance_condition.append(value)
         result.append(occurance_condition)
@@ -36,7 +35,7 @@ class KBEvent(AllenClass):
     @property
     def legacy_inner_xml(self) -> Element:
         formula = Element("Formula")
-        formula.append(self.occurance_condition.legacy_xml)
+        formula.append(self.occurance_condition.get_xml(legacy=True))
         return formula
 
     @property
@@ -45,7 +44,7 @@ class KBEvent(AllenClass):
 
     @property
     def legacy_available(self) -> bool:
-        raise True
+        return True
 
     @property
     def inner_krl(self):

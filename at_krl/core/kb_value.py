@@ -15,13 +15,13 @@ class Evaluatable(SimpleEvaluatable):
     non_factor: NonFactor = field(default_factory=NonFactor)
 
     def __post_init__(self):
+        super().__post_init__()
         if self.non_factor:
             self.non_factor.owner = self
 
-    @property
-    def xml(self) -> Element:
-        result = super().xml
-        if self.non_factor:
+    def get_xml(self, *args, **kwargs) -> Element:
+        result = super().get_xml(*args, **kwargs)
+        if self.non_factor and (not self.non_factor.is_default or kwargs.get("convert_default_non_factor")):
             result.append(self.non_factor.xml)
         return result
 
@@ -68,6 +68,12 @@ class Evaluatable(SimpleEvaluatable):
 class KBValue(Evaluatable, SimpleValue):
     tag: Literal["value"] = field(init=False, default="value")
     content: Any
+    legacy_tag: Literal["value"] = field(init=False, default="value")
+
+    def __post_init__(self):
+        result = super().__post_init__()
+        self.legacy_tag = self.tag
+        return result
 
     def copy(self):
         if self.non_factor is not None:
@@ -80,3 +86,15 @@ class KBValue(Evaluatable, SimpleValue):
     @staticmethod
     def from_simple(simple_value: SimpleValue) -> "KBValue":
         return KBValue(content=simple_value.content, non_factor=NonFactor())
+
+    @property
+    def legacy_inner_xml(self):
+        return self.get_inner_xml()
+
+    @property
+    def legacy_attrs(self):
+        return self.attrs
+
+    @property
+    def legacy_available(self):
+        return True

@@ -48,10 +48,9 @@ class SimpleReference(SimpleEvaluatable):
     def attrs(self) -> dict:
         return {"id": self.id}
 
-    @property
-    def inner_xml(self) -> Optional[Element]:
+    def get_inner_xml(self, *args, **kwargs) -> Optional[Element]:
         if self.ref:
-            return self.ref.xml
+            return self.ref.get_xml(*args, **kwargs)
 
     @property
     def fullfiled(self) -> bool:

@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.10"
 antlr4-python3-runtime = "^4.13.2"
 pydantic = "^2.10.6"
+pydantic-xml = "^2.14.2"
 
 
 [tool.poetry.group.dev.dependencies]

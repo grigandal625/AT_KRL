@@ -44,8 +44,7 @@ class SimpleValue(SimpleEvaluatable):
     def get_krl(self, *args, **kwargs) -> str:
         return json.dumps(self.content, ensure_ascii=False)
 
-    @property
-    def inner_xml(self) -> str:
+    def get_inner_xml(self, *args, **kwargs) -> str:
         if isinstance(self.content, bool):
             return str(self.content).lower()
         return str(self.content)

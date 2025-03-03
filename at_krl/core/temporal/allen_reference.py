@@ -30,11 +30,10 @@ class AllenReference(SimpleReference, AllenEvaluatable):
         result["meta"] = self.meta
         return result
 
-    @property
-    def inner_xml(self) -> Element:
-        result = super().inner_xml
+    def get_inner_xml(self, *args, **kwargs) -> Element:
+        result = super().get_inner_xml(*args, **kwargs)
         if self.index:
-            index_element = Element(tag="index")
+            index_element = Element("index")
             index_element.append(self.index.xml)
             result.append(index_element)
         return result

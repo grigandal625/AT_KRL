@@ -5,6 +5,7 @@ from pydantic import Field
 
 from at_krl.core.simple.simple_reference import SimpleReference
 from at_krl.models.simple.simple_evaluatable import SimpleEvaluatableModel
+from at_krl.utils.context import Context
 
 
 class SimpleReferenceModel(SimpleEvaluatableModel):
@@ -12,7 +13,7 @@ class SimpleReferenceModel(SimpleEvaluatableModel):
     id: str
     ref: Optional["SimpleReferenceModel"] = Field(default=None)
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         if self.ref is not None:
             data["ref"] = self.ref.to_internal()
         return SimpleReference(**data)

@@ -21,8 +21,7 @@ class KBInstruction(KBEntity):
     tag: str = field(init=False, default="instruction")
     non_factor: Optional[NonFactor] = field(default_factory=NonFactor)
 
-    @property
-    def inner_xml(self) -> Element:
+    def get_inner_xml(self, *args, **kwargs) -> Element:
         return self.non_factor.xml
 
 
@@ -32,9 +31,13 @@ class AssignInstruction(KBInstruction):
     ref: KBReference
     value: Evaluatable
 
-    @property
-    def inner_xml(self) -> List[Element] | Iterable[Element]:
-        return [self.ref.xml, self.value.xml, self.non_factor.xml]
+    def get_inner_xml(self, *args, **kwargs) -> List[Element] | Iterable[Element]:
+        legacy = kwargs.get("legacy")
+        kwargs["legacy"] = False
+        ref_xml = self.ref.get_xml(*args, **kwargs)
+        kwargs["legacy"] = legacy
+        value_xml = self.value.get_xml(*args, **kwargs)
+        return [ref_xml, value_xml, self.non_factor.xml]
 
     def get_krl(self, *args, **kwargs) -> str:
         return f"{self.ref.to_simple().krl} = ({self.value.get_krl(*args, **kwargs)}) {self.non_factor.krl}"

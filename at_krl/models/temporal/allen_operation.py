@@ -23,7 +23,7 @@ TEMPORAL_TAGS_SIGNS = {
 #     right: AllenReferenceModel
 #     sign: Literal["b", "bi", "m", "mi", "s", "si", "f", "fi", "d", "di", "o", "oi", "e", "a"]
 
-#     def build_target(self, data):
+#     def build_target(self, data, context: Context):
 
 #         data['left'] = self.left.to_internal()
 #         data['right'] = self.right.to_internal()

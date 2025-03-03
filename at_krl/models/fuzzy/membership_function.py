@@ -5,6 +5,7 @@ from at_krl.core.fuzzy.membership_function import MembershipFunction
 from at_krl.core.fuzzy.membership_function import MFPoint
 from at_krl.models.kb_entity import KBEntityModel
 from at_krl.models.kb_entity import KBRootModel
+from at_krl.utils.context import Context
 
 
 class MFPointModel(KBEntityModel):
@@ -12,12 +13,12 @@ class MFPointModel(KBEntityModel):
     x: float
     y: float
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         return MFPoint(**data)
 
 
 class MFPointListModel(KBRootModel[List[MFPointModel]]):
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         return [p.to_internal() for p in self.points]
 
 
@@ -28,6 +29,6 @@ class MembershipFunctionModel(KBEntityModel):
     max: float
     points: MFPointListModel
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         data["points"] = self.points.to_internal()
         return MembershipFunction(**data)

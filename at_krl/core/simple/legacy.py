@@ -12,7 +12,7 @@ class LegacyMixin:
 
     @property
     def legacy_attrs(self) -> str:
-        raise NotImplementedError("Not implemented")
+        return {}
 
     @property
     def legacy_inner_xml(self) -> Union[str, Element, List[Element], Iterable[Element], None]:
@@ -36,4 +36,10 @@ class LegacyMixin:
 
     @property
     def legacy_available(self) -> bool:
-        raise NotImplementedError("Not implemented")
+        return True
+
+    def get_xml(self, *args, legacy=False, **kwargs):
+        if legacy:
+            return self.legacy_xml
+        else:
+            return super().get_xml(*args, **kwargs)

@@ -1,5 +1,6 @@
 from at_krl.core.knowledge_base import KnowledgeBase
 from at_krl.models.kb_entity import KBEntityModel
+from at_krl.utils.context import Context
 
 
 class KBClasses(KBEntityModel):
@@ -15,5 +16,5 @@ class KnowledgeBaseModel(KBEntityModel):
     _raise_on_validation: bool = False
     _validated: bool = False
 
-    def build_target(self, data):
+    def build_target(self, data, context: Context):
         return KnowledgeBase(**data)
