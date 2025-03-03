@@ -1,47 +1,33 @@
-from dataclasses import dataclass
-from dataclasses import field
-from typing import Iterable
-from typing import List
 from typing import Literal
 from typing import Optional
-from typing import TYPE_CHECKING
-from xml.etree.ElementTree import Element
 
-from at_krl.core.kb_entity import KBEntity
-from at_krl.core.kb_reference import KBReference
-from at_krl.core.kb_value import Evaluatable
-from at_krl.core.non_factor import NonFactor
+from pydantic import Field
 
-if TYPE_CHECKING:
-    from at_krl.core.knowledge_base import KnowledgeBase
-
-
-@dataclass(kw_only=True)
-class KBInstruction(KBEntity):
-    tag: str = field(init=False, default="instruction")
-    non_factor: Optional[NonFactor] = field(default_factory=NonFactor)
-
-    @property
-    def inner_xml(self) -> Element:
-        return self.non_factor.xml
+from at_krl.core.kb_instruction import AssignInstruction
+from at_krl.core.kb_instruction import KBInstruction
+from at_krl.models.kb_entity import KBEntityModel
+from at_krl.models.kb_operation import KBOperationModel
+from at_krl.models.kb_reference import KBReferenceModel
+from at_krl.models.kb_value import KBValueModel
+from at_krl.models.non_factor import NonFactorModel
 
 
-@dataclass(kw_only=True)
-class AssignInstruction(KBInstruction):
-    tag: Literal["assign"] = field(init=False, default="assign")
-    ref: KBReference
-    value: Evaluatable
+class KBInstructionModel(KBEntityModel):
+    tag: str = Field(default="instruction")
+    non_factor: Optional[NonFactorModel]
 
-    @property
-    def inner_xml(self) -> List[Element] | Iterable[Element]:
-        return [self.ref.xml, self.value.xml, self.non_factor.xml]
+    def build_target(self, data):
+        if self.non_factor is not None:
+            data["non_factor"] = self.non_factor.to_internal()
+        return KBInstruction(**data)
 
-    @property
-    def krl(self) -> str:
-        return f"{self.ref.krl} = ({self.value.krl}) {self.non_factor.krl}"
 
-    def validate(self, kb: "KnowledgeBase", *args, **kwargs):
-        if not self._validated:
-            self.ref.validate(kb, *args, **kwargs)
-            self.value.validate(kb, *args, **kwargs)
-            self._validated = True
+class AssignInstructionModel(KBInstructionModel):
+    tag: Literal["assign"] = Field(default="assign")
+    ref: KBReferenceModel
+    value: KBValueModel | KBReferenceModel | KBOperationModel
+
+    def build_target(self, data):
+        data["ref"] = self.value.to_internal()
+        data["value"] = self.value.to_internal()
+        return AssignInstruction(**data)
