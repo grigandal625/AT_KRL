@@ -1,9 +1,8 @@
-from pydantic_xml import BaseXmlModel
-
 from at_krl.utils.context import Context
+from at_krl.xml_models.utils import MultiTagXmlModel
 
 
-class KBEntityXMLModel(BaseXmlModel):
+class KBEntityXMLModel(MultiTagXmlModel, abstract=True):
     def get_data(self, context: Context):
         return self.model_dump()
 

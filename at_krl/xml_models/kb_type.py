@@ -3,6 +3,7 @@ from typing import Literal
 from typing import Optional
 
 from pydantic_xml import attr
+from pydantic_xml import BaseXmlModel
 from pydantic_xml import element
 
 from at_krl.core.kb_type import KBFuzzyType
@@ -10,10 +11,9 @@ from at_krl.core.kb_type import KBNumericType
 from at_krl.core.kb_type import KBSymbolicType
 from at_krl.utils.context import Context
 from at_krl.xml_models.fuzzy.membership_function import MembershipFunctionXMLModel
-from at_krl.xml_models.kb_entity import KBEntityXMLModel
 
 
-class KBTypeXMLModel(KBEntityXMLModel, tag="type"):
+class KBTypeXMLModel(BaseXmlModel, tag="type"):
     id: str = attr()
     desc: Optional[str] = attr(default=None)
     meta: str = attr()
@@ -67,3 +67,13 @@ class KBFuzzyTypeXMLModel(KBTypeXMLModel):
             context.kb.types.append(result)
             result.owner = context.kb
         return result
+
+
+if __name__ == "__main__":
+    xml_data = """
+    <type id="test" meta="number">
+        <from>0</from>
+        <to>100</to>
+    </type>
+    """
+    model = KBNumericTypeXMLModel.from_xml(xml_data)
