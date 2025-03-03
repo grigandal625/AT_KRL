@@ -19,7 +19,7 @@ class MFPointModel(KBEntityModel):
 
 class MFPointListModel(KBRootModel[List[MFPointModel]]):
     def build_target(self, data, context: Context):
-        return [p.to_internal() for p in self.points]
+        return [p.to_internal() for p in self.root]
 
 
 class MembershipFunctionModel(KBEntityModel):
