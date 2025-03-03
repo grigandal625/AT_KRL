@@ -72,7 +72,7 @@ class SimpleReference(SimpleEvaluatable):
             return None
         elif "." in ref_str:
             return SimpleReference(
-                ref_str[: ref_str.index(".")], SimpleReference.parse(ref_str[ref_str.index(".") + 1 :])
+                id=ref_str[: ref_str.index(".")], ref=SimpleReference.parse(ref_str[ref_str.index(".") + 1 :])
             )
         else:
-            return SimpleReference(ref_str)
+            return SimpleReference(id=ref_str)
