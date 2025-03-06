@@ -17,8 +17,10 @@ logger = getLogger(__name__)
 class AllenReference(SimpleReference, AllenEvaluatable):
     ref: None = field(init=False, metadata={"serialize": False}, default=None)
     index: Optional["Evaluatable"] = field(default=None)
-    target: "AllenClass" = field(init=False, metadata={"serialize": False})
+    target: "AllenClass" = field(init=False, metadata={"serialize": False}, default=None)
     meta: Literal["allen_reference"] = field(init=False, default="allen_reference")
+
+    legacy_tag: Literal["Event", "Interval"] = field(init=False, metadata={"serialize": False})
 
     def __post_init__(self):
         if self.index:
@@ -31,12 +33,30 @@ class AllenReference(SimpleReference, AllenEvaluatable):
         return result
 
     def get_inner_xml(self, *args, **kwargs) -> Element:
+        if kwargs.get('legacy'):
+            return self.legacy_inner_xml
         result = super().get_inner_xml(*args, **kwargs)
         if self.index:
             index_element = Element("index")
             index_element.append(self.index.xml)
             result.append(index_element)
         return result
+
+    @property
+    def legacy_attrs(self) -> dict:
+        return {"Name": self.id}
+
+    @property
+    def legacy_inner_xml(self) -> None:
+        return None
+
+    @property
+    def legacy_available(self) -> bool:
+        return hasattr(self, "legacy_tag") and self.legacy_tag in ['Event', 'Interval']
+
+    def validate_legacy_tag(self):
+        if self.target:
+            self.legacy_tag = self.target.legacy_tag
 
     @property
     def xml_owner_path(self) -> str:

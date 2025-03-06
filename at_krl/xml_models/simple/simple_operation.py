@@ -139,11 +139,11 @@ Mod.model_rebuild()
 Pow.model_rebuild()
 
 
-class SimpleOperationRootXMLModel(KBEntityRootXMLModel):
-    root: "AnyOperation"
+class SimpleEvaluatableRootXMLModel(KBEntityRootXMLModel):
+    root: Union["AnyOperation", SimpleValueXMLModel, SimpleReferenceXMLModel]
 
 
-SimpleOperationRootXMLModel.model_rebuild()
+SimpleEvaluatableRootXMLModel.model_rebuild()
 
 
 class BinaryOperationLegacyXMLModel(SimpleEvaluatableLegacyXMLModel):
@@ -246,16 +246,22 @@ LogOp.model_rebuild()
 EqOp.model_rebuild()
 
 
-class SimpleOperationRootLegacyRootXMLModel(KBEntityRootXMLModel):
-    root: "AnyOperationLegacy"
+class SimpleEvaluatableLegacyRootXMLModel(KBEntityRootXMLModel):
+    root: Union[
+        "AnyOperationLegacy",
+        SimpleReferenceLegacyXMLModel,
+        SimpleNumberValueLegacyXMLModel,
+        SimpleStringValueLegacyXMLModel,
+        SimpleBooleanValueLegacyXMLModel
+    ]
 
 
-SimpleOperationRootLegacyRootXMLModel.model_rebuild()
+SimpleEvaluatableLegacyRootXMLModel.model_rebuild()
 
 
 if __name__ == "__main__":
     xml_data = """
-    <SimpleOperationRootXMLModel>
+    <SimpleEvaluatableRootXMLModel>
         <and>
             <or>
                 <eq>
@@ -283,13 +289,13 @@ if __name__ == "__main__":
                 </ge>
             </not>
         </and>
-    </SimpleOperationRootXMLModel>
+    </SimpleEvaluatableRootXMLModel>
     """
-    model = SimpleOperationRootXMLModel.from_xml(xml_data)
+    model = SimpleEvaluatableRootXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)).krl)
 
     xml_data = """
-    <SimpleOperationRootLegacyRootXMLModel>
+    <SimpleEvaluatableLegacyRootXMLModel>
         <LogOp value="or">
             <ArOp value="+">
                 <Number value="5" />
@@ -300,8 +306,8 @@ if __name__ == "__main__":
                 <Attribute value="obj.attr" />
             </EqOp>
         </LogOp>
-    </SimpleOperationRootLegacyRootXMLModel>
+    </SimpleEvaluatableLegacyRootXMLModel>
     """
 
-    model = SimpleOperationRootLegacyRootXMLModel.from_xml(xml_data)
+    model = SimpleEvaluatableLegacyRootXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)).krl)

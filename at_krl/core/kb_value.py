@@ -16,6 +16,7 @@ class Evaluatable(SimpleEvaluatable):
 
     def __post_init__(self):
         super().__post_init__()
+        self.non_factor = self.non_factor or NonFactor()
         if self.non_factor:
             self.non_factor.owner = self
 
