@@ -3,7 +3,6 @@ from typing import Literal
 from typing import Optional
 
 from pydantic_xml import attr
-from pydantic_xml import BaseXmlModel
 from pydantic_xml import element
 
 from at_krl.core.kb_type import KBFuzzyType
@@ -11,9 +10,10 @@ from at_krl.core.kb_type import KBNumericType
 from at_krl.core.kb_type import KBSymbolicType
 from at_krl.utils.context import Context
 from at_krl.xml_models.fuzzy.membership_function import MembershipFunctionXMLModel
+from at_krl.xml_models.kb_entity import KBEntityXMLModel
 
 
-class KBTypeXMLModel(BaseXmlModel, tag="type"):
+class KBTypeXMLModel(KBEntityXMLModel, tag="type"):
     id: str = attr()
     desc: Optional[str] = attr(default=None)
     meta: str = attr()
@@ -77,3 +77,35 @@ if __name__ == "__main__":
     </type>
     """
     model = KBNumericTypeXMLModel.from_xml(xml_data)
+    print(model.to_internal(context=Context(name="test", kb=None)))
+
+    xml_data = """
+    <type id="test" meta="string">
+        <value>apple</value>
+        <value>banana</value>
+        <value>orange</value>
+    </type>
+    """
+    model = KBSymbolicTypeXMLModel.from_xml(xml_data)
+    print(model.to_internal(context=Context(name="test", kb=None)))
+
+    xml_data = """
+    <type id="test" meta="fuzzy">
+        <parameter min-value="0" max-value="1">
+            <value>mf1</value>
+            <mf>
+                <point x="0" y="0.5" />
+                <point x="1" y="1" />
+            </mf>
+        </parameter>
+        <parameter min-value="0" max-value="1">
+            <value>mf2</value>
+            <mf>
+                <point x="0" y="0" />
+                <point x="1" y="1" />
+            </mf>
+        </parameter>
+    </type>
+    """
+    model = KBFuzzyTypeXMLModel.from_xml(xml_data)
+    print(model.to_internal(context=Context(name="test", kb=None)))

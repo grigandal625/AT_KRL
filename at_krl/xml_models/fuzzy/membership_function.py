@@ -29,3 +29,17 @@ class MembershipFunctionXMLModel(KBEntityXMLModel, tag="parameter"):
             p.to_internal(context=context.create_child("point").create_child(i)) for i, p in enumerate(self.points)
         ]
         return MembershipFunction(**data)
+
+
+if __name__ == "__main__":
+    xml_data = """
+    <parameter min-value="0" max-value="1">
+        <value>membership</value>
+        <mf>
+            <point x="0" y="0.5" />
+            <point x="1" y="1" />
+        </mf>
+    </parameter>
+    """
+    model = MembershipFunctionXMLModel.from_xml(xml_data)
+    print(model.to_internal(context=Context(name="test", kb=None)))

@@ -6,29 +6,29 @@ from at_krl.xml_models.simple.simple_evaluatable import SimpleEvaluatableLegacyX
 from at_krl.xml_models.simple.simple_evaluatable import SimpleEvaluatableXMLModel
 
 
-class SimpleValueXMLModel(SimpleEvaluatableXMLModel, tags=["value"]):
-    value: float | bool | str
+class SimpleValueXMLModel(SimpleEvaluatableXMLModel, tag="value"):
+    value: int | float | bool | str
 
     def build_target(self, data, context: Context):
         result = SimpleValue(content=data["value"])
         return result
 
 
-class SimpleValueLegacyXMLModel(SimpleEvaluatableLegacyXMLModel, abstract=True):
+class SimpleValueLegacyXMLModel(SimpleEvaluatableLegacyXMLModel):
     def build_target(self, data, context: Context):
         result = SimpleValue(content=data["value"])
         return result
 
 
-class SimpleStringValueLegacyXMLModel(SimpleValueLegacyXMLModel, tags=["String"]):
+class SimpleStringValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag="String"):
     value: str = attr()
 
 
-class SimpleNumberValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag=["Number"]):
+class SimpleNumberValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag="Number"):
     value: float = attr()
 
 
-class SimpleBooleanValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag=["TruthVal"]):
+class SimpleBooleanValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag="TruthVal"):
     value: bool = attr()
 
 

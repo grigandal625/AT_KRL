@@ -53,6 +53,7 @@ class SimpleOperation(SimpleEvaluatable):
             self.legacy_tag = "ArOp"
         else:
             logger.warning(f"Unknown operation {self.sign} for legacy operation {self.operation_name}")
+            self.legacy_tag = None
 
     @property
     def legacy_available(self) -> bool:
@@ -83,9 +84,15 @@ class SimpleOperation(SimpleEvaluatable):
             result.append(self.right.xml)
         return result
 
+    @property
+    def original_sign(self):
+        return TAGS_SIGNS[self.operation_name]["values"][0]
+
     def get_krl(self, *args, **kwargs) -> str:
         if self.is_binary:
-            return f"({self.left.get_krl(*args, **kwargs)}) {self.sign} ({self.right.get_krl(*args, **kwargs)})"
+            return (
+                f"({self.left.get_krl(*args, **kwargs)}) {self.original_sign} ({self.right.get_krl(*args, **kwargs)})"
+            )
         return f"{self.sign} ({self.left.get_krl(*args, **kwargs)})"
 
     def to_simple(self) -> "SimpleOperation":
