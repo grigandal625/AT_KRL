@@ -11,8 +11,10 @@ from at_krl.core.temporal.allen_operation import AllenOperation
 from at_krl.core.temporal.allen_reference import AllenReference
 from at_krl.utils.context import Context
 from at_krl.xml_models.kb_entity import KBEntityRootXMLModel
+from at_krl.xml_models.kb_reference import KBReferenceLegacyXMLModel
 from at_krl.xml_models.kb_reference import KBReferenceXMLModel
 from at_krl.xml_models.kb_value import KBEvaluatableXMLModel
+from at_krl.xml_models.kb_value import KBValueLegacyXMLModel
 from at_krl.xml_models.kb_value import KBValueXMLModel
 from at_krl.xml_models.non_factor import NonFactorXMLModel
 from at_krl.xml_models.temporal.allen_evaluatable import AllenEvaluatableLegacyXMLModel
@@ -34,7 +36,7 @@ class BinaryKBOperationXMLModel(KBEvaluatableXMLModel):
         "AnyKBOperation",
         "AnyAllenOperation",
     ]
-    non_factor: NonFactorXMLModel = element()
+    non_factor: NonFactorXMLModel = element(default=None)
 
     def get_data(self, context: Context):
         data = super().get_data(context)
@@ -164,6 +166,157 @@ class KBEvaluatableRootXMLModel(KBEntityRootXMLModel):
         KBValueXMLModel,
         AnyKBOperation,
         "AnyAllenOperation",
+    ]
+
+
+class BinaryKBOperationLegacyXMLModel(KBEvaluatableXMLModel):
+    left: Union[
+        KBValueLegacyXMLModel,
+        KBReferenceLegacyXMLModel,
+        "AnyKBOperationLegacy",
+        "EvIntRelLegacyXMLModel",
+        "IntRelLegacyXMLModel",
+        "EvRelLegacyXMLModel",
+    ]
+    right: Union[
+        KBValueLegacyXMLModel,
+        KBReferenceLegacyXMLModel,
+        "AnyKBOperationLegacy",
+        "EvIntRelLegacyXMLModel",
+        "IntRelLegacyXMLModel",
+        "EvRelLegacyXMLModel",
+    ]
+    non_factor: NonFactorXMLModel = element(default=None)
+
+    def get_data(self, context: Context):
+        data = super().get_data(context)
+        data["left"] = self.left.to_internal(context.create_child("left"))
+        data["right"] = self.right.to_internal(context.create_child("right"))
+        data["sign"] = self.__xml_tag__
+        return data
+
+    def build_target(self, data, context: Context):
+        return KBOperation(**data)
+
+
+class UnaryKBOperationLegacyXMLModel(KBEvaluatableXMLModel):
+    operand: Union[
+        KBValueLegacyXMLModel,
+        KBReferenceLegacyXMLModel,
+        "AnyKBOperationLegacy",
+        "EvIntRelLegacyXMLModel",
+        "IntRelLegacyXMLModel",
+        "EvRelLegacyXMLModel",
+    ]
+    non_factor: Optional[NonFactorXMLModel] = element(default=None)
+
+    def get_data(self, context: Context):
+        data = super().get_data(context)
+        data["left"] = self.operand.to_internal(context.create_child("left"))
+        data["sign"] = self.__xml_tag__
+        data.pop("operand", None)
+        return data
+
+    def build_target(self, data, context: Context):
+        return KBOperation(**data)
+
+
+class KBEqLegacy(BinaryKBOperationLegacyXMLModel, tag="eq"):
+    pass
+
+
+class KBGtLegacy(BinaryKBOperationLegacyXMLModel, tag="gt"):
+    pass
+
+
+class KBGeLegacy(BinaryKBOperationLegacyXMLModel, tag="ge"):
+    pass
+
+
+class KBLtLegacy(BinaryKBOperationLegacyXMLModel, tag="lt"):
+    pass
+
+
+class KBLeLegacy(BinaryKBOperationLegacyXMLModel, tag="le"):
+    pass
+
+
+class KBNeLegacy(BinaryKBOperationLegacyXMLModel, tag="ne"):
+    pass
+
+
+class KBAndLegacy(BinaryKBOperationLegacyXMLModel, tag="and"):
+    pass
+
+
+class KBOrLegacy(BinaryKBOperationLegacyXMLModel, tag="or"):
+    pass
+
+
+class KBNotLegacy(UnaryKBOperationLegacyXMLModel, tag="not"):
+    pass
+
+
+class KBXorLegacy(BinaryKBOperationLegacyXMLModel, tag="xor"):
+    pass
+
+
+class KBNegLegacy(UnaryKBOperationLegacyXMLModel, tag="neg"):
+    pass
+
+
+class KBAddLegacy(BinaryKBOperationLegacyXMLModel, tag="add"):
+    pass
+
+
+class KBSubLegacy(BinaryKBOperationLegacyXMLModel, tag="sub"):
+    pass
+
+
+class KBMulLegacy(BinaryKBOperationLegacyXMLModel, tag="mul"):
+    pass
+
+
+class KBDivLegacy(BinaryKBOperationLegacyXMLModel, tag="div"):
+    pass
+
+
+class KBModLegacy(BinaryKBOperationLegacyXMLModel, tag="mod"):
+    pass
+
+
+class KBPowLegacy(BinaryKBOperationLegacyXMLModel, tag="pow"):
+    pass
+
+
+AnyKBOperationLegacy = (
+    KBEqLegacy
+    | KBGtLegacy
+    | KBGeLegacy
+    | KBLtLegacy
+    | KBLeLegacy
+    | KBNegLegacy
+    | KBAndLegacy
+    | KBOrLegacy
+    | KBNotLegacy
+    | KBXorLegacy
+    | KBNegLegacy
+    | KBAddLegacy
+    | KBSubLegacy
+    | KBMulLegacy
+    | KBModLegacy
+    | KBPowLegacy
+)
+
+
+class KBEvaluatableLegacyRootXMLModel(KBEntityRootXMLModel):
+    root: Union[
+        KBReferenceLegacyXMLModel,
+        KBValueLegacyXMLModel,
+        AnyKBOperationLegacy,
+        "EvIntRelLegacyXMLModel",
+        "IntRelLegacyXMLModel",
+        "EvRelLegacyXMLModel",
     ]
 
 
@@ -429,6 +582,29 @@ KBMod.model_rebuild()
 KBPow.model_rebuild()
 KBEvaluatableRootXMLModel.model_rebuild()
 
+BinaryKBOperationLegacyXMLModel.model_rebuild()
+UnaryKBOperationLegacyXMLModel.model_rebuild()
+
+KBEqLegacy.model_rebuild()
+KBGtLegacy.model_rebuild()
+KBGeLegacy.model_rebuild()
+KBLtLegacy.model_rebuild()
+KBLeLegacy.model_rebuild()
+KBNegLegacy.model_rebuild()
+KBAndLegacy.model_rebuild()
+KBOrLegacy.model_rebuild()
+KBNotLegacy.model_rebuild()
+KBXorLegacy.model_rebuild()
+KBNegLegacy.model_rebuild()
+KBAddLegacy.model_rebuild()
+KBSubLegacy.model_rebuild()
+KBMulLegacy.model_rebuild()
+KBDivLegacy.model_rebuild()
+KBModLegacy.model_rebuild()
+KBPowLegacy.model_rebuild()
+
+KBEvaluatableLegacyRootXMLModel.model_rebuild()
+
 
 if __name__ == "__main__":
     xml_data = """
@@ -494,14 +670,40 @@ if __name__ == "__main__":
 
     xml_data = """
     <KBEvaluatableRootXMLModel>
-        <eq>
-            <ref id="ДЛИТЕЛЬНОСТЬ" meta="allen_attribute_expression">
-                <ref id="INTERVAL" meta="allen_reference"/>
-            </ref>
-            <value>10</value>
-            <with belief="90" probability="100" accuracy="0" />
-        </eq>
+        <and>
+            <eq>
+                <ref id="ДЛИТЕЛЬНОСТЬ" meta="allen_attribute_expression">
+                    <ref id="INTERVAL" meta="allen_reference"/>
+                </ref>
+                <value>10</value>
+                <with belief="90" probability="100" accuracy="0" />
+            </eq>
+            <d>
+                <ref id="INTERVAL1" meta="allen_reference" />
+                <ref id="INTERVAL2" meta="allen_reference" />
+            </d>
+        </and>
     </KBEvaluatableRootXMLModel>
     """
     model = KBEvaluatableRootXMLModel.from_xml(xml_data)
-    model.to_internal(context=Context(name="test", kb=None))
+    print(model.to_internal(context=Context(name="test", kb=None)))
+
+    xml_data = """
+    <KBEvaluatableLegacyRootXMLModel>
+        <and>
+            <eq>
+                <ref id="obj">
+                    <ref id="attr" />
+                </ref>
+                <value>10</value>
+                <with belief="70" probability="80" accuracy="0" />
+            </eq>
+            <EvIntRel Value="d">
+                <Event Name="EVENT1" />
+                <Interval Name="INTERVAL1" />
+            </EvIntRel>
+        </and>
+    </KBEvaluatableLegacyRootXMLModel>
+    """
+    model = KBEvaluatableLegacyRootXMLModel.from_xml(xml_data)
+    print(model.to_internal(context=Context(name="test", kb=None)))
