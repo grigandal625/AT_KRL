@@ -17,7 +17,7 @@ class SimpleReference(SimpleEvaluatable):
     target: KBEntity = field(default=None, init=False, metadata={"serialize": False})
 
     legacy_tag: Literal["Attribute"] = field(
-        init=False, default="Attribute"
+        init=False, default="Attribute", metadata={"serialize": False}
     )  # для совместимости со старым темпоральным решателем
 
     def __post_init__(self):

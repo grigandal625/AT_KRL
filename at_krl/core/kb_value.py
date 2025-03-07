@@ -69,7 +69,8 @@ class Evaluatable(SimpleEvaluatable):
 class KBValue(Evaluatable, SimpleValue):
     tag: Literal["value"] = field(init=False, default="value")
     content: Any
-    legacy_tag: Literal["value"] = field(init=False, default="value")
+
+    legacy_tag: Literal["value"] = field(init=False, default="value", metadata={"serialize": False})
 
     def __post_init__(self):
         result = super().__post_init__()

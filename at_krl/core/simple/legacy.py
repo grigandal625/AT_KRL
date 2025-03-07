@@ -8,7 +8,7 @@ from xml.etree.ElementTree import Element
 
 @dataclass(kw_only=True)
 class LegacyMixin:
-    legacy_tag: str = field(init=False)
+    legacy_tag: str = field(init=False, repr=False, metadata={"serialize": False})
 
     @property
     def legacy_attrs(self) -> str:

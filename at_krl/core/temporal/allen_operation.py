@@ -1,6 +1,9 @@
 from dataclasses import dataclass
+from dataclasses import field
 from logging import getLogger
 from typing import List
+from typing import Literal
+from typing import Optional
 from typing import TYPE_CHECKING
 from xml.etree.ElementTree import Element
 
@@ -40,6 +43,10 @@ def get_inversion(op: str) -> str:
 class AllenOperation(SimpleOperation):
     left: AllenReference
     right: AllenReference
+
+    legacy_tag: Optional[Literal["IntRel", "EvRel", "EvIntRel"]] = field(
+        init=False, repr=False, default=None, metadata={"serialize": False}
+    )
 
     def __post_init__(self):
         self.tag = self.sign

@@ -108,4 +108,3 @@ if __name__ == "__main__":
     </type>
     """
     model = KBFuzzyTypeXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))

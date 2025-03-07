@@ -252,7 +252,7 @@ class SimpleEvaluatableLegacyRootXMLModel(KBEntityRootXMLModel):
         SimpleReferenceLegacyXMLModel,
         SimpleNumberValueLegacyXMLModel,
         SimpleStringValueLegacyXMLModel,
-        SimpleBooleanValueLegacyXMLModel
+        SimpleBooleanValueLegacyXMLModel,
     ]
 
 

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 @dataclass(kw_only=True)
 class KBReference(Evaluatable, SimpleReference):
-    legacy_tag: Literal["ref"] = field(default="ref", init=False)
+    legacy_tag: Literal["ref"] = field(default="ref", init=False, metadata={"serialize": False})
 
     @staticmethod
     def from_simple(ref):

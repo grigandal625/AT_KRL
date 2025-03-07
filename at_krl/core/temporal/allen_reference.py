@@ -20,7 +20,7 @@ class AllenReference(SimpleReference, AllenEvaluatable):
     target: "AllenClass" = field(init=False, metadata={"serialize": False}, default=None)
     meta: Literal["allen_reference"] = field(init=False, default="allen_reference")
 
-    legacy_tag: Literal["Event", "Interval"] = field(init=False, metadata={"serialize": False})
+    legacy_tag: Literal["Event", "Interval"] = field(init=False, default=None, metadata={"serialize": False})
 
     def __post_init__(self):
         if self.index:
@@ -33,7 +33,7 @@ class AllenReference(SimpleReference, AllenEvaluatable):
         return result
 
     def get_inner_xml(self, *args, **kwargs) -> Element:
-        if kwargs.get('legacy'):
+        if kwargs.get("legacy"):
             return self.legacy_inner_xml
         result = super().get_inner_xml(*args, **kwargs)
         if self.index:
@@ -52,7 +52,7 @@ class AllenReference(SimpleReference, AllenEvaluatable):
 
     @property
     def legacy_available(self) -> bool:
-        return hasattr(self, "legacy_tag") and self.legacy_tag in ['Event', 'Interval']
+        return hasattr(self, "legacy_tag") and self.legacy_tag in ["Event", "Interval"]
 
     def validate_legacy_tag(self):
         if self.target:

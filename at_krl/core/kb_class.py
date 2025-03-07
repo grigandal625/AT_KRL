@@ -111,7 +111,7 @@ class PropertyDefinition(LegacyMixin, KBEntity):  # LegacyMixin для совм�
     question: Optional[str] = field(default=None)
     query: Optional[str] = field(default=None)
 
-    legacy_tag: Literal["property"] = field(init=False, default="property")
+    legacy_tag: Literal["property"] = field(init=False, default="property", metadata={"serialize": False})
 
     def get_krl(self, *args, **kwargs):
         krl = f"""АТРИБУТ {self.id}

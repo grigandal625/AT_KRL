@@ -16,7 +16,7 @@ class SimpleValue(SimpleEvaluatable):
     content: Any
 
     legacy_tag: Literal["TruthVal", "Number", "String"] = field(
-        init=False, default=None
+        init=False, default=None, metadata={"serialize": False}
     )  # для совместимости со старым темпоральным решателем
 
     def __post_init__(self):

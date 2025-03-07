@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from dataclasses import field
 from typing import Literal
-from xml.etree.ElementTree import Element
 
 from at_krl.core.kb_entity import KBEntity
 from at_krl.core.simple.simple_reference import SimpleReference
@@ -14,6 +13,7 @@ class FutureEvaluatingObject(KBEntity):
     name: Literal[
         "DURATION", "OCCURANCE_COUNT", "OPEN_COUNT", "CLOSE_COUNT", "OPENT_TACT", "CLOSE_TACT", "OCCURANCE_TACT"
     ]
+    tag: None = field(default=None, init=False)
 
 
 NAME_TO_ID = {
@@ -35,7 +35,7 @@ class AllenAttributeExpression(SimpleReference, AllenEvaluatable):
 
     def __post_init__(self):
         self.ref.owner = self
-        self.target = FutureEvaluatingObject(NAME_TO_ID[self.id])
+        self.target = FutureEvaluatingObject(name=NAME_TO_ID[self.id])
 
     def get_krl(self, *args, **kwargs) -> str:
         return f"{self.ref.krl}.{self.id}"
@@ -44,11 +44,6 @@ class AllenAttributeExpression(SimpleReference, AllenEvaluatable):
     def attrs(self) -> dict:
         result = super().attrs
         result["meta"] = self.meta
-        return result
-
-    def get_inner_xml(self, *args, **kwargs) -> Element:
-        result = super().inner_xml
-        result.append(self.ref.xml)
         return result
 
     def to_simple(self) -> SimpleReference:

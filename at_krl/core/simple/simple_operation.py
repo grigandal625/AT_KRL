@@ -28,7 +28,7 @@ class SimpleOperation(SimpleEvaluatable):
     right: Optional[SimpleEvaluatable] = field(default=None)
     operation_name: str = field(init=False, metadata={"serialize": False})
 
-    legacy_tag: Literal["EqOp", "LogOp", "ArOp"] = field(init=False)
+    legacy_tag: Literal["EqOp", "LogOp", "ArOp"] = field(init=False, repr=False, metadata={"serialize": False})
 
     def __post_init__(self):
         for op in TAGS_SIGNS:
