@@ -52,9 +52,8 @@ class BinaryKBOperationXMLModel(KBEvaluatableXMLModel):
 class UnaryKBOperationXMLModel(KBEvaluatableXMLModel):
     operand: Union[
         KBValueXMLModel,
-        KBReferenceXMLModel,
-        "AllenReferenceXMLModel",
         "AllenAttributeExpressionXMLModel",
+        KBReferenceXMLModel,
         "AnyKBOperation",
         "AnyAllenOperation",
     ]
@@ -161,8 +160,8 @@ AnyKBOperation = (
 
 class KBEvaluatableRootXMLModel(KBEntityRootXMLModel):
     root: Union[
-        KBReferenceXMLModel,
         "AllenAttributeExpressionXMLModel",
+        KBReferenceXMLModel,
         KBValueXMLModel,
         AnyKBOperation,
         "AnyAllenOperation",

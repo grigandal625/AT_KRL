@@ -11,6 +11,7 @@ from at_krl.core.kb_entity import KBEntity
 from at_krl.core.kb_reference import KBReference
 from at_krl.core.kb_value import Evaluatable
 from at_krl.core.non_factor import NonFactor
+from at_krl.core.simple.simple_reference import SimpleReference
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
@@ -30,6 +31,10 @@ class AssignInstruction(KBInstruction):
     tag: Literal["assign"] = field(init=False, default="assign")
     ref: KBReference
     value: Evaluatable
+
+    def __post_init__(self):
+        if isinstance(self.ref, SimpleReference):
+            self.ref = KBReference.from_simple(self.ref)
 
     def get_inner_xml(self, *args, **kwargs) -> List[Element] | Iterable[Element]:
         legacy = kwargs.get("legacy")

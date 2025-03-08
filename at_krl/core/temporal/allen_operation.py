@@ -65,7 +65,9 @@ class AllenOperation(SimpleOperation):
         elif self.left.fullfiled and self.right.fullfiled:
             self.fullfill_legacy_tag()
         else:
-            logger.warning(f"Can't now determine operation type for {self.krl}. Will be determined in KB validation.")
+            logger.warning(
+                f"Can't now determine legacy operation type for {self.krl}. Will be determined in KB validation."
+            )
         # если не вышло, то вид операции определим во время валидации БЗ
 
     def fullfill_legacy_tag(self):
@@ -91,7 +93,9 @@ class AllenOperation(SimpleOperation):
             self.__post_init__()
             self.validate_for_what()
         else:
-            logger.warning(f"Can't now determine operation type for {self.krl}. Will be determined in KB validation.")
+            logger.warning(
+                f"Can't now determine legacy operation type for {self.krl}. Will be determined in KB validation."
+            )
 
     def validate_for_what(self):
         assert self.left.fullfiled, f"Expected fullfilled allen reference {self.left.id} for allen operation"

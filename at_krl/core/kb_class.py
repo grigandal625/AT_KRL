@@ -127,18 +127,19 @@ class PropertyDefinition(LegacyMixin, KBEntity):  # LegacyMixin для совм�
 
     @property
     def attrs(self):
-        return {"id": self.id, "desc": self.desc or self.id, "source": self.source}
+        result = {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "source": self.source}
+        if not self.value:
+            result["create"] = True
+        return result
 
     @property
     def legacy_attrs(self):
-        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "source": self.source}
+        return self.attrs
 
     def get_inner_xml(self, *args, **kwargs):
         if kwargs.get("legacy"):
             return self.legacy_inner_xml
-        type_element = Element("type")
-        type_element.append(self.type.xml)
-        result = [type_element]
+        result = []
         if self.value:
             result.append(self.value.xml)
         if self.question:
@@ -185,7 +186,7 @@ class KBInstance(LegacyMixin, KBEntity):
 
     @property
     def attrs(self) -> dict:
-        return {"id": self.id, "desc": self.desc or self.id, "create": self.create}
+        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "create": self.create}
 
     @property
     def legacy_attrs(self) -> dict:
@@ -194,9 +195,7 @@ class KBInstance(LegacyMixin, KBEntity):
     def get_inner_xml(self, *args, **kwargs) -> List[Element]:
         if kwargs.get("legacy"):
             return self.legacy_inner_xml
-        type_element = Element("type")
-        type_element.append(self.type.xml)
-        result = [type_element]
+        result = []
         if self.value:
             result.append(self.value.xml)
         if self.properties:

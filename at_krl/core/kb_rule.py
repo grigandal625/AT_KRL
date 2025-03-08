@@ -43,7 +43,10 @@ class KBRule(KBEntity):
 
     @property
     def attrs(self) -> dict:
-        return {"id": self.id, "meta": self.meta, "desc": self.desc or self.id}
+        result = {"id": self.id, "meta": self.meta, "desc": self.desc or self.id}
+        if self.period:
+            result["period"] = self.period
+        return result
 
     def get_inner_xml(self, *args, **kwargs) -> str | Element | List[Element] | Iterable[Element] | None:
         res = []
