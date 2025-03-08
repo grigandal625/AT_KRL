@@ -25,7 +25,7 @@ class SimpleReferenceXMLModel(SimpleEvaluatableXMLModel, tag="ref"):
 
 
 class SimpleReferenceLegacyXMLModel(SimpleEvaluatableLegacyXMLModel, tag="Attribute"):
-    value: str = attr()
+    value: str = attr(name="Value")
 
     def build_target(self, data, context: Context):
         result = SimpleReference.parse(data.get("value"))
@@ -41,6 +41,6 @@ if __name__ == "__main__":
     model = SimpleReferenceXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)))
 
-    xml_data = '<Attribute value="test.field" />'
+    xml_data = '<Attribute Value="test.field" />'
     model = SimpleReferenceLegacyXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)))

@@ -15,21 +15,23 @@ class SimpleValueXMLModel(SimpleEvaluatableXMLModel, tag="value"):
 
 
 class SimpleValueLegacyXMLModel(SimpleEvaluatableLegacyXMLModel):
+    value: str | int | float | bool = attr(name="Value")
+
     def build_target(self, data, context: Context):
         result = SimpleValue(content=data["value"])
         return result
 
 
 class SimpleStringValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag="String"):
-    value: str = attr()
+    value: str = attr(name="Value")
 
 
 class SimpleNumberValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag="Number"):
-    value: float = attr()
+    value: float = attr(name="Value")
 
 
 class SimpleBooleanValueLegacyXMLModel(SimpleValueLegacyXMLModel, tag="TruthVal"):
-    value: bool = attr()
+    value: bool = attr(name="Value")
 
 
 if __name__ == "__main__":
@@ -37,14 +39,14 @@ if __name__ == "__main__":
     model = SimpleValueXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)))
 
-    xml_data = '<String value="test" />'
+    xml_data = '<String Value="test" />'
     model = SimpleStringValueLegacyXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)))
 
-    xml_data = '<Number value="123.45" />'
+    xml_data = '<Number Value="123.45" />'
     model = SimpleNumberValueLegacyXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)))
 
-    xml_data = '<TruthVal value="FALSE" />'
+    xml_data = '<TruthVal Value="FALSE" />'
     model = SimpleBooleanValueLegacyXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)))

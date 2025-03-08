@@ -147,7 +147,7 @@ SimpleEvaluatableRootXMLModel.model_rebuild()
 
 
 class BinaryOperationLegacyXMLModel(SimpleEvaluatableLegacyXMLModel):
-    sign: str = attr(name="value")
+    sign: str = attr(name="Value")
     left: Union[
         SimpleStringValueLegacyXMLModel,
         SimpleBooleanValueLegacyXMLModel,
@@ -195,7 +195,7 @@ class ArOp(BinaryOperationLegacyXMLModel, tag="ArOp"):
         "**",
         "pow",
         "POW",
-    ] = attr(name="value")
+    ] = attr(name="Value")
 
 
 class LogOp(BinaryOperationLegacyXMLModel, tag="LogOp"):
@@ -210,7 +210,7 @@ class LogOp(BinaryOperationLegacyXMLModel, tag="LogOp"):
         "OR",
         "xor",
         "XOR",
-    ] = attr(name="value")
+    ] = attr(name="Value")
 
 
 class EqOp(BinaryOperationLegacyXMLModel, tag="EqOp"):
@@ -234,7 +234,7 @@ class EqOp(BinaryOperationLegacyXMLModel, tag="EqOp"):
         "!=",
         "ne",
         "NE",
-    ] = attr(name="value")
+    ] = attr(name="Value")
 
 
 AnyOperationLegacy = ArOp | LogOp | EqOp
@@ -296,14 +296,14 @@ if __name__ == "__main__":
 
     xml_data = """
     <SimpleEvaluatableLegacyRootXMLModel>
-        <LogOp value="or">
-            <ArOp value="+">
-                <Number value="5" />
-                <Attribute value="obj.attr" />
+        <LogOp Value="OR">
+            <ArOp Value="+">
+                <Number Value="5" />
+                <Attribute Value="obj.attr" />
             </ArOp>
-            <EqOp value="eq">
-                <Number value="5" />
-                <Attribute value="obj.attr" />
+            <EqOp Value="eq">
+                <Number Value="5" />
+                <Attribute Value="obj.attr" />
             </EqOp>
         </LogOp>
     </SimpleEvaluatableLegacyRootXMLModel>

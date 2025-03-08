@@ -31,6 +31,7 @@ class SimpleOperation(SimpleEvaluatable):
     legacy_tag: Literal["EqOp", "LogOp", "ArOp"] = field(init=False, repr=False, metadata={"serialize": False})
 
     def __post_init__(self):
+        self.sign = self.sign.lower()
         for op in TAGS_SIGNS:
             if self.sign in TAGS_SIGNS[op]["values"]:
                 if TAGS_SIGNS[op]["is_binary"] == is_binary(self.left, self.right):

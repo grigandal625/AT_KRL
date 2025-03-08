@@ -9,3 +9,10 @@ class SimpleClassXMLModel(KBEntityXMLModel, tag="class"):
     id: str = attr()
     # group: Optional[str] = attr(default=None)
     desc: Optional[str] = attr(default=None)
+
+
+class SimpleClassLegacyXMLModel(KBEntityXMLModel, tag="class"):
+    pass
+    # id: str = attr()
+    # group: Optional[str] = attr(default=None)
+    # desc: Optional[str] = attr(default=None)
