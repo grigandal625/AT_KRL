@@ -92,6 +92,7 @@ class KBClass(LegacyMixin, SimpleClass):
 class TypeOrClassReference(SimpleReference):
     meta: Literal["type_or_class"] = field(init=False, default="type_or_class")
     target: Union[KBType, KBClass] = field(default=None, init=False, metadata={"serialize": False})
+    ref: None = field(init=False)
 
     @property
     def attrs(self) -> dict:
@@ -112,6 +113,10 @@ class PropertyDefinition(LegacyMixin, KBEntity):  # LegacyMixin для совм�
     query: Optional[str] = field(default=None)
 
     legacy_tag: Literal["property"] = field(init=False, default="property", metadata={"serialize": False})
+
+    def __post_init__(self):
+        if isinstance(self.type, str):
+            self.type = TypeOrClassReference(id=self.type)
 
     def get_krl(self, *args, **kwargs):
         krl = f"""АТРИБУТ {self.id}
@@ -141,7 +146,9 @@ class PropertyDefinition(LegacyMixin, KBEntity):  # LegacyMixin для совм�
             return self.legacy_inner_xml
         result = []
         if self.value:
-            result.append(self.value.xml)
+            value = Element("value")
+            value.append(self.value.xml)
+            result.append(value)
         if self.question:
             question = Element("question")
             question.text = self.question
@@ -156,7 +163,9 @@ class PropertyDefinition(LegacyMixin, KBEntity):  # LegacyMixin для совм�
     def legacy_inner_xml(self):
         result = []
         if self.value:
-            result.append(self.value.xml)
+            value = Element("value")
+            value.append(self.value.xml)
+            result.append(value)
         if self.question:
             question = Element("question")
             question.text = self.question
@@ -197,7 +206,9 @@ class KBInstance(LegacyMixin, KBEntity):
             return self.legacy_inner_xml
         result = []
         if self.value:
-            result.append(self.value.xml)
+            value = Element("value")
+            value.append(self.value.xml)
+            result.append(value)
         if self.properties:
             properties = Element("properties")
             for prop in self.properties:
@@ -209,7 +220,9 @@ class KBInstance(LegacyMixin, KBEntity):
     def legacy_inner_xml(self) -> List[Element]:
         result = []
         if self.value:
-            result.append(self.value.xml)
+            value = Element("value")
+            value.append(self.value.xml)
+            result.append(value)
         if self.properties:
             properties = Element("properties")
             for prop in self.properties:
