@@ -11,7 +11,10 @@ from at_krl.core.kb_value import Evaluatable
 from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
 from at_krl.models.kb_entity import KBEntityModel
 from at_krl.models.kb_entity import KBRootModel
+from at_krl.models.kb_operation import KBOperationModel
+from at_krl.models.kb_reference import KBReferenceModel
 from at_krl.models.kb_rule import KBRuleModel
+from at_krl.models.kb_value import KBValueModel
 from at_krl.models.simple.simple_class import SimpleClassModel
 from at_krl.models.simple.simple_reference import SimpleReferenceModel
 from at_krl.utils.context import Context
@@ -49,7 +52,7 @@ class PropertyDefinitionModel(KBEntityModel):  # LegacyMixin для совмес
     type: TypeOrClassReferenceModel
     desc: Optional[str] = Field(default=None)
     value: Optional[SimpleEvaluatable] = Field(default=None)
-    # ? value: KBValueModel | KBReferenceModel | KBOperationModel
+    value: KBValueModel | KBReferenceModel | KBOperationModel
     source: Optional[str] = Field(default="asked")
     question: Optional[str] = Field(default=None)
     query: Optional[str] = Field(default=None)
