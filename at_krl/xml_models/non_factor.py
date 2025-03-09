@@ -12,11 +12,3 @@ class NonFactorXMLModel(KBEntityXMLModel, tag="with"):
 
     def build_target(self, data, context: Context):
         return NonFactor(**data)
-
-
-if __name__ == "__main__":
-    xml_data = """
-    <with belief="80" probability="90" accuracy="0.95"/>
-    """
-    model = NonFactorXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))

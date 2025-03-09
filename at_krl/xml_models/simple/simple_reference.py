@@ -30,17 +30,3 @@ class SimpleReferenceLegacyXMLModel(SimpleEvaluatableLegacyXMLModel, tag="Attrib
     def build_target(self, data, context: Context):
         result = SimpleReference.parse(data.get("value"))
         return result
-
-
-if __name__ == "__main__":
-    xml_data = """
-    <ref id="test">
-        <ref id="field" />
-    </ref>
-    """
-    model = SimpleReferenceXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))
-
-    xml_data = '<Attribute Value="test.field" />'
-    model = SimpleReferenceLegacyXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))

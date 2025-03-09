@@ -70,17 +70,3 @@ class AssignInstructionLegacyXMLModel(KBInstructionLegacyXMLModel, tag="assign")
 
     def build_target(self, data, context: Context):
         return AssignInstruction(**data)
-
-
-if __name__ == "__main__":
-    xml_data = """
-    <assign>
-        <ref id="ОБЪЕКТ6">
-            <ref id="АТРИБУТ2"/>
-        </ref>
-        <value>Некротическая форма аспергиллеза</value>
-        <with belief="50" probability="70" accuracy="0"/>
-    </assign>
-    """
-    model = AssignInstructionXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))

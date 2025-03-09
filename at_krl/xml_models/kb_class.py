@@ -63,7 +63,13 @@ class PropertyDefinitionXMLModel(KBEntityXMLModel, tag="property"):
         data = super().get_data(context)
         data["type"] = TypeOrClassReference(id=self.type)
         if context.kb:
-            data["type"].target = context.kb.get_type_by_id(data["type"].id)
+            cls = context.kb.get_class_by_id(data["type"].id)
+            type = context.kb.get_type_by_id(data["type"].id)
+            if not type and not cls:
+                raise ValueError(f"No type or class found with id {self.type}")
+            if cls and type:
+                raise ValueError(f"Found both class and type with id {self.type}")
+            data["type"].target = cls or type
         if self.value:
             data["value"] = self.value.to_internal(context.create_child("value"))
         return data
@@ -112,7 +118,13 @@ class PropertyDefinitionLegacyXMLModel(KBEntityXMLModel, tag="property", extra="
         data = super().get_data(context)
         data["type"] = TypeOrClassReference(id=self.type)
         if context.kb:
-            data["type"].target = context.kb.get_type_by_id(data["type"].id)
+            cls = context.kb.get_class_by_id(data["type"].id)
+            type = context.kb.get_type_by_id(data["type"].id)
+            if not type and not cls:
+                raise ValueError(f"No type or class found with id {self.type}")
+            if cls and type:
+                raise ValueError(f"Found both class and type with id {self.type}")
+            data["type"].target = cls or type
         if self.value:
             data["value"] = self.value.to_internal(context.create_child("value"))
         return data
@@ -144,23 +156,3 @@ class KBClassLegacyXMLModel(KBEntityXMLModel, tag="class"):
             context.kb.classes.objects.append(result)
             result.owner = context.kb.classes
         return result
-
-
-if __name__ == "__main__":
-    xml_data = """
-    <class id="КЛАСС_Пострадавший_1" desc="Пострадавший_1" group="Пострадавший_1">
-        <properties>
-            <property id="Состояние" type="Состояния" desc="Состояние" source="asked"/>
-            <property id="Степень_тяжести" type="Степень_тяжести" desc="Степень_тяжести" source="asked"/>
-            <property id="Тип_травмы" type="Типы_травм" desc="Тип_травмы" source="asked"/>
-            <property id="Приоритет_пострадавшего" type="Степень_приоритета" desc="Приоритет_пострадавшего"
-                source="asked"/>
-        </properties>
-    </class>
-    """
-
-    model = KBClassXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)).krl)
-
-    model = KBClassLegacyXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)).krl)

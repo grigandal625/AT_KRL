@@ -40,28 +40,3 @@ class KBReferenceLegacyXMLModel(KBEvaluatableLegacyXMLModel, tag="ref"):
     def build_target(self, data, context: Context):
         result = KBReference(**data)
         return result
-
-
-if __name__ == "__main__":
-    xml_data = """
-    <ref id="ref1"/>
-    """
-    model = KBReferenceXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))
-
-    xml_data = """
-    <ref id="ref2">
-        <with belief="50" probability="70" accuracy="0"/>
-    </ref>
-    """
-    model = KBReferenceXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))
-
-    xml_data = """
-    <ref id="ref3">
-        <ref id="ref4"/>
-        <with belief="50" probability="70" accuracy="0"/>
-    </ref>
-    """
-    model = KBReferenceXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))

@@ -29,6 +29,10 @@ class MembershipFunctionModel(KBEntityModel):
     max: float
     points: MFPointListModel
 
-    def build_target(self, data, context: Context):
+    def get_data(self, context):
+        data = super().get_data(context)
         data["points"] = self.points.to_internal(context)
+        return data
+
+    def build_target(self, data, context: Context):
         return MembershipFunction(**data)

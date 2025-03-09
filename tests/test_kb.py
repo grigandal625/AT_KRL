@@ -1,6 +1,7 @@
 from pytest import fixture
 
 from at_krl.core.knowledge_base import KnowledgeBase
+from at_krl.models.knowledge_base import KnowledgeBaseModel
 from at_krl.xml_models.knowledge_base import KnowledgeBaseLegacyXMLModel
 from at_krl.xml_models.knowledge_base import KnowledgeBaseXMLModel
 
@@ -69,3 +70,9 @@ def test_legacy_xml(legacy_big_kb):
     krl_kb = KnowledgeBase.from_krl(kb.krl)
     assert krl_kb is not None, "Knowledge base is not parsed correctly"
     assert krl_kb.krl == kb.krl, "Knowledge base after repeatly parsing must be equal"
+
+    kb_data = kb.to_representation()
+    dict_kb_model = KnowledgeBaseModel(**kb_data)
+    assert dict_kb_model is not None, "Knowledge base is not parsed correctly"
+    dict_kb = dict_kb_model.to_internal()
+    assert dict_kb.krl == kb.krl, "Knowledge base after repeatly parsing must be equal"

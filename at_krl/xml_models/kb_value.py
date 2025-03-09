@@ -51,23 +51,3 @@ class KBValueLegacyXMLModel(KBEvaluatableLegacyXMLModel, tag="value"):
 
     def build_target(self, data, context: Context) -> KBValue:
         return KBValue(**data)
-
-
-if __name__ == "__main__":
-    xml_data = """
-    <value>123.45<with belief="50" probability="70" accuracy="0"/></value>
-    """
-    model = KBValueXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))
-
-    xml_data = """
-    <value>True</value>
-    """
-    model = KBValueXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))
-
-    xml_data = """
-    <value>False</value>
-    """
-    model = KBValueXMLModel.from_xml(xml_data)
-    print(model.to_internal(context=Context(name="test", kb=None)))

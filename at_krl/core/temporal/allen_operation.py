@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from xml.etree.ElementTree import Element
 
 from at_krl.core.simple.simple_operation import SimpleOperation
+from at_krl.core.temporal.allen_evaluatable import AllenEvaluatable
 from at_krl.core.temporal.allen_reference import AllenReference
 
 logger = getLogger(__name__)
@@ -40,7 +41,7 @@ def get_inversion(op: str) -> str:
 
 
 @dataclass(kw_only=True)
-class AllenOperation(SimpleOperation):
+class AllenOperation(SimpleOperation, AllenEvaluatable):
     left: AllenReference
     right: AllenReference
 

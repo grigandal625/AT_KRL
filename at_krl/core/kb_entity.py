@@ -30,7 +30,7 @@ class KBEntity:
     @staticmethod
     def _represent(item):
         if isinstance(item, KBEntity):
-            return item.__dict__
+            return item.to_representation()
         if isinstance(item, list):
             return [KBEntity._represent(i) for i in item]
         if isinstance(item, dict):

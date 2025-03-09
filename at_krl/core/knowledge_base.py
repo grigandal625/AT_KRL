@@ -27,7 +27,7 @@ class KBClasses(KBEntity):
     objects: List[KBClass] = field(init=False, default_factory=list)
     events: List[KBEvent] = field(init=False, default_factory=list)
     intervals: List[KBInterval] = field(init=False, default_factory=list)
-    owner: None = field(init=False, default=None, metadata={"serialize": False})
+    owner: "KnowledgeBase" = field(init=False, default=None, metadata={"serialize": False})
 
     @property
     def all(self):
@@ -84,6 +84,23 @@ class KnowledgeBase(KBEntity):
             world = self.get_object_by_id("world")
         world.owner = self
         return world
+
+    def to_representation(self):
+        result = {
+            "tag": self.tag,
+            "problem_info": self.problem_info,
+            "types": [tp.to_representation() for tp in self.types],
+            "classes": [],
+        }
+        for cls in self.classes.objects:
+            if cls.id != "world":
+                result["classes"].append(cls.to_representation())
+        for intetval in self.classes.intervals:
+            result["classes"].append(intetval.to_representation())
+        for event in self.classes.events:
+            result["classes"].append(event.to_representation())
+        result["classes"].append(self.world.to_representation())
+        return result
 
     def get_free_class_id(self, initial: str = None, from_object_id: bool = True) -> str:
         initial = (f"КЛАСС_{initial}" if from_object_id else initial) if initial else "КЛАСС_0"
@@ -208,15 +225,18 @@ class KnowledgeBase(KBEntity):
         if not self._validated:
             for t in self.types:
                 t.validate(self)
+
             for cls in self.classes.objects:
-                cls.validate(self)
-            if not self.with_world:
-                self.world.validate(self)
+                if cls.id != "world":
+                    cls.validate(self)
+
             for interval in self.classes.intervals:
                 interval.validate(self)
+
             for event in self.classes.events:
                 event.validate(self)
 
+            self.world.validate(self)
             self._validated = True
 
     @staticmethod

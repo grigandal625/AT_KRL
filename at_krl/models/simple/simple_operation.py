@@ -17,12 +17,19 @@ class SimpleOperationModel(SimpleEvaluatableModel):
     tag: Literal[
         "eq", "gt", "ge", "lt", "le", "ne", "and", "or", "not", "xor", "neg", "add", "sub", "mul", "div", "mod", "pow"
     ]
-    sign: str
     left: Union[SimpleValueModel, SimpleReferenceModel, "SimpleOperationModel"]
     right: Optional[Union[SimpleValueModel, SimpleReferenceModel, "SimpleOperationModel"]] = Field(default=None)
 
-    def build_target(self, data, context: Context):
+    def get_data(self, context):
+        data = super().get_data(context)
         data["left"] = self.left.to_internal(context)
-        data["right"] = self.right.to_internal(context)
+        if self.right:
+            data["right"] = self.right.to_internal(context)
+        data["sign"] = self.tag
+        return data
 
+    def build_target(self, data, context: Context):
         return SimpleOperation(**data)
+
+
+SimpleOperationModel.model_rebuild()
