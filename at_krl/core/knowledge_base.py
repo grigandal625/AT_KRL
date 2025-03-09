@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from dataclasses import field
 from datetime import datetime
@@ -175,6 +176,9 @@ class KnowledgeBase(KBEntity):
         return self.get_xml()
 
     def get_xml(self, *args, **kwargs):
+        if not kwargs.get("with_allen", True):
+            kwargs["legacy"] = True
+
         knowledge_base = Element("knowledge-base")
         knowledge_base.attrib["creation-date"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
@@ -189,7 +193,7 @@ class KnowledgeBase(KBEntity):
 
         knowledge_base.append(types)
 
-        if kwargs.get("legacy"):
+        if kwargs.get("legacy") and kwargs.get("with_allen", True):
             knowledge_base.append(self.get_allen_xml(*args, **kwargs))
 
         classes = Element("classes")
@@ -256,37 +260,14 @@ class KnowledgeBase(KBEntity):
         return kb_model.to_internal()
 
     @staticmethod
-    def from_dict(d: dict) -> "KnowledgeBase":
-        KB = KnowledgeBase()
+    def from_json(d: dict | str) -> "KnowledgeBase":
+        from at_krl.models.knowledge_base import KnowledgeBaseModel
 
-        types = d.get("types", [])
-        for t_dict in types:
-            t = KBType.from_dict(t_dict)
-            t.owner = KB
-            KB.types.append(t)
+        if isinstance(d, str):
+            d = json.loads(d)
 
-        intervals = d.get("intervals", [])
-        for i_dict in intervals:
-            i = KBInterval.from_dict(i_dict)
-            i.owner = KB
-            KB.classes.intervals.append(i)
-
-        events = d.get("events", [])
-        for e_dict in events:
-            e = KBEvent.from_dict(e_dict)
-            KB.classes.events.append(e)
-
-        classes = d.get("classes", [])
-        for c_dict in classes:
-            c = KBClass.from_dict(c_dict)
-            c.owner = KB
-            KB.classes.objects.append(c)
-
-        if KB.get_object_by_id("world") is not None:
-            KB.with_world = True
-
-        KB.rules = KB.world.rules
-        return KB
+        kb_model = KnowledgeBaseModel(**d)
+        return kb_model.to_internal()
 
     @staticmethod
     def from_krl(krl_text: str):

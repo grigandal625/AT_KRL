@@ -1,0 +1,363 @@
+{
+    "tag": "knowledge-base",
+    "problem_info": null,
+    "types": [
+        {
+            "tag": "type",
+            "id": "МойТип",
+            "desc": "Тестовый тип",
+            "meta": "number",
+            "from": 0,
+            "to": 10
+        }
+    ],
+    "classes": [
+        {
+            "tag": "class",
+            "id": "КЛАСС_МойОбъект",
+            "group": "Группа1",
+            "desc": "Класс для МойОбъект",
+            "properties": [
+                {
+                    "tag": "property",
+                    "id": "Атрибут1",
+                    "type": {
+                        "tag": "ref",
+                        "id": "МойТип",
+                        "ref": null,
+                        "meta": "type_or_class"
+                    },
+                    "desc": "Тестовый атрибут",
+                    "value": null,
+                    "source": "asked",
+                    "question": null,
+                    "query": null
+                },
+                {
+                    "tag": "property",
+                    "id": "Атрибут2",
+                    "type": {
+                        "tag": "ref",
+                        "id": "МойТип",
+                        "ref": null,
+                        "meta": "type_or_class"
+                    },
+                    "desc": "Тестовый атрибут2",
+                    "value": {
+                        "tag": "value",
+                        "content": 0,
+                        "non_factor": {
+                            "tag": "with",
+                            "belief": 50,
+                            "probability": 100,
+                            "accuracy": 0
+                        }
+                    },
+                    "source": "asked",
+                    "question": null,
+                    "query": null
+                }
+            ],
+            "rules": []
+        },
+        {
+            "tag": "interval",
+            "id": "МойИнтервал",
+            "group": "ИНТЕРВАЛ",
+            "desc": "МойИнтервал",
+            "open": {
+                "tag": "eq",
+                "left": {
+                    "tag": "ref",
+                    "id": "МойОбъект",
+                    "ref": {
+                        "tag": "ref",
+                        "id": "Атрибут1",
+                        "ref": null
+                    }
+                },
+                "right": {
+                    "tag": "value",
+                    "content": 0
+                }
+            },
+            "close": {
+                "tag": "eq",
+                "left": {
+                    "tag": "ref",
+                    "id": "МойОбъект",
+                    "ref": {
+                        "tag": "ref",
+                        "id": "Атрибут1",
+                        "ref": null
+                    }
+                },
+                "right": {
+                    "tag": "value",
+                    "content": 10
+                }
+            }
+        },
+        {
+            "tag": "event",
+            "id": "МоеСобытие",
+            "group": "СОБЫТИЕ",
+            "desc": "МоеСобытие",
+            "occurance_condition": {
+                "tag": "eq",
+                "left": {
+                    "tag": "ref",
+                    "id": "МойОбъект",
+                    "ref": {
+                        "tag": "ref",
+                        "id": "Атрибут1",
+                        "ref": null
+                    }
+                },
+                "right": {
+                    "tag": "value",
+                    "content": 5
+                }
+            }
+        },
+        {
+            "tag": "class",
+            "id": "world",
+            "group": null,
+            "desc": "Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила",
+            "properties": [
+                {
+                    "tag": "property",
+                    "id": "МойОбъект",
+                    "type": {
+                        "tag": "ref",
+                        "id": "КЛАСС_МойОбъект",
+                        "ref": null,
+                        "meta": "type_or_class"
+                    },
+                    "desc": "Тестовый объект",
+                    "value": null,
+                    "source": "asked",
+                    "question": null,
+                    "query": null
+                }
+            ],
+            "rules": [
+                {
+                    "tag": "rule",
+                    "id": "ПРАВИЛО1",
+                    "condition": {
+                        "tag": "and",
+                        "left": {
+                            "tag": "d",
+                            "left": {
+                                "tag": "ref",
+                                "id": "МоеСобытие",
+                                "index": null,
+                                "meta": "allen_reference"
+                            },
+                            "right": {
+                                "tag": "ref",
+                                "id": "МойИнтервал",
+                                "index": null,
+                                "meta": "allen_reference"
+                            }
+                        },
+                        "right": {
+                            "tag": "lt",
+                            "left": {
+                                "tag": "ref",
+                                "id": "МойОбъект",
+                                "ref": {
+                                    "tag": "ref",
+                                    "id": "Атрибут2",
+                                    "ref": null,
+                                    "non_factor": {
+                                        "tag": "with",
+                                        "belief": 50,
+                                        "probability": 100,
+                                        "accuracy": 0
+                                    }
+                                },
+                                "non_factor": {
+                                    "tag": "with",
+                                    "belief": 50,
+                                    "probability": 100,
+                                    "accuracy": 0
+                                }
+                            },
+                            "right": {
+                                "tag": "value",
+                                "content": 5,
+                                "non_factor": {
+                                    "tag": "with",
+                                    "belief": 50,
+                                    "probability": 80,
+                                    "accuracy": 0
+                                }
+                            },
+                            "non_factor": {
+                                "tag": "with",
+                                "belief": 50,
+                                "probability": 100,
+                                "accuracy": 0
+                            }
+                        },
+                        "non_factor": {
+                            "tag": "with",
+                            "belief": 50,
+                            "probability": 100,
+                            "accuracy": 0
+                        }
+                    },
+                    "instructions": [
+                        {
+                            "tag": "assign",
+                            "non_factor": {
+                                "tag": "with",
+                                "belief": 50,
+                                "probability": 100,
+                                "accuracy": 0
+                            },
+                            "ref": {
+                                "tag": "ref",
+                                "id": "МойОбъект",
+                                "ref": {
+                                    "tag": "ref",
+                                    "id": "Атрибут1",
+                                    "ref": null,
+                                    "non_factor": {
+                                        "tag": "with",
+                                        "belief": 50,
+                                        "probability": 100,
+                                        "accuracy": 0
+                                    }
+                                },
+                                "non_factor": {
+                                    "tag": "with",
+                                    "belief": 50,
+                                    "probability": 100,
+                                    "accuracy": 0
+                                }
+                            },
+                            "value": {
+                                "tag": "add",
+                                "left": {
+                                    "tag": "ref",
+                                    "id": "МойОбъект",
+                                    "ref": {
+                                        "tag": "ref",
+                                        "id": "Атрибут1",
+                                        "ref": null,
+                                        "non_factor": {
+                                            "tag": "with",
+                                            "belief": 50,
+                                            "probability": 100,
+                                            "accuracy": 0
+                                        }
+                                    },
+                                    "non_factor": {
+                                        "tag": "with",
+                                        "belief": 50,
+                                        "probability": 100,
+                                        "accuracy": 0
+                                    }
+                                },
+                                "right": {
+                                    "tag": "value",
+                                    "content": 1,
+                                    "non_factor": {
+                                        "tag": "with",
+                                        "belief": 40,
+                                        "probability": 60,
+                                        "accuracy": 0
+                                    }
+                                },
+                                "non_factor": {
+                                    "tag": "with",
+                                    "belief": 50,
+                                    "probability": 100,
+                                    "accuracy": 0
+                                }
+                            }
+                        },
+                        {
+                            "tag": "assign",
+                            "non_factor": {
+                                "tag": "with",
+                                "belief": 50,
+                                "probability": 100,
+                                "accuracy": 0
+                            },
+                            "ref": {
+                                "tag": "ref",
+                                "id": "МойОбъект",
+                                "ref": {
+                                    "tag": "ref",
+                                    "id": "Атрибут2",
+                                    "ref": null,
+                                    "non_factor": {
+                                        "tag": "with",
+                                        "belief": 50,
+                                        "probability": 100,
+                                        "accuracy": 0
+                                    }
+                                },
+                                "non_factor": {
+                                    "tag": "with",
+                                    "belief": 50,
+                                    "probability": 100,
+                                    "accuracy": 0
+                                }
+                            },
+                            "value": {
+                                "tag": "add",
+                                "left": {
+                                    "tag": "ref",
+                                    "id": "МойОбъект",
+                                    "ref": {
+                                        "tag": "ref",
+                                        "id": "Атрибут2",
+                                        "ref": null,
+                                        "non_factor": {
+                                            "tag": "with",
+                                            "belief": 50,
+                                            "probability": 100,
+                                            "accuracy": 0
+                                        }
+                                    },
+                                    "non_factor": {
+                                        "tag": "with",
+                                        "belief": 50,
+                                        "probability": 100,
+                                        "accuracy": 0
+                                    }
+                                },
+                                "right": {
+                                    "tag": "value",
+                                    "content": 1,
+                                    "non_factor": {
+                                        "tag": "with",
+                                        "belief": 50,
+                                        "probability": 100,
+                                        "accuracy": 0
+                                    }
+                                },
+                                "non_factor": {
+                                    "tag": "with",
+                                    "belief": 50,
+                                    "probability": 100,
+                                    "accuracy": 0
+                                }
+                            }
+                        }
+                    ],
+                    "else_instructions": null,
+                    "meta": "simple",
+                    "period": null,
+                    "desc": "Тестовое правило"
+                }
+            ]
+        }
+    ]
+}

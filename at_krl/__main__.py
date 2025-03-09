@@ -1,17 +1,10 @@
 import argparse
 import json
-from xml.etree.ElementTree import ElementTree
-from xml.etree.ElementTree import indent
+import logging
+from xml.dom import minidom
 from xml.etree.ElementTree import tostring
 
-from antlr4 import CommonTokenStream
-from antlr4 import InputStream
-
 from at_krl.core.knowledge_base import KnowledgeBase
-from at_krl.grammar.at_krlLexer import at_krlLexer
-from at_krl.grammar.at_krlParser import at_krlParser
-from at_krl.utils.error_listener import ATKRLErrorListener
-from at_krl.utils.listener import ATKRLListener
 
 MODES = ["atkrl-xml", "atkrl-json", "xml-json", "json-xml", "xml-atkrl", "json-atkrl"]
 
@@ -32,36 +25,37 @@ parser.add_argument(
     ),
 )
 parser.add_argument(
-    "-f", "--force", required=False, default=False, help="[NOT REQUIRED] A flag to force converting without validation"
+    "-l",
+    "--legacy",
+    required=False,
+    default=False,
+    help=("[NOT REQUIRED] A flag that indicates " + " whether legacy xml data provided"),
 )
 
 
-def kb_to_xml(kb: KnowledgeBase, output: str = None, allen: str = None, *args, **kwargs):
+def kb_to_xml(kb: KnowledgeBase, output: str = None, allen: str = None, legacy: bool = False, *args, **kwargs):
     output_path = output
     allen_path = allen
 
-    if output_path is not None:
-        if allen_path is None:
-            kb_xml = kb.get_xml()
-        else:
-            kb_xml = kb.get_xml(with_allen=False)
+    with_allen = False
+    if allen_path:
+        with_allen = True
+        legacy = True
 
+    kb_xml = kb.get_xml(with_allen=with_allen, legacy=legacy)
+
+    if output_path is not None:
         with open(output_path, "w") as xml_file:
-            tree = ElementTree(kb_xml)
-            indent(tree, space="\t", level=0)
-            xml_file.write(tostring(tree.getroot(), encoding="utf-8").decode())
+            parsed = minidom.parseString(tostring(kb_xml, encoding="unicode"))
+            xml_file.write(parsed.toprettyxml(indent="    "))
 
         if allen_path is not None:
             with open(allen_path, "w") as allen_file:
-                allen_xml = kb.allen_xml
-                tree = ElementTree(allen_xml)
-                indent(tree, space="\t", level=0)
-                allen_file.write(tostring(tree.getroot(), encoding="utf-8").decode())
+                allen_xml = kb.get_allen_xml(legacy=True)
+                parsed = minidom.parseString(tostring(allen_xml, encoding="unicode"))
+                allen_file.write(parsed.toprettyxml(indent="    "))
     else:
-        kb_xml = kb.get_xml()
-        tree = ElementTree(kb_xml)
-        indent(tree, space="\t", level=0)
-        print(tostring(tree.getroot(), encoding="utf-8").decode())
+        print(minidom.parseString(tostring(kb_xml, encoding="unicode")).toprettyxml(indent="    "))
 
 
 def kb_to_krl(kb: KnowledgeBase, output: str = None, *args, **kwargs):
@@ -78,39 +72,22 @@ def kb_to_krl(kb: KnowledgeBase, output: str = None, *args, **kwargs):
 def kb_from_krl(input: str, *args, **kwargs):
     with open(input, "r") as krl_file:
         krl_text = krl_file.read()
-
-        input_stream = InputStream(krl_text)
-        lexer = at_krlLexer(input_stream)
-        stream = CommonTokenStream(lexer)
-        parser = at_krlParser(stream)
-
-        listener = ATKRLListener()
-        parser.addParseListener(listener)
-        parser.removeErrorListeners()
-        parser.addErrorListener(ATKRLErrorListener())
-        tree = parser.knowledge_base()
-
-        if tree.exception:
-            print(tree.exception)
-            exit(0)
-        return listener.KB
+        return KnowledgeBase.from_krl(krl_text)
 
 
-def kb_from_xml(input: str, allen: str = None, *args, **kwargs):
+def kb_from_xml(input: str, allen: str = None, legacy: bool = False, *args, **kwargs):
     with open(input, "r") as xml_file:
-        tree = ElementTree(file=xml_file)
-        kb_xml = tree.getroot()
+        kb_xml = xml_file.read()
         allen_xml = None
         if allen is not None:
             with open(allen, "r") as allen_file:
-                allen_tree = ElementTree(file=allen_file)
-                allen_xml = allen_tree.getroot()
-
-        return KnowledgeBase.from_xml(kb_xml, allen_xml=allen_xml)
+                allen_xml = allen_file.read()
+                legacy = True
+        return KnowledgeBase.from_xml(kb_xml, allen_xml=allen_xml, legacy=legacy)
 
 
 def kb_to_json(kb: KnowledgeBase, output: str = None, *args, **kwargs):
-    d = kb.__dict__()
+    d = kb.to_representation()
     if output is not None:
         with open(output, "w") as kb_file:
             kb_file.write(json.dumps(d, indent=4, ensure_ascii=False))
@@ -121,11 +98,12 @@ def kb_to_json(kb: KnowledgeBase, output: str = None, *args, **kwargs):
 def kb_from_json(input, *args, **kwargs):
     with open(input, "r") as f:
         d = json.loads(f.read())
-        kb = KnowledgeBase.from_dict(d)
+        kb = KnowledgeBase.from_json(d)
         return kb
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.ERROR)
     args = parser.parse_args()
     args_dict = vars(args)
     if args_dict.get("mode").startswith("atkrl"):
@@ -136,8 +114,8 @@ if __name__ == "__main__":
         kb = kb_from_json(**args_dict)
 
     kb._raise_on_validation = True
-    if not args_dict.get("force"):
-        kb.validate()
+    # if not args_dict.get("force"):
+    #     kb.validate()
 
     if args_dict.get("mode").endswith("krl"):
         kb_to_krl(kb, **args_dict)
