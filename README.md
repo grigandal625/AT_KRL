@@ -65,14 +65,210 @@ python -m at_krl atkrl-xml -i ./example/test.kbs -o TKBNew.xml
 python -m at_krl atkrl-xml -i ./example/test.kbs -o TKBNew.xml -a Allen2.xml
 ```
 
-### 2.2. Использование режиме runtime
+### 2.2. Использование в режиме runtime
+
+#### 2.2.1. Построение конструкций ЯПЗ из кода
+
+Типы:
+
+```python
+# Символьный тип
+from at_krl.core.kb_type import KBSymbolicType
+
+my_symbolic_type = KBSymbolicType(
+    id="СИМВ_ТИП_1",
+    desc="Символьный тестовый тип",
+    values=["Значение 1", "Значение 2"]
+)
+print(my_symbolic_type.krl) # напечаниется представление типа в формате ЯПЗ
+
+# Числовой тип
+from at_krl.core.kb_type import KBNumericType
+
+my_numeric_type = KBNumericType(
+    id="ЧИСЛО_ТИП_1",
+    desc="Числовой тестовый тип",
+    from_=0,
+    to_=10
+)
+print(my_numeric_type.krl) # напечаниется представление типа в формате ЯПЗ
+
+# Нечеткий тип
+from at_krl.core.fuzzy.membership_function import MFPoint
+from at_krl.core.fuzzy.membership_function import MembershipFunction
+from at_krl.core.kb_type import KBFuzzyType
+
+mf1 = MembershipFunction(
+    name="Высокая",
+    min=0,
+    max=100,
+    points=[
+        MFPoint(x=0, y=0),
+        MFPoint(x=60, y=0.7),
+        MFPoint(x=100, y=1)
+    ]
+)
+mf2 = MembershipFunction(
+    name="Низкая",
+    min=0,
+    max=100,
+    points=[
+        MFPoint(x=0, y=1),
+        MFPoint(x=30, y=0.6),
+        MFPoint(x=100, y=0)
+    ]
+)
+
+my_fuzzy_type = KBFuzzyType(
+    id="СКОРОСТЬ",
+    desc="Нечеткий тестовый тип для описания лингвистической переменной Скорость",
+    membership_functions=[mf1, mf2]
+)
+print(my_fuzzy_type.krl) # напечаниется представление типа в формате ЯПЗ
+```
+
+Объекты (базовые, события, интервалы)
+
+```python
+# Базовый объект
+from at_krl.core.kb_class import TypeOrClassReference
+from at_krl.core.kb_class import PropertyDefinition
+from at_krl.core.kb_class import KBClass
+
+my_base_object = KBClass(
+    id="МОЙ_ОБЪЕКТ",
+    desc="Базовый объект",
+    properties=[
+        PropertyDefinition(id="Скорость", type=TypeOrClassReference(id="СКОРОСТЬ")),
+        PropertyDefinition(id="Атрибут2", type=TypeOrClassReference(id="СИМВ_ТИП_1")),
+        PropertyDefinition(id="Атрибут3", type=TypeOrClassReference(id="ЧИСЛО_ТИП_1"))
+    ]
+)
+
+# дополнительно можно явно указать, на какие типы ссылаются атрибуты объекта
+
+my_base_object.properties[0].type.target = my_fuzzy_type
+my_base_object.properties[1].type.target = my_symbolic_type
+my_base_object.properties[2].type.target = my_numeric_type
+
+print(my_base_object.krl) # напечаниется представление объекта в формате ЯПЗ
+
+# События
+
+from at_krl.core.simple.simple_reference import SimpleReference
+from at_krl.core.simple.simple_value import SimpleValue
+from at_krl.core.simple.simple_operation import SimpleOperation
+from at_krl.core.temporal.allen_event import KBEvent
+
+my_event = KBEvent(
+    id="МОЕ_СОБЫТИЕ",
+    desc="Темпоральный объект - событие",
+    occurance_condition=SimpleOperation(
+        sign=">",
+        left=SimpleReference(
+            id="МОЙ_ОБЪЕКТ",
+            ref=SimpleReference(id="Атрибут3")
+        ),
+        right=SimpleValue(content=5)
+    )
+)
+
+print(my_event.krl) # напечаниется представление события в формате ЯПЗ
+
+from at_krl.core.temporal.allen_interval import KBInterval
+
+my_interval = KBInterval(
+    id="МОЙ_ИНТЕРВАЛ",
+    desc="Темпоральный объект - интервал",
+    open=SimpleOperation(
+        sign="<=",
+        left=SimpleReference(
+            id="МОЙ_ОБЪЕКТ",
+            ref=SimpleReference(id="Атрибут3")
+        ),
+        right=SimpleValue(content=10)
+    ),
+    close=SimpleOperation(
+        sign=">",
+        left=SimpleReference(
+            id="МОЙ_ОБЪЕКТ",
+            ref=SimpleReference(id="Атрибут3")
+        ),
+        right=SimpleValue(content=15)
+    )
+)
+
+print(my_interval.krl) # напечаниется представление интервала в формате ЯПЗ
+```
+
+Правила
+
+```python
+# Простое правило с темпоральным отношением в условии
+from at_krl.core.non_factor import NonFactor
+from at_krl.core.kb_value import KBValue
+from at_krl.core.kb_reference import KBReference
+from at_krl.core.kb_operation import KBOperation
+from at_krl.core.kb_instruction import AssignInstruction
+from at_krl.core.temporal.allen_reference import AllenReference
+from at_krl.core.temporal.allen_operation import AllenOperation
+from at_krl.core.kb_rule import KBRule
+
+event_reference = AllenReference(id="МОЕ_СОБЫТИЕ")
+interval_reference = AllenReference(id="МОЙ_ИНТЕРВАЛ")
+
+event_reference.target = my_event
+interval_reference.target = my_interval
+
+# Операция логики аллена, которая утверждает, что событие произошло до интервала
+allen_operation = AllenOperation(
+    sign="b",
+    left=event_reference,
+    right=interval_reference
+)
+
+# для выражения условия правила задаим простую
+# логическую операцию с НЕ-фактором, включающую алленовскую
+
+rule_condition = KBOperation(
+    sign="&",
+    left=allen_operation,
+    right=KBOperation(
+        sign=">",
+        left=KBReference(
+            id="МОЙ_ОБЪЕКТ",
+            ref=KBReference(id="Атрибут3"),
+            non_factor=NonFactor(belief=70, probability=100, accuracy=0)
+        ),
+        right=KBValue(content=5, non_factor=NonFactor(belief=80, probability=90, accuracy=0)),
+        non_factor=NonFactor(belief=40, probability=50, accuracy=0)
+    )
+)
+
+my_rule = KBRule(
+    id="МОЕ_ПРАВИЛО",
+    desc="Тестовое правило",
+    condition=rule_condition,
+    instructions=[
+        AssignInstruction(
+            ref=KBReference.parse("МОЙ_ОБЪЕКТ.АТРИБУТ2"),
+            value=KBValue(content="Значение 2"),
+            non_factor=NonFactor(belief=90, probability=95, accuracy=0)
+        ),
+    ]
+)
+
+print(my_rule.krl) # напечаниется представление правила в формате ЯПЗ
+```
+
+#### 2.2.2. Считывание текста на ЯПЗ и конвертация в объекты
 
 Загрузить БЗ из формата ЯПЗ можно следующим образом:
 
 ```python
 from antlr4 import CommonTokenStream, InputStream
-from at_krl.grammar.at_krlLexer import at_krlLexer
-from at_krl.grammar.at_krlParser import at_krlParser
+from at_krl.grammar.at_krl_lexer import at_krl_lexer
+from at_krl.grammar.at_krl_parser import at_krl_parser
 from at_krl.utils.listener import ATKRLListener
 from at_krl.utils.error_listener import ATKRLErrorListener
 
@@ -80,19 +276,30 @@ input = 'example/test.kbs' # Входной файл на япз
 
 with open(input, 'r') as krl_file:
     krl_text = krl_file.read() # считываем текст БЗ
+
+    # Создаем поток ввода для текста ЯПЗ
     input_stream = InputStream(krl_text)
-    lexer = at_krlLexer(input_stream) # создаем лексер
+
+    # Создаем лексер
+    lexer = at_krl_lexer(input_stream)
+
+    # Создаем кастомный поток токенов, который пропускает скрытые токены
     stream = CommonTokenStream(lexer)
-    parser = at_krlParser(stream) # создаем парсер
+    stream.fill()  # Заполняем поток токенов
+
+    # Создаем парсер
+    parser = at_krl_parser(stream)
 
     listener = ATKRLListener()
-    parser.addParseListener(listener) # добавляем лисенер
+    parser.addParseListener(listener)
 
+    # Настраиваем обработчик ошибок
     error_listener = ATKRLErrorListener()
     parser.removeErrorListeners()
     parser.addErrorListener(error_listener)
 
-    tree = parser.knowledge_base() # даем команду распарсить БЗ
+    # Парсим входной текст
+    parser.knowledge_base() # даем команду распарсить БЗ
 
     # После этого в объекте listener в свойсте KB будет загруженная бз
 
@@ -102,7 +309,7 @@ with open(input, 'r') as krl_file:
         print(t.id)
 
     for p in kb.world.properties: # печатаем все объекты
-        print(p.id, p.type_or_class_id)
+        print(p.id, p.type.target.id)
 
     for i in kb.classes.intervals: # печатаем все интервалы
         print(i.id)

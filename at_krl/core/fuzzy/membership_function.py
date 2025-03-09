@@ -16,7 +16,6 @@ class MFPoint(KBEntity):
     y: float | int
 
     def __post_init__(self):
-        super().__post_init__()
         self.x = to_number_or_str(self.x)
         self.y = to_number_or_str(self.y)
 
@@ -37,7 +36,6 @@ class MembershipFunction(KBEntity):
     max: float
 
     def __post_init__(self):
-        super().__post_init__()
         for point in self.points:
             point.owner = self
         self.min = to_number_or_str(self.min)
