@@ -112,7 +112,7 @@ temporal_attribute_condition
 
 // простое вычисляемое
 
-simple_value: STRING | NUMBER;
+simple_value: STRING | NUMBER | BOOLEAN;
 
 ref_path: NAME (DOT ref_path)?;
 

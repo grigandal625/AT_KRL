@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,108,894,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,
+        4,1,109,894,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,
         7,6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,
         13,2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,
         20,7,20,2,21,7,21,2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,
@@ -91,7 +91,7 @@ def serializedATN():
         32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,
         76,78,80,82,84,86,88,90,92,94,96,98,100,102,104,106,108,110,112,
         114,116,118,120,122,124,126,128,130,132,134,136,138,140,142,0,8,
-        1,0,43,44,1,0,15,16,1,0,13,14,1,0,103,104,2,0,20,20,24,26,1,0,21,
+        1,0,43,44,1,0,15,16,1,0,13,14,1,0,103,105,2,0,20,20,24,26,1,0,21,
         23,3,0,67,67,73,73,86,86,2,0,46,46,57,58,1005,0,145,1,0,0,0,2,148,
         1,0,0,0,4,155,1,0,0,0,6,167,1,0,0,0,8,175,1,0,0,0,10,183,1,0,0,0,
         12,186,1,0,0,0,14,198,1,0,0,0,16,203,1,0,0,0,18,213,1,0,0,0,20,219,
@@ -109,8 +109,8 @@ def serializedATN():
         1,0,0,0,116,810,1,0,0,0,118,812,1,0,0,0,120,815,1,0,0,0,122,839,
         1,0,0,0,124,841,1,0,0,0,126,843,1,0,0,0,128,846,1,0,0,0,130,853,
         1,0,0,0,132,857,1,0,0,0,134,865,1,0,0,0,136,885,1,0,0,0,138,887,
-        1,0,0,0,140,889,1,0,0,0,142,891,1,0,0,0,144,146,5,105,0,0,145,144,
-        1,0,0,0,145,146,1,0,0,0,146,1,1,0,0,0,147,149,5,107,0,0,148,147,
+        1,0,0,0,140,889,1,0,0,0,142,891,1,0,0,0,144,146,5,106,0,0,145,144,
+        1,0,0,0,145,146,1,0,0,0,146,1,1,0,0,0,147,149,5,108,0,0,148,147,
         1,0,0,0,149,150,1,0,0,0,150,148,1,0,0,0,150,151,1,0,0,0,151,3,1,
         0,0,0,152,154,3,2,1,0,153,152,1,0,0,0,154,157,1,0,0,0,155,156,1,
         0,0,0,155,153,1,0,0,0,156,158,1,0,0,0,157,155,1,0,0,0,158,159,3,
@@ -128,23 +128,23 @@ def serializedATN():
         1,0,0,0,198,196,1,0,0,0,198,197,1,0,0,0,199,15,1,0,0,0,200,201,3,
         28,14,0,201,202,3,2,1,0,202,204,1,0,0,0,203,200,1,0,0,0,203,204,
         1,0,0,0,204,205,1,0,0,0,205,209,5,33,0,0,206,207,3,2,1,0,207,208,
-        5,103,0,0,208,210,1,0,0,0,209,206,1,0,0,0,209,210,1,0,0,0,210,211,
+        5,104,0,0,208,210,1,0,0,0,209,206,1,0,0,0,209,210,1,0,0,0,210,211,
         1,0,0,0,211,212,3,20,10,0,212,17,1,0,0,0,213,214,3,22,11,0,214,215,
         3,24,12,0,215,19,1,0,0,0,216,217,3,2,1,0,217,218,3,18,9,0,218,220,
         1,0,0,0,219,216,1,0,0,0,220,221,1,0,0,0,221,222,1,0,0,0,221,219,
-        1,0,0,0,222,21,1,0,0,0,223,224,5,104,0,0,224,225,5,103,0,0,225,227,
-        5,103,0,0,226,228,5,103,0,0,227,226,1,0,0,0,227,228,1,0,0,0,228,
+        1,0,0,0,222,21,1,0,0,0,223,224,5,105,0,0,224,225,5,104,0,0,225,227,
+        5,104,0,0,226,228,5,104,0,0,227,226,1,0,0,0,227,228,1,0,0,0,228,
         230,1,0,0,0,229,231,5,58,0,0,230,229,1,0,0,0,230,231,1,0,0,0,231,
         23,1,0,0,0,232,233,5,38,0,0,233,236,3,26,13,0,234,235,7,0,0,0,235,
         237,3,26,13,0,236,234,1,0,0,0,237,238,1,0,0,0,238,239,1,0,0,0,238,
         236,1,0,0,0,239,241,1,0,0,0,240,242,7,0,0,0,241,240,1,0,0,0,241,
         242,1,0,0,0,242,243,1,0,0,0,243,244,5,41,0,0,244,25,1,0,0,0,245,
-        246,5,103,0,0,246,247,5,52,0,0,247,248,5,103,0,0,248,27,1,0,0,0,
+        246,5,104,0,0,246,247,5,52,0,0,247,248,5,104,0,0,248,27,1,0,0,0,
         249,250,5,31,0,0,250,251,3,30,15,0,251,29,1,0,0,0,252,253,3,2,1,
-        0,253,254,5,104,0,0,254,256,1,0,0,0,255,252,1,0,0,0,256,257,1,0,
+        0,253,254,5,105,0,0,254,256,1,0,0,0,255,252,1,0,0,0,256,257,1,0,
         0,0,257,258,1,0,0,0,257,255,1,0,0,0,258,31,1,0,0,0,259,260,5,32,
-        0,0,260,261,3,2,1,0,261,262,5,34,0,0,262,263,5,103,0,0,263,264,3,
-        2,1,0,264,265,5,35,0,0,265,266,5,103,0,0,266,33,1,0,0,0,267,268,
+        0,0,260,261,3,2,1,0,261,262,5,34,0,0,262,263,5,104,0,0,263,264,3,
+        2,1,0,264,265,5,35,0,0,265,266,5,104,0,0,266,33,1,0,0,0,267,268,
         5,8,0,0,268,269,5,102,0,0,269,270,3,2,1,0,270,274,3,36,18,0,271,
         272,3,2,1,0,272,273,3,118,59,0,273,275,1,0,0,0,274,271,1,0,0,0,274,
         275,1,0,0,0,275,35,1,0,0,0,276,280,3,38,19,0,277,280,3,48,24,0,278,
@@ -204,9 +204,9 @@ def serializedATN():
         53,0,457,458,3,74,37,4,458,460,1,0,0,0,459,443,1,0,0,0,459,447,1,
         0,0,0,459,451,1,0,0,0,459,455,1,0,0,0,460,463,1,0,0,0,461,459,1,
         0,0,0,461,462,1,0,0,0,462,75,1,0,0,0,463,461,1,0,0,0,464,465,3,74,
-        37,0,465,77,1,0,0,0,466,467,5,1,0,0,467,468,5,37,0,0,468,469,5,103,
-        0,0,469,470,7,0,0,0,470,471,5,103,0,0,471,472,5,40,0,0,472,79,1,
-        0,0,0,473,474,5,2,0,0,474,475,5,103,0,0,475,81,1,0,0,0,476,477,3,
+        37,0,465,77,1,0,0,0,466,467,5,1,0,0,467,468,5,37,0,0,468,469,5,104,
+        0,0,469,470,7,0,0,0,470,471,5,104,0,0,471,472,5,40,0,0,472,79,1,
+        0,0,0,473,474,5,2,0,0,474,475,5,104,0,0,475,81,1,0,0,0,476,477,3,
         78,39,0,477,478,3,80,40,0,478,482,1,0,0,0,479,482,3,78,39,0,480,
         482,3,80,40,0,481,476,1,0,0,0,481,479,1,0,0,0,481,480,1,0,0,0,482,
         83,1,0,0,0,483,485,3,68,34,0,484,486,3,82,41,0,485,484,1,0,0,0,485,
@@ -322,7 +322,7 @@ def serializedATN():
         1,0,0,0,810,762,1,0,0,0,810,766,1,0,0,0,810,770,1,0,0,0,810,774,
         1,0,0,0,810,778,1,0,0,0,810,782,1,0,0,0,810,786,1,0,0,0,810,790,
         1,0,0,0,810,794,1,0,0,0,810,798,1,0,0,0,810,802,1,0,0,0,810,806,
-        1,0,0,0,811,117,1,0,0,0,812,813,5,101,0,0,813,814,5,108,0,0,814,
+        1,0,0,0,811,117,1,0,0,0,812,813,5,101,0,0,813,814,5,109,0,0,814,
         119,1,0,0,0,815,816,5,3,0,0,816,821,5,102,0,0,817,818,3,2,1,0,818,
         819,5,7,0,0,819,820,3,122,61,0,820,822,1,0,0,0,821,817,1,0,0,0,821,
         822,1,0,0,0,822,823,1,0,0,0,823,824,3,2,1,0,824,825,3,130,65,0,825,
@@ -331,7 +331,7 @@ def serializedATN():
         0,832,833,3,2,1,0,833,834,3,118,59,0,834,836,1,0,0,0,835,832,1,0,
         0,0,835,836,1,0,0,0,836,121,1,0,0,0,837,840,3,124,62,0,838,840,3,
         126,63,0,839,837,1,0,0,0,839,838,1,0,0,0,840,123,1,0,0,0,841,842,
-        5,28,0,0,842,125,1,0,0,0,843,844,3,128,64,0,844,845,5,103,0,0,845,
+        5,28,0,0,842,125,1,0,0,0,843,844,3,128,64,0,844,845,5,104,0,0,845,
         127,1,0,0,0,846,851,5,29,0,0,847,848,3,2,1,0,848,849,5,30,0,0,849,
         852,1,0,0,0,850,852,5,42,0,0,851,847,1,0,0,0,851,850,1,0,0,0,852,
         129,1,0,0,0,853,854,5,4,0,0,854,855,3,2,1,0,855,856,3,104,52,0,856,
@@ -422,8 +422,8 @@ class at_krl_parser ( Parser ):
                       "ALLEN_BI", "ALLEN_M", "ALLEN_MI", "ALLEN_S", "ALLEN_SI", 
                       "ALLEN_F", "ALLEN_FI", "ALLEN_D", "ALLEN_DI", "ALLEN_O", 
                       "ALLEN_OI", "ALLEN_E", "ALLEN_A", "COMMENT", "NAME", 
-                      "NUMBER", "STRING", "LANG_COMMENT", "WS", "NEWLINE", 
-                      "COMMENT_DATA" ]
+                      "BOOLEAN", "NUMBER", "STRING", "LANG_COMMENT", "WS", 
+                      "NEWLINE", "COMMENT_DATA" ]
 
     RULE_lang_comment = 0
     RULE_newline = 1
@@ -622,12 +622,13 @@ class at_krl_parser ( Parser ):
     ALLEN_A=100
     COMMENT=101
     NAME=102
-    NUMBER=103
-    STRING=104
-    LANG_COMMENT=105
-    WS=106
-    NEWLINE=107
-    COMMENT_DATA=108
+    BOOLEAN=103
+    NUMBER=104
+    STRING=105
+    LANG_COMMENT=106
+    WS=107
+    NEWLINE=108
+    COMMENT_DATA=109
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -672,7 +673,7 @@ class at_krl_parser ( Parser ):
             self.state = 145
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==105:
+            if _la==106:
                 self.state = 144
                 self.match(at_krl_parser.LANG_COMMENT)
 
@@ -1392,7 +1393,7 @@ class at_krl_parser ( Parser ):
             self.state = 227
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==103:
+            if _la==104:
                 self.state = 226
                 self.match(at_krl_parser.NUMBER)
 
@@ -2077,7 +2078,7 @@ class at_krl_parser ( Parser ):
             self.state = 302
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [107]:
+            if token in [108]:
                 self.state = 300
                 self.long_attribute()
                 pass
@@ -2241,7 +2242,7 @@ class at_krl_parser ( Parser ):
                 self.state = 319
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 318
                     self.newline()
 
@@ -2934,7 +2935,7 @@ class at_krl_parser ( Parser ):
                 self.state = 401
                 self.simple_evaluatable()
                 pass
-            elif token in [107]:
+            elif token in [108]:
                 self.state = 402
                 self.newline()
                 self.state = 403
@@ -2948,7 +2949,7 @@ class at_krl_parser ( Parser ):
                 self.state = 408
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 407
                     self.newline()
 
@@ -2981,6 +2982,9 @@ class at_krl_parser ( Parser ):
         def NUMBER(self):
             return self.getToken(at_krl_parser.NUMBER, 0)
 
+        def BOOLEAN(self):
+            return self.getToken(at_krl_parser.BOOLEAN, 0)
+
         def getRuleIndex(self):
             return at_krl_parser.RULE_simple_value
 
@@ -3004,7 +3008,7 @@ class at_krl_parser ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 414
             _la = self._input.LA(1)
-            if not(_la==103 or _la==104):
+            if not(((((_la - 103)) & ~0x3f) == 0 and ((1 << (_la - 103)) & 7) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -3206,7 +3210,7 @@ class at_krl_parser ( Parser ):
                 self.state = 424
                 self.simple_ref()
                 pass
-            elif token in [103, 104]:
+            elif token in [103, 104, 105]:
                 self.state = 425
                 self.simple_value()
                 pass
@@ -3228,7 +3232,7 @@ class at_krl_parser ( Parser ):
                 self.state = 433
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 432
                     self.newline()
 
@@ -3238,7 +3242,7 @@ class at_krl_parser ( Parser ):
                 self.state = 437
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 436
                     self.newline()
 
@@ -3757,7 +3761,7 @@ class at_krl_parser ( Parser ):
                 self.state = 492
                 self.kb_reference()
                 pass
-            elif token in [103, 104]:
+            elif token in [103, 104, 105]:
                 self.state = 493
                 self.kb_value()
                 pass
@@ -3779,7 +3783,7 @@ class at_krl_parser ( Parser ):
                 self.state = 501
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 500
                     self.newline()
 
@@ -3789,7 +3793,7 @@ class at_krl_parser ( Parser ):
                 self.state = 505
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 504
                     self.newline()
 
@@ -4013,7 +4017,7 @@ class at_krl_parser ( Parser ):
                 self.state = 545
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 544
                     self.newline()
 
@@ -4023,7 +4027,7 @@ class at_krl_parser ( Parser ):
                 self.state = 549
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 548
                     self.newline()
 
@@ -4587,7 +4591,7 @@ class at_krl_parser ( Parser ):
                 self.state = 610
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 609
                     self.newline()
 
@@ -4600,7 +4604,7 @@ class at_krl_parser ( Parser ):
                 self.state = 614
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 613
                     self.newline()
 
@@ -4613,7 +4617,7 @@ class at_krl_parser ( Parser ):
                 self.state = 618
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 617
                     self.newline()
 
@@ -4626,7 +4630,7 @@ class at_krl_parser ( Parser ):
                 self.state = 622
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 621
                     self.newline()
 
@@ -4639,7 +4643,7 @@ class at_krl_parser ( Parser ):
                 self.state = 626
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 625
                     self.newline()
 
@@ -4652,7 +4656,7 @@ class at_krl_parser ( Parser ):
                 self.state = 630
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 629
                     self.newline()
 
@@ -4665,7 +4669,7 @@ class at_krl_parser ( Parser ):
                 self.state = 634
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 633
                     self.newline()
 
@@ -4819,7 +4823,7 @@ class at_krl_parser ( Parser ):
                 self.state = 642
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 641
                     self.newline()
 
@@ -4832,7 +4836,7 @@ class at_krl_parser ( Parser ):
                 self.state = 646
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 645
                     self.newline()
 
@@ -4845,7 +4849,7 @@ class at_krl_parser ( Parser ):
                 self.state = 650
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 649
                     self.newline()
 
@@ -4858,7 +4862,7 @@ class at_krl_parser ( Parser ):
                 self.state = 654
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 653
                     self.newline()
 
@@ -4871,7 +4875,7 @@ class at_krl_parser ( Parser ):
                 self.state = 658
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 657
                     self.newline()
 
@@ -4884,7 +4888,7 @@ class at_krl_parser ( Parser ):
                 self.state = 662
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 661
                     self.newline()
 
@@ -4897,7 +4901,7 @@ class at_krl_parser ( Parser ):
                 self.state = 666
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 665
                     self.newline()
 
@@ -4910,7 +4914,7 @@ class at_krl_parser ( Parser ):
                 self.state = 670
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 669
                     self.newline()
 
@@ -4923,7 +4927,7 @@ class at_krl_parser ( Parser ):
                 self.state = 674
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 673
                     self.newline()
 
@@ -4936,7 +4940,7 @@ class at_krl_parser ( Parser ):
                 self.state = 678
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 677
                     self.newline()
 
@@ -4949,7 +4953,7 @@ class at_krl_parser ( Parser ):
                 self.state = 682
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 681
                     self.newline()
 
@@ -4962,7 +4966,7 @@ class at_krl_parser ( Parser ):
                 self.state = 686
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 685
                     self.newline()
 
@@ -4975,7 +4979,7 @@ class at_krl_parser ( Parser ):
                 self.state = 690
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 689
                     self.newline()
 
@@ -4988,7 +4992,7 @@ class at_krl_parser ( Parser ):
                 self.state = 694
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 693
                     self.newline()
 
@@ -5074,7 +5078,7 @@ class at_krl_parser ( Parser ):
                 self.state = 700
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 699
                     self.newline()
 
@@ -5087,7 +5091,7 @@ class at_krl_parser ( Parser ):
                 self.state = 704
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 703
                     self.newline()
 
@@ -5100,7 +5104,7 @@ class at_krl_parser ( Parser ):
                 self.state = 708
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 707
                     self.newline()
 
@@ -5113,7 +5117,7 @@ class at_krl_parser ( Parser ):
                 self.state = 712
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 711
                     self.newline()
 
@@ -5126,7 +5130,7 @@ class at_krl_parser ( Parser ):
                 self.state = 716
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 715
                     self.newline()
 
@@ -5139,7 +5143,7 @@ class at_krl_parser ( Parser ):
                 self.state = 720
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 719
                     self.newline()
 
@@ -5152,7 +5156,7 @@ class at_krl_parser ( Parser ):
                 self.state = 724
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 723
                     self.newline()
 
@@ -5165,7 +5169,7 @@ class at_krl_parser ( Parser ):
                 self.state = 728
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 727
                     self.newline()
 
@@ -5178,7 +5182,7 @@ class at_krl_parser ( Parser ):
                 self.state = 732
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 731
                     self.newline()
 
@@ -5249,7 +5253,7 @@ class at_krl_parser ( Parser ):
                 self.state = 738
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 737
                     self.newline()
 
@@ -5262,7 +5266,7 @@ class at_krl_parser ( Parser ):
                 self.state = 742
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 741
                     self.newline()
 
@@ -5275,7 +5279,7 @@ class at_krl_parser ( Parser ):
                 self.state = 746
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 745
                     self.newline()
 
@@ -5288,7 +5292,7 @@ class at_krl_parser ( Parser ):
                 self.state = 750
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 749
                     self.newline()
 
@@ -5389,7 +5393,7 @@ class at_krl_parser ( Parser ):
                 self.state = 756
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 755
                     self.newline()
 
@@ -5402,7 +5406,7 @@ class at_krl_parser ( Parser ):
                 self.state = 760
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 759
                     self.newline()
 
@@ -5415,7 +5419,7 @@ class at_krl_parser ( Parser ):
                 self.state = 764
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 763
                     self.newline()
 
@@ -5428,7 +5432,7 @@ class at_krl_parser ( Parser ):
                 self.state = 768
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 767
                     self.newline()
 
@@ -5441,7 +5445,7 @@ class at_krl_parser ( Parser ):
                 self.state = 772
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 771
                     self.newline()
 
@@ -5454,7 +5458,7 @@ class at_krl_parser ( Parser ):
                 self.state = 776
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 775
                     self.newline()
 
@@ -5467,7 +5471,7 @@ class at_krl_parser ( Parser ):
                 self.state = 780
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 779
                     self.newline()
 
@@ -5480,7 +5484,7 @@ class at_krl_parser ( Parser ):
                 self.state = 784
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 783
                     self.newline()
 
@@ -5493,7 +5497,7 @@ class at_krl_parser ( Parser ):
                 self.state = 788
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 787
                     self.newline()
 
@@ -5506,7 +5510,7 @@ class at_krl_parser ( Parser ):
                 self.state = 792
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 791
                     self.newline()
 
@@ -5519,7 +5523,7 @@ class at_krl_parser ( Parser ):
                 self.state = 796
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 795
                     self.newline()
 
@@ -5532,7 +5536,7 @@ class at_krl_parser ( Parser ):
                 self.state = 800
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 799
                     self.newline()
 
@@ -5545,7 +5549,7 @@ class at_krl_parser ( Parser ):
                 self.state = 804
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 803
                     self.newline()
 
@@ -5558,7 +5562,7 @@ class at_krl_parser ( Parser ):
                 self.state = 808
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if _la==107:
+                if _la==108:
                     self.state = 807
                     self.newline()
 
@@ -5930,7 +5934,7 @@ class at_krl_parser ( Parser ):
             self.state = 851
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [107]:
+            if token in [108]:
                 self.state = 847
                 self.newline()
                 self.state = 848

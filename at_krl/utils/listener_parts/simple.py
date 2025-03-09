@@ -8,6 +8,8 @@ from at_krl.grammar.at_krl_parser import at_krl_parser
 
 class ListenerForSimpleMixin:
     def exitSimple_value(self, ctx: at_krl_parser.Simple_valueContext):
+        if ctx.getText().lower() in ["true", "false"]:
+            ctx.content = SimpleValue(content=ctx.getText().lower() == "true")
         ctx.content = SimpleValue(content=json.loads(ctx.getText()))
 
     def exitRef_path(self, ctx: at_krl_parser.Ref_pathContext):

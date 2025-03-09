@@ -109,6 +109,8 @@ COMMENT: 'КОММЕНТАРИЙ' -> pushMode(COMMENT_MODE);
 
 NAME : IDENTIFIER;
 
+BOOLEAN: 'TRUE' | 'True' | 'true' | 'false' | 'False' | 'FALSE';
+
 NUMBER
    : '-'? (INTEGER
    | FLOAT_NUMBER
