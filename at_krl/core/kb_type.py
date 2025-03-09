@@ -97,7 +97,7 @@ class KBSymbolicType(KBType):
 
     @property
     def inner_krl(self):
-        return '    "' + '"\n"'.join(self.values) + '"'
+        return '    "' + '"\n    "'.join(self.values) + '"'
 
     def get_inner_xml(self, *args, **kwargs) -> List[Element]:
         res = []
