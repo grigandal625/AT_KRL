@@ -1,4 +1,6 @@
-def to_number_or_str(value: str | int | float) -> int | float | str:
+def to_number_or_str(value: bool | str | int | float) -> bool | int | float | str:
+    if isinstance(value, bool):
+        return value
     if isinstance(value, str):
         try:
             return int(value)
@@ -6,6 +8,10 @@ def to_number_or_str(value: str | int | float) -> int | float | str:
             try:
                 return float(value)
             except ValueError:
+                if value.lower() == "true":
+                    return True
+                if value.lower() == "false":
+                    return False
                 return value
     if int(value) == value:
         return int(value)
