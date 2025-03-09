@@ -83,8 +83,8 @@ class KBRuleListModel(KBRootModel[List[KBRuleModel]]):
 
 
 class KBClassModel(SimpleClassModel):
-    properties: PropertyDefinitionListModel = Field(default_factory=list)
-    rules: Optional[KBRuleListModel] = Field(default_factory=list)
+    properties: PropertyDefinitionListModel = Field(default_factory=lambda: PropertyDefinitionListModel([]))
+    rules: Optional[KBRuleListModel] = Field(default_factory=lambda: KBRuleListModel([]))
     group: Optional[str] = Field(default=None)
 
     def get_data(self, context):
