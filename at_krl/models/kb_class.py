@@ -51,7 +51,7 @@ class TypeOrClassReferenceModel(SimpleReferenceModel):
 class PropertyDefinitionModel(KBEntityModel):  # LegacyMixin для совместимости со старым АТ-РЕШАТЕЛЕМ
     tag: Literal["property"] = Field(default="property")
     id: str
-    type: TypeOrClassReferenceModel
+    type: str | TypeOrClassReferenceModel
     desc: Optional[str] = Field(default=None)
     value: Optional[Union[KBValueModel, KBReferenceModel, KBOperationModel]] = Field(default=None)
     source: Optional[str] = Field(default="asked")
@@ -60,7 +60,10 @@ class PropertyDefinitionModel(KBEntityModel):  # LegacyMixin для совмес
 
     def get_data(self, context):
         data = super().get_data(context)
-        data["type"] = self.type.to_internal(context)
+        if isinstance(self.type, str):
+            data["type"] = TypeOrClassReferenceModel(tag="ref", id=self.type, meta="type_or_class").to_internal(context)
+        else:
+            data["type"] = self.type.to_internal(context)
         if self.value:
             data["value"] = self.value.to_internal(context)
         return data

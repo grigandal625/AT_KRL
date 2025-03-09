@@ -10,7 +10,6 @@ from at_krl.utils.context import Context
 
 class KBEntityModel(BaseModel):
     tag: str
-    _validated: bool
 
     def get_data(self, context: Context):
         data = self.model_dump()
