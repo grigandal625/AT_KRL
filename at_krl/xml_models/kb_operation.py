@@ -157,15 +157,17 @@ AnyKBOperation = (
     | KBPow
 )
 
+KBEvaluatableRoot = Union[
+    "AllenAttributeExpressionXMLModel",
+    KBReferenceXMLModel,
+    KBValueXMLModel,
+    AnyKBOperation,
+    "AnyAllenOperation",
+]
+
 
 class KBEvaluatableRootXMLModel(KBEntityRootXMLModel):
-    root: Union[
-        "AllenAttributeExpressionXMLModel",
-        KBReferenceXMLModel,
-        KBValueXMLModel,
-        AnyKBOperation,
-        "AnyAllenOperation",
-    ]
+    root: KBEvaluatableRoot
 
 
 class BinaryKBOperationLegacyXMLModel(KBEvaluatableXMLModel):
@@ -294,7 +296,7 @@ AnyKBOperationLegacy = (
     | KBGeLegacy
     | KBLtLegacy
     | KBLeLegacy
-    | KBNegLegacy
+    | KBNeLegacy
     | KBAndLegacy
     | KBOrLegacy
     | KBNotLegacy
@@ -307,16 +309,18 @@ AnyKBOperationLegacy = (
     | KBPowLegacy
 )
 
+KBEvaluatableLegacyRoot = Union[
+    KBReferenceLegacyXMLModel,
+    KBValueLegacyXMLModel,
+    AnyKBOperationLegacy,
+    "EvIntRelLegacyXMLModel",
+    "IntRelLegacyXMLModel",
+    "EvRelLegacyXMLModel",
+]
+
 
 class KBEvaluatableLegacyRootXMLModel(KBEntityRootXMLModel):
-    root: Union[
-        KBReferenceLegacyXMLModel,
-        KBValueLegacyXMLModel,
-        AnyKBOperationLegacy,
-        "EvIntRelLegacyXMLModel",
-        "IntRelLegacyXMLModel",
-        "EvRelLegacyXMLModel",
-    ]
+    root: KBEvaluatableLegacyRoot
 
 
 class AllenReferenceXMLModel(AllenEvaluatableXMLModel, tag="ref"):
@@ -589,7 +593,7 @@ KBGtLegacy.model_rebuild()
 KBGeLegacy.model_rebuild()
 KBLtLegacy.model_rebuild()
 KBLeLegacy.model_rebuild()
-KBNegLegacy.model_rebuild()
+KBNeLegacy.model_rebuild()
 KBAndLegacy.model_rebuild()
 KBOrLegacy.model_rebuild()
 KBNotLegacy.model_rebuild()
@@ -704,5 +708,65 @@ if __name__ == "__main__":
         </and>
     </KBEvaluatableLegacyRootXMLModel>
     """
+    model = KBEvaluatableLegacyRootXMLModel.from_xml(xml_data)
+    print(model.to_internal(context=Context(name="test", kb=None)))
+
+    xml_data = """
+    <KBEvaluatableLegacyRootXMLModel>
+        <ne>
+            <ref id="Пострадавший_2">
+                <ref id="Степень_тяжести">
+                    <with belief="50" probability="100" accuracy="0"/>
+                </ref>
+                <with belief="50" probability="100" accuracy="0"/>
+            </ref>
+            <value>Тяжелая</value>
+            <with belief="50" probability="100" accuracy="0"/>
+        </ne>
+    </KBEvaluatableLegacyRootXMLModel>
+    """
+
+    model = KBEvaluatableLegacyRootXMLModel.from_xml(xml_data)
+    print(model.to_internal(context=Context(name="test", kb=None)))
+
+    xml_data = """
+    <KBEvaluatableLegacyRootXMLModel>
+        <and>
+            <ne>
+                <ref id="Пострадавший_2">
+                    <ref id="Степень_тяжести">
+                        <with belief="50" probability="100" accuracy="0"/>
+                    </ref>
+                    <with belief="50" probability="100" accuracy="0"/>
+                </ref>
+                <value>Очень_тяжелая</value>
+                <with belief="50" probability="100" accuracy="0"/>
+            </ne>
+            <and>
+                <ne>
+                    <ref id="Пострадавший_2">
+                        <ref id="Степень_тяжести">
+                            <with belief="50" probability="100" accuracy="0"/>
+                        </ref>
+                        <with belief="50" probability="100" accuracy="0"/>
+                    </ref>
+                    <value>Тяжелая</value>
+                    <with belief="50" probability="100" accuracy="0"/>
+                </ne>
+                <ne>
+                    <ref id="Пострадавший_2">
+                        <ref id="Степень_тяжести">
+                            <with belief="50" probability="100" accuracy="0"/>
+                        </ref>
+                        <with belief="50" probability="100" accuracy="0"/>
+                    </ref>
+                    <value>Средняя</value>
+                    <with belief="50" probability="100" accuracy="0"/>
+                </ne>
+            </and>
+        </and>
+    </KBEvaluatableLegacyRootXMLModel>
+    """
+
     model = KBEvaluatableLegacyRootXMLModel.from_xml(xml_data)
     print(model.to_internal(context=Context(name="test", kb=None)))

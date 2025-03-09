@@ -6,6 +6,7 @@ from typing import Literal
 from xml.etree.ElementTree import Element
 
 from at_krl.core.kb_entity import KBEntity
+from at_krl.utils.numbers import to_number_or_str
 
 
 @dataclass(kw_only=True)
@@ -13,6 +14,11 @@ class MFPoint(KBEntity):
     tag: Literal["point"] = field(init=False, default="point")
     x: float | int
     y: float | int
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.x = to_number_or_str(self.x)
+        self.y = to_number_or_str(self.y)
 
     @property
     def attrs(self) -> dict:
@@ -31,8 +37,11 @@ class MembershipFunction(KBEntity):
     max: float
 
     def __post_init__(self):
+        super().__post_init__()
         for point in self.points:
             point.owner = self
+        self.min = to_number_or_str(self.min)
+        self.max = to_number_or_str(self.max)
 
     @property
     def attrs(self) -> dict:

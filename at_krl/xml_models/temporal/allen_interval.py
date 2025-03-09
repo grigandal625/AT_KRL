@@ -56,7 +56,11 @@ class KBIntervalXMLModel(AllenClassXMLModel, tag="interval"):
         return data
 
     def build_target(self, data, context: Context):
-        return KBInterval(**data)
+        result = KBInterval(**data)
+        if context.kb:
+            context.kb.classes.intervals.append(result)
+            result.owner = context.kb.classes
+        return result
 
 
 class KBIntervalLegacyXMLModel(AllenClassLegacyXMLModel, tag="Interval"):
@@ -71,7 +75,11 @@ class KBIntervalLegacyXMLModel(AllenClassLegacyXMLModel, tag="Interval"):
         return data
 
     def build_target(self, data, context: Context):
-        return KBInterval(**data)
+        result = KBInterval(**data)
+        if context.kb:
+            context.kb.classes.intervals.append(result)
+            result.owner = context.kb.classes
+        return result
 
 
 if __name__ == "__main__":

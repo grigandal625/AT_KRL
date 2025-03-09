@@ -3,6 +3,7 @@ from dataclasses import field
 from typing import Literal
 
 from at_krl.core.kb_entity import KBEntity
+from at_krl.utils.numbers import to_number_or_str
 
 
 def num(v):
@@ -20,6 +21,11 @@ class NonFactor(KBEntity):
     belief: float = field(default=50)
     probability: float = field(default=100)
     accuracy: float = field(default=0)
+
+    def __post_init__(self):
+        self.belief = to_number_or_str(self.belief)
+        self.probability = to_number_or_str(self.probability)
+        self.accuracy = to_number_or_str(self.accuracy)
 
     @property
     def is_default(self):

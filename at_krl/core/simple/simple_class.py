@@ -27,7 +27,7 @@ class SimpleClass(KBEntity):
         return f"""ОБЪЕКТ {self.id}
 ГРУППА {group}
 {self.inner_krl}
-КОММЕНТАРИЙ {self.desc}
+КОММЕНТАРИЙ {self.desc or self.id}
 """
 
     @property

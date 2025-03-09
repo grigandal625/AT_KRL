@@ -75,6 +75,10 @@ class KBEntity:
     def xml_str(self):
         return tostring(self.xml, encoding="unicode")
 
+    @property
+    def legacy_xml_str(self):
+        return tostring(self.get_xml(legacy=True), encoding="unicode")
+
     def validate(self, kb: "KnowledgeBase", *args, **kwargs):
         raise NotImplementedError("Not implemented")
 

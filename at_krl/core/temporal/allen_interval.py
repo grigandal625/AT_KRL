@@ -45,6 +45,10 @@ class KBInterval(AllenClass):
         return result
 
     @property
+    def legacy_attrs(self) -> dict:
+        return {"Name": self.id}
+
+    @property
     def legacy_inner_xml(self) -> List[Element]:
         open = Element("Open")
         open.append(self.open.get_xml(legacy=True))

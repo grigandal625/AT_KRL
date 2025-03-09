@@ -6,6 +6,7 @@ from typing import Any
 from typing import Literal
 
 from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
+from at_krl.utils.numbers import to_number_or_str
 
 logger = getLogger(__name__)
 
@@ -20,6 +21,7 @@ class SimpleValue(SimpleEvaluatable):
     )  # для совместимости со старым темпоральным решателем
 
     def __post_init__(self):
+        self.content = to_number_or_str(self.content)
         if isinstance(self.content, bool):
             self.legacy_tag = "TruthVal"
         elif isinstance(self.content, float) or isinstance(self.content, int):

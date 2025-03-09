@@ -3,7 +3,12 @@ from dataclasses import field
 from datetime import datetime
 from typing import List
 from typing import Literal
+from typing import Optional
 from xml.etree.ElementTree import Element
+from xml.etree.ElementTree import fromstring
+
+from antlr4 import CommonTokenStream
+from antlr4 import InputStream
 
 from at_krl.core.kb_class import KBClass
 from at_krl.core.kb_entity import KBEntity
@@ -11,6 +16,9 @@ from at_krl.core.kb_rule import KBRule
 from at_krl.core.kb_type import KBType
 from at_krl.core.temporal.allen_event import KBEvent
 from at_krl.core.temporal.allen_interval import KBInterval
+from at_krl.grammar.at_krl_lexer import at_krl_lexer
+from at_krl.grammar.at_krl_parser import at_krl_parser
+from at_krl.utils.error_listener import ATKRLErrorListener
 
 
 @dataclass(kw_only=True)
@@ -19,7 +27,7 @@ class KBClasses(KBEntity):
     objects: List[KBClass] = field(init=False, default_factory=list)
     events: List[KBEvent] = field(init=False, default_factory=list)
     intervals: List[KBInterval] = field(init=False, default_factory=list)
-    owner: None = field(init=False, default=None)
+    owner: None = field(init=False, default=None, metadata={"serialize": False})
 
     @property
     def all(self):
@@ -36,21 +44,36 @@ def get_world():
     )
 
 
+def find_index_by_tag(parent: Element, tag: str):
+    for index, child in enumerate(parent):
+        if child.tag == tag:
+            return index
+    return -1
+
+
 @dataclass(kw_only=True)
 class KnowledgeBase(KBEntity):
     tag: Literal["knowledge-base"] = field(init=False, default="knowledge-base")
+    problem_info: Optional[str] = field(default=None)
     types: List[KBType] = field(init=False, default_factory=list)
     classes: KBClasses = field(init=False, default_factory=KBClasses)
-    rules: List[KBRule] = field(init=False, default_factory=list)
-    with_world: bool = field(default=False)
-    _world: KBClass = field(init=False, default_factory=get_world)
+    rules: List[KBRule] = field(init=False, default_factory=list, metadata={"serialize": False})
+    with_world: bool = field(default=False, metadata={"serialize": False})
+    _world: KBClass = field(init=False, default_factory=get_world, metadata={"serialize": False})
 
-    _raise_on_validation: bool = False
-    _validated: bool = False
+    _raise_on_validation: bool = field(default=False, metadata={"serialize": False})
 
     def __post_init__(self) -> None:
         self.classes.owner = self
+        self.rebuild_rules()
+
+    def rebuild_rules(self):
         self.rules = []
+        world = self.get_object_by_id("world")
+        self.with_world = world is not None
+        if self.with_world:
+            self.rules = world.rules
+            self._world = world
         self._world.rules = self.rules
         self._world.owner = self.classes
 
@@ -106,7 +129,7 @@ class KnowledgeBase(KBEntity):
     def add_rule(self, rule: KBRule):
         self.rules.append(rule)
         if not self.with_world:
-            if rule not in self.world.rules:
+            if rule.id not in [r.id for r in self.world.rules]:
                 self.world.rules.append(rule)
                 rule.owner = self.world
 
@@ -117,10 +140,14 @@ class KnowledgeBase(KBEntity):
             class_id = property.type.krl
 
             cls = self.get_object_by_id(class_id)
+            class_desc = cls.desc
+
             cls.id = object_id
+            cls.desc = property.desc
 
             res += "\n" + cls.krl
             cls.id = class_id
+            cls.desc = class_desc
 
         res += "\n" + "\n".join([obj.krl for obj in self.classes.temporal_objects])
         res += "\n" + "\n".join([rule.krl for rule in self.rules])
@@ -134,7 +161,10 @@ class KnowledgeBase(KBEntity):
         knowledge_base = Element("knowledge-base")
         knowledge_base.attrib["creation-date"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
-        knowledge_base.append(Element("problem-info"))
+        problem_info = Element("problem-info")
+        if self.problem_info:
+            problem_info.text = self.problem_info
+        knowledge_base.append(problem_info)
         types = Element("types")
 
         for t in self.types:
@@ -147,13 +177,14 @@ class KnowledgeBase(KBEntity):
 
         classes = Element("classes")
         for c in self.classes.objects:
+            if self.with_world and c.id == "world":
+                continue
             classes.append(c.get_xml(*args, **kwargs))
         if not kwargs.get("legacy"):
             for c in self.classes.temporal_objects:
                 classes.append(c.get_xml(*args, **kwargs))
 
-        if not self.with_world:
-            classes.append(self.world.get_xml(*args, **kwargs))  # rules are here
+        classes.append(self.world.get_xml(*args, **kwargs))  # rules are here
         knowledge_base.append(classes)
 
         return knowledge_base
@@ -173,16 +204,6 @@ class KnowledgeBase(KBEntity):
 
         return intervals_and_events
 
-    def __dict__(self) -> dict:
-        knowledge_base = {}
-        knowledge_base["types"] = [t.__dict__() for t in self.types]
-        knowledge_base["intervals"] = [i.__dict__() for i in self.classes.intervals]
-        knowledge_base["events"] = [e.__dict__() for e in self.classes.events]
-        knowledge_base["classes"] = [c.__dict__() for c in self.classes.objects]
-        if not self.with_world:
-            knowledge_base["classes"].append(self.world.__dict__())
-        return knowledge_base
-
     def validate(self):
         if not self._validated:
             for t in self.types:
@@ -199,39 +220,20 @@ class KnowledgeBase(KBEntity):
             self._validated = True
 
     @staticmethod
-    def from_xml(xml: Element, allen_xml: Element = None) -> "KnowledgeBase":
-        KB = KnowledgeBase()
-        types = xml.find("types")
-        for type_xml in types:
-            t = KBType.from_xml(type_xml)
-            t.owner = KB
-            KB.types.append(t)
+    def from_xml(xml: Element | str, allen_xml: Element | str = None, legacy: bool = False) -> "KnowledgeBase":
+        from at_krl.xml_models.knowledge_base import KnowledgeBaseXMLModel, KnowledgeBaseLegacyXMLModel
 
-        allen_xml = allen_xml or xml.find("IntervalsAndEvents")
+        if isinstance(xml, str):
+            xml = fromstring(xml)
         if allen_xml:
-            intervals = allen_xml.find("Intervals")
-            for interval_xml in intervals:
-                i = KBInterval.from_xml(interval_xml)
-                i.owner = KB
-                KB.classes.intervals.append(i)
-
-            events = allen_xml.find("Events")
-            for event_xml in events:
-                e = KBEvent.from_xml(event_xml)
-                KB.classes.events.append(e)
-
-        classes = xml.find("classes")
-        for class_xml in classes:
-            if class_xml.attrib.get("id", None) == "world":
-                KB.with_world = True
-            cls = KBClass.from_xml(class_xml)
-            cls.owner = KB
-            KB.classes.objects.append(cls)
-
-        if KB.world:
-            KB.rules = KB.world.rules
-
-        return KB
+            legacy = True
+            if isinstance(allen_xml, str):
+                allen_xml = fromstring(allen_xml)
+            after_types_index = find_index_by_tag(xml, "types") + 1
+            xml.insert(after_types_index, allen_xml)
+        model_class = KnowledgeBaseXMLModel if not legacy else KnowledgeBaseLegacyXMLModel
+        kb_model = model_class.from_xml_tree(xml)
+        return kb_model.to_internal()
 
     @staticmethod
     def from_dict(d: dict) -> "KnowledgeBase":
@@ -265,6 +267,35 @@ class KnowledgeBase(KBEntity):
 
         KB.rules = KB.world.rules
         return KB
+
+    @staticmethod
+    def from_krl(krl_text: str):
+        from at_krl.utils.listener import ATKRLListener
+
+        # Создаем поток ввода для текста ЯПЗ
+        input_stream = InputStream(krl_text)
+
+        # Создаем лексер
+        lexer = at_krl_lexer(input_stream)
+
+        # Создаем кастомный поток токенов, который пропускает скрытые токены
+        stream = CommonTokenStream(lexer)
+        stream.fill()  # Заполняем поток токенов
+
+        # Создаем парсер
+        parser = at_krl_parser(stream)
+
+        listener = ATKRLListener()
+        parser.addParseListener(listener)
+
+        # Настраиваем обработчик ошибок
+        error_listener = ATKRLErrorListener()
+        parser.removeErrorListeners()
+        parser.addErrorListener(error_listener)
+
+        # Парсим входной текст
+        parser.knowledge_base()
+        return listener.KB
 
     @property
     def xml_owner_path(self):

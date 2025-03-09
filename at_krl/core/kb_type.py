@@ -8,6 +8,7 @@ from xml.etree.ElementTree import Element
 
 from at_krl.core.fuzzy.membership_function import MembershipFunction
 from at_krl.core.kb_entity import KBEntity
+from at_krl.utils.numbers import to_number_or_str
 
 if TYPE_CHECKING:
     from at_krl.core.knowledge_base import KnowledgeBase
@@ -51,6 +52,10 @@ class KBNumericType(KBType):
     to_: float | int = field(metadata={"alias": "to"})
     meta: Literal["number"] = field(init=False, default="number")
     krl_type: str = field(init=False, default="ЧИСЛО", metadata={"serialize": False})
+
+    def __post_init__(self):
+        self.from_ = to_number_or_str(self.from_)
+        self.to_ = to_number_or_str(self.to_)
 
     @property
     def inner_krl(self):

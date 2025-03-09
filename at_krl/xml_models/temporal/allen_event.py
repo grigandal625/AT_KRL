@@ -38,7 +38,11 @@ class KBEventXMLModel(AllenClassXMLModel, tag="event"):
         return data
 
     def build_target(self, data, context: Context):
-        return KBEvent(**data)
+        result = KBEvent(**data)
+        if context.kb:
+            context.kb.classes.events.append(result)
+            result.owner = context.kb.classes
+        return result
 
 
 class KBEventLegacyXMLModel(AllenClassLegacyXMLModel, tag="Event"):
@@ -51,7 +55,11 @@ class KBEventLegacyXMLModel(AllenClassLegacyXMLModel, tag="Event"):
         return data
 
     def build_target(self, data, context: Context):
-        return KBEvent(**data)
+        result = KBEvent(**data)
+        if context.kb:
+            context.kb.classes.events.append(result)
+            result.owner = context.kb.classes
+        return result
 
 
 if __name__ == "__main__":

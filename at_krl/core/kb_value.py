@@ -8,6 +8,7 @@ from xml.etree.ElementTree import Element
 from at_krl.core.non_factor import NonFactor
 from at_krl.core.simple.simple_evaluatable import SimpleEvaluatable
 from at_krl.core.simple.simple_value import SimpleValue
+from at_krl.utils.numbers import to_number_or_str
 
 
 @dataclass(kw_only=True)
@@ -30,8 +31,10 @@ class Evaluatable(SimpleEvaluatable):
         if self.non_factor:
             if kwargs.get("convert_default_non_factor", True):
                 kwargs["convert_default_non_factor"] = False
-                return f"{super().get_krl(*args, **kwargs)} {self.non_factor.krl}"
-            return f"{super().get_krl(*args, **kwargs)}{self.non_factor.not_default_krl}"
+                return f"({super().get_krl(*args, **kwargs)}) {self.non_factor.krl}"
+            if self.non_factor.is_default:
+                return super().get_krl(*args, **kwargs)
+            return f"({super().get_krl(*args, **kwargs)}) {self.non_factor.krl}"
         return super().get_krl(*args, **kwargs)
 
     @property
@@ -74,6 +77,7 @@ class KBValue(Evaluatable, SimpleValue):
 
     def __post_init__(self):
         result = super().__post_init__()
+        self.content = to_number_or_str(self.content)
         self.legacy_tag = self.tag
         return result
 

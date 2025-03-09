@@ -121,7 +121,7 @@ class ListenerForKBClassMixin:
         desc = commentary_child.content if commentary_child else None
 
         meta = body.pop("meta")
-        desc = body.pop("desc", None)
+        desc = body.pop("desc", desc)
 
         classes = {
             "object": KBClass,

@@ -1,0 +1,110 @@
+<knowledge-base creation-date="08.03.2025 23:21:15">
+    <problem-info />
+    <types>
+        <type id="МойТип" meta="number" desc="Тестовый тип">
+            <from>0</from>
+            <to>10</to>
+        </type>
+    </types>
+    <classes>
+        <class id="КЛАСС_МойОбъект" desc="Класс для МойОбъект" group="Группа1">
+            <properties>
+                <property id="Атрибут1" type="МойТип" desc="Тестовый атрибут" source="asked" create="true" />
+                <property id="Атрибут2" type="МойТип" desc="Тестовый атрибут2" source="asked">
+                    <value>
+                        <value>0</value>
+                    </value>
+                </property>
+            </properties>
+        </class>
+        <interval id="МойИнтервал" desc="МойИнтервал" group="ИНТЕРВАЛ">
+            <properties>
+                <property id="УслНач" type="ЛогВыр">
+                    <value>
+                        <eq>
+                            <ref id="МойОбъект">
+                                <ref id="Атрибут1" />
+                            </ref>
+                            <value>0</value>
+                        </eq>
+                    </value>
+                </property>
+                <property id="УслОконч" type="ЛогВыр">
+                    <value>
+                        <eq>
+                            <ref id="МойОбъект">
+                                <ref id="Атрибут1" />
+                            </ref>
+                            <value>10</value>
+                        </eq>
+                    </value>
+                </property>
+            </properties>
+        </interval>
+        <event id="МоеСобытие" desc="МоеСобытие" group="СОБЫТИЕ">
+            <properties>
+                <property id="УслВозн" type="ЛогВыр">
+                    <value>
+                        <eq>
+                            <ref id="МойОбъект">
+                                <ref id="Атрибут1" />
+                            </ref>
+                            <value>5</value>
+                        </eq>
+                    </value>
+                </property>
+            </properties>
+        </event>
+        <class id="world" desc="Класс верхнего уровня, включающий в себя экземпляры других классов и общие правила" group="ГРУППА1">
+            <properties>
+                <property id="МойОбъект" type="КЛАСС_МойОбъект" desc="МойОбъект" source="asked" create="true" />
+            </properties>
+            <rules>
+                <rule id="ПРАВИЛО1" meta="simple" desc="Тестовое правило">
+                    <condition>
+                        <and>
+                            <d>
+                                <ref id="МоеСобытие" meta="allen_reference" />
+                                <ref id="МойИнтервал" meta="allen_reference" />
+                            </d>
+                            <lt>
+                                <ref id="МойОбъект">
+                                    <ref id="Атрибут2" />
+                                </ref>
+                                <value>5<with belief="50.0" probability="80.0" accuracy="0.0" />
+                                </value>
+                            </lt>
+                        </and>
+                    </condition>
+                    <action>
+                        <assign>
+                            <ref id="МойОбъект">
+                                <ref id="Атрибут1" />
+                            </ref>
+                            <add>
+                                <ref id="МойОбъект">
+                                    <ref id="Атрибут1" />
+                                </ref>
+                                <value>1<with belief="40.0" probability="60.0" accuracy="0.0" />
+                                </value>
+                            </add>
+                            <with belief="50" probability="100" accuracy="0" />
+                        </assign>
+                        <assign>
+                            <ref id="МойОбъект">
+                                <ref id="Атрибут2" />
+                            </ref>
+                            <add>
+                                <ref id="МойОбъект">
+                                    <ref id="Атрибут2" />
+                                </ref>
+                                <value>1</value>
+                            </add>
+                            <with belief="50" probability="100" accuracy="0" />
+                        </assign>
+                    </action>
+                </rule>
+            </rules>
+        </class>
+    </classes>
+</knowledge-base>

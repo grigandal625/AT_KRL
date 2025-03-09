@@ -1,4 +1,5 @@
 import logging
+import re
 from dataclasses import dataclass
 from dataclasses import field
 from typing import Iterable
@@ -29,6 +30,13 @@ class KBClass(LegacyMixin, SimpleClass):
     properties: Optional[List["PropertyDefinition"]] = field(default_factory=list)
     rules: Optional[List[KBRule]] = field(default_factory=list)
 
+    def __post_init__(self):
+        super().__post_init__()
+        self.rules = self.rules or []
+        self.properties = self.properties or []
+        if self.group:
+            self.group = re.sub(r"\W", "_", self.group)
+
     @property
     def attrs(self) -> dict:
         return {
@@ -37,11 +45,15 @@ class KBClass(LegacyMixin, SimpleClass):
             "group": self.group or "ГРУППА1",
         }
 
+    @property
+    def legacy_attrs(self):
+        return self.attrs
+
     def get_inner_xml(self, *args, **kwargs) -> List[Element] | Iterable[Element]:
         properties = Element("properties")
         for p in self.properties:
             properties.append(p.get_xml(*args, **kwargs))
-        if len(self.rules):
+        if self.rules:
             rules = Element("rules")
             for r in self.rules:
                 rules.append(r.get_xml(*args, **kwargs))
@@ -134,7 +146,7 @@ class PropertyDefinition(LegacyMixin, KBEntity):  # LegacyMixin для совм�
     def attrs(self):
         result = {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "source": self.source}
         if not self.value:
-            result["create"] = True
+            result["create"] = "true"
         return result
 
     @property
@@ -195,11 +207,11 @@ class KBInstance(LegacyMixin, KBEntity):
 
     @property
     def attrs(self) -> dict:
-        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "create": self.create}
+        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "create": str(self.create).lower()}
 
     @property
     def legacy_attrs(self) -> dict:
-        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "create": self.create}
+        return {"id": self.id, "type": self.type.krl, "desc": self.desc or self.id, "create": str(self.create).lower()}
 
     def get_inner_xml(self, *args, **kwargs) -> List[Element]:
         if kwargs.get("legacy"):
