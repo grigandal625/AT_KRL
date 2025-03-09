@@ -1,6 +1,4 @@
-from dataclasses import dataclass
 from typing import Any
-from typing import Literal
 
 from at_krl.core.kb_value import KBValue
 from at_krl.models.non_factor import NonFactorModel
@@ -13,13 +11,13 @@ class EvaluatableModel(SimpleEvaluatableModel):
     non_factor: NonFactorModel
 
     def build_target(self, data, context: Context):
-        raise NotImplementedError()
+        raise NotImplementedError("Not implemented")
 
 
-@dataclass
 class KBValueModel(EvaluatableModel, SimpleValueModel):
-    tag: Literal["value"]
     content: Any
 
     def build_target(self, data, context: Context):
+        if self.non_factor:
+            data["non_factor"] = self.non_factor.to_internal(context)
         return KBValue(**data)

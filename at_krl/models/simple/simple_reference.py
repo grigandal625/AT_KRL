@@ -15,5 +15,5 @@ class SimpleReferenceModel(SimpleEvaluatableModel):
 
     def build_target(self, data, context: Context):
         if self.ref is not None:
-            data["ref"] = self.ref.to_internal()
+            data["ref"] = self.ref.to_internal(context)
         return SimpleReference(**data)

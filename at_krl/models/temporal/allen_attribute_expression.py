@@ -21,6 +21,6 @@ class FutureEvaluatingObjectModel(KBEntityModel):
 #     target: FutureEvaluatingObjectModel
 
 #     def build_target(self, data, context: Context):
-#         data['ref'] = self.ref.to_internal()
-#         data['target'] = self.target.to_internal()
+#         data['ref'] = self.ref.get_data(context)
+#         data['target'] = self.target.get_data(context)
 #         return AllenAttributeExpression(**data)

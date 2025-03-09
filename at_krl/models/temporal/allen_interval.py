@@ -13,8 +13,8 @@ class KBIntervalModel(AllenClassModel):
     group: Literal["ИНТЕРВАЛ"]
 
     def build_target(self, data, context: Context):
-        data["open"] = self.open.to_internal()
-        data["close"] = self.close.to_internal()
+        data["open"] = self.open.to_internal(context)
+        data["close"] = self.close.to_internal(context)
 
         result = KBInterval(**data)
         if context.kb:

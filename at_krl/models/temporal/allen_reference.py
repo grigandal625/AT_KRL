@@ -13,6 +13,6 @@ class AllenReferenceModel(SimpleReferenceModel, AllenEvaluatableModel):
     index: Optional[KBReferenceModel]  # ?
     meta: Literal["allen_reference"] = Field(default="allen_reference")
 
-    def build_target(self, data):
-        data["index"] = self.index.to_internal()
+    def build_target(self, data, context):
+        data["index"] = self.index.to_internal(context)
         return AllenReference(**data)
