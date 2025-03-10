@@ -107,9 +107,9 @@ ALLEN_A  : 'a';
 
 COMMENT: 'КОММЕНТАРИЙ' -> pushMode(COMMENT_MODE);
 
-NAME : IDENTIFIER;
-
 BOOLEAN: 'TRUE' | 'True' | 'true' | 'false' | 'False' | 'FALSE';
+
+NAME : IDENTIFIER;
 
 NUMBER
    : '-'? (INTEGER
