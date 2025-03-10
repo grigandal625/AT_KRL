@@ -20,7 +20,7 @@ from at_krl.utils.context import Context
 
 class KBInstructionModel(KBEntityModel):
     tag: str = Field(default="instruction")
-    non_factor: Optional[NonFactorModel]
+    non_factor: Optional[NonFactorModel] = Field(default=None)
 
     def get_data(self, context):
         data = super().get_data(context)
