@@ -94,7 +94,7 @@ class KBRule(KBEntity):
 ЕСЛИ
     {condition_krl}
 {action_krl}
-{else_action_krl}КОММЕНТАРИЙ {self.desc}
+{else_action_krl}КОММЕНТАРИЙ {self.desc or self.id}
 """
 
     def validate(self, kb: "KnowledgeBase", *args, **kwargs):
