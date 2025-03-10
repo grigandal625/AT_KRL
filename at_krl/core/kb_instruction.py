@@ -22,6 +22,9 @@ class KBInstruction(KBEntity):
     tag: str = field(init=False, default="instruction")
     non_factor: Optional[NonFactor] = field(default_factory=NonFactor)
 
+    def __post_init__(self):
+        self.non_factor = self.non_factor or NonFactor()
+
     def get_inner_xml(self, *args, **kwargs) -> Element:
         return self.non_factor.xml
 
@@ -33,6 +36,7 @@ class AssignInstruction(KBInstruction):
     value: Evaluatable
 
     def __post_init__(self):
+        super().__post_init__()
         if isinstance(self.ref, SimpleReference):
             self.ref = KBReference.from_simple(self.ref)
 
