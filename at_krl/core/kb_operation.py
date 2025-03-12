@@ -16,7 +16,8 @@ if TYPE_CHECKING:
 @dataclass(kw_only=True)
 class KBOperation(Evaluatable, SimpleOperation):
     def __post_init__(self):
-        super().__post_init__()
+        SimpleOperation.__post_init__(self)
+        Evaluatable.__post_init__(self)
         self.legacy_tag = self.tag
 
     @staticmethod
