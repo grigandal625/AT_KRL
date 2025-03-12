@@ -18,6 +18,9 @@ from at_krl.utils.context import Context
 
 
 class KBOperationModel(EvaluatableModel, SimpleOperationModel):
+    tag: Literal[
+        "eq", "gt", "ge", "lt", "le", "ne", "and", "or", "not", "xor", "neg", "add", "sub", "mul", "div", "mod", "pow"
+    ]
     left: Union[
         KBValueModel, "AllenAttributeExpressionModel", KBReferenceModel, "KBOperationModel", "AllenOperationModel"
     ]
