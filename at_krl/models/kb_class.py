@@ -9,9 +9,10 @@ from at_krl.core.kb_class import KBClass
 from at_krl.core.kb_class import KBInstance
 from at_krl.core.kb_class import PropertyDefinition
 from at_krl.core.kb_class import TypeOrClassReference
-from at_krl.core.kb_value import Evaluatable
 from at_krl.models.kb_entity import KBEntityModel
 from at_krl.models.kb_entity import KBRootModel
+from at_krl.models.kb_operation import AllenAttributeExpressionModel
+from at_krl.models.kb_operation import AllenOperationModel
 from at_krl.models.kb_operation import KBOperationModel
 from at_krl.models.kb_reference import KBReferenceModel
 from at_krl.models.kb_rule import KBRuleModel
@@ -106,7 +107,9 @@ class KBInstanceModel(KBEntityModel):
     id: str
     type: TypeOrClassReferenceModel
     desc: Optional[str] = Field(default=None)
-    value: Optional[Evaluatable] = Field(default=None)
+    value: Optional[
+        Union[KBValueModel, AllenAttributeExpressionModel, KBReferenceModel, KBOperationModel, AllenOperationModel]
+    ] = Field(default=None)
     create: bool = Field(default=True)
     properties: Optional["KBPropertyListModel"] = Field(default_factory=list)
 
