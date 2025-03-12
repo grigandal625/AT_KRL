@@ -1,4 +1,6 @@
-def to_number_or_str(value: bool | str | int | float) -> bool | int | float | str:
+def to_number_or_str(value: bool | str | int | float | None) -> bool | int | float | str | None:
+    if value is None:
+        return value
     if isinstance(value, bool):
         return value
     if isinstance(value, str):
