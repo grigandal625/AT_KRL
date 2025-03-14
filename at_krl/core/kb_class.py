@@ -95,9 +95,9 @@ class KBClass(LegacyMixin, SimpleClass):
     @property
     def xml_owner_path(self):
         owner: "KnowledgeBase" = self.owner
-        if (owner.world == self) and not owner.with_world:
+        if (owner.world.id == self.id) and not owner.with_world:
             return owner.xml_owner_path + f"/classes/class[{len(owner.classes.objects)}]"
-        return owner.xml_owner_path + f"/classes/class[{owner.classes.objects.index(self)}]"
+        return owner.xml_owner_path + f"/classes/class[{[obj.id for obj in owner.classes.objects].index(self.id)}]"
 
 
 @dataclass(kw_only=True)
