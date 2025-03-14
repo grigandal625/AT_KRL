@@ -57,3 +57,12 @@ class SimpleValue(SimpleEvaluatable):
     @staticmethod
     def from_simple(v: "SimpleValue") -> "SimpleValue":
         return SimpleValue(content=v.content)
+
+    @property
+    def xml_owner_path(self) -> str:
+        from at_krl.core.simple.simple_operation import SimpleOperation
+
+        if isinstance(self.owner, SimpleOperation):
+            subpath = "/left/" if self.owner.left is self else "/right/"
+            return self.owner.xml_owner_path + subpath + self.tag
+        return self.owner.xml_owner_path + "/" + self.tag

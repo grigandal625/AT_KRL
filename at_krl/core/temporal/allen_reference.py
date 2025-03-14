@@ -59,10 +59,10 @@ class AllenReference(SimpleReference, AllenEvaluatable):
             self.legacy_tag = self.target.legacy_tag
 
     @property
-    def xml_owner_path(self) -> str:
+    def inner_xml_owner_path(self) -> str:
         if self.index:
-            return f"{self.owner.xml_owner_path}/{self.id}[{self.index.krl}]"
-        return f"{self.owner.xml_owner_path}/{self.id}"
+            return f"{self.id}[{self.index.krl}]"
+        return self.id
 
     def get_krl(self, *args, **kwargs) -> str:
         if self.index:
@@ -77,3 +77,12 @@ class AllenReference(SimpleReference, AllenEvaluatable):
         if self.index:
             logger.warning("Index will be lost after converting AllenReference to simple reference")
         return super().to_simple()
+
+    @property
+    def xml_owner_path(self) -> str:
+        from at_krl.core.simple.simple_operation import SimpleOperation
+
+        if isinstance(self.owner, SimpleOperation):
+            subpath = "/left/" if self.owner.left is self else "/right/"
+            return self.owner.xml_owner_path + subpath + self.inner_xml_owner_path
+        return self.owner.xml_owner_path + "/" + self.inner_xml_owner_path

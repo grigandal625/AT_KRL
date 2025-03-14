@@ -108,3 +108,10 @@ class SimpleOperation(SimpleEvaluatable):
             left=operation.left.from_simple(operation.left),
             right=operation.right.from_simple(operation.right) if operation.right else None,
         )
+
+    @property
+    def xml_owner_path(self) -> str:
+        if isinstance(self.owner, SimpleOperation):
+            subpath = "/left/" if self.owner.left is self else "/right/"
+            return self.owner.xml_owner_path + subpath + self.tag
+        return self.owner.xml_owner_path + "/" + self.tag

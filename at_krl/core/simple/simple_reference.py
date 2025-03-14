@@ -76,3 +76,12 @@ class SimpleReference(SimpleEvaluatable):
             )
         else:
             return SimpleReference(id=ref_str)
+
+    @property
+    def xml_owner_path(self) -> str:
+        from at_krl.core.simple.simple_operation import SimpleOperation
+
+        if isinstance(self.owner, SimpleOperation):
+            subpath = "/left/" if self.owner.left is self else "/right/"
+            return self.owner.xml_owner_path + subpath + self.tag
+        return self.owner.xml_owner_path + "/" + self.tag

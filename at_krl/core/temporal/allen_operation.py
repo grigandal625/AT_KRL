@@ -165,4 +165,7 @@ class AllenOperation(SimpleOperation, AllenEvaluatable):
 
     @property
     def xml_owner_path(self) -> str:
+        if isinstance(self.owner, SimpleOperation):
+            subpath = "/left/" if self.owner.left is self else "/right/"
+            return self.owner.xml_owner_path + subpath + self.tag
         return self.owner.xml_owner_path + "/" + self.tag
