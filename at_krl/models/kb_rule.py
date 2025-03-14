@@ -47,7 +47,7 @@ class KBRuleModel(KBEntityModel):
     def build_target(self, data, context: Context):
         result = KBRule(**data)
         if context.kb:
-            context.kb.rules.append(result)
+            context.kb.add_rule(result)
         return result
 
 
