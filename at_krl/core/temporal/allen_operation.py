@@ -162,3 +162,7 @@ class AllenOperation(SimpleOperation, AllenEvaluatable):
 
     def to_simple(self):
         return self
+
+    @property
+    def xml_owner_path(self) -> str:
+        return self.owner.xml_owner_path + "/" + self.tag

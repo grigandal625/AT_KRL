@@ -145,11 +145,9 @@ class KnowledgeBase(KBEntity):
                 return rule
 
     def add_rule(self, rule: KBRule):
-        self.rules.append(rule)
-        if not self.with_world:
-            if rule.id not in [r.id for r in self.world.rules]:
-                self.world.rules.append(rule)
-                rule.owner = self.world
+        self.world.rules.append(rule)
+        rule.owner = self.world
+        self.rules = self.world.rules
 
     def get_krl(self, *args, **kwargs):
         res = "\n".join([t.krl for t in self.types])

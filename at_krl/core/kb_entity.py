@@ -84,7 +84,7 @@ class KBEntity:
 
     @property
     def xml_owner_path(self) -> str:
-        raise NotImplementedError("Not implemented")
+        return self.owner.xml_owner_path + "/" + self.tag
 
     @property
     def _unknown_ownership(self):

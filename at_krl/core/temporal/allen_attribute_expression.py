@@ -55,3 +55,7 @@ class AllenAttributeExpression(SimpleReference, AllenEvaluatable):
     @staticmethod
     def from_simple(ref: SimpleReference) -> "AllenAttributeExpression":
         return AllenAttributeExpression(id=ref.id, ref=AllenReference(id=ref.id))
+
+    @property
+    def xml_owner_path(self) -> str:
+        return self.owner.xml_owner_path + "/" + self.tag
