@@ -130,6 +130,8 @@ class KnowledgeBase(KBEntity):
                 return interval
 
     def get_class_by_id(self, class_id: str) -> KBClass | None:
+        if class_id == "world":
+            return self.world
         for cls in self.classes.all:
             if cls.id == class_id:
                 return cls
