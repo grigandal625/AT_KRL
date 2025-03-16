@@ -24,8 +24,14 @@ class NonFactor(KBEntity):
 
     def __post_init__(self):
         self.belief = to_number_or_str(self.belief)
+        if self.belief is None:
+            self.belief = 50
         self.probability = to_number_or_str(self.probability)
+        if self.probability is None:
+            self.probability = 100
         self.accuracy = to_number_or_str(self.accuracy)
+        if self.accuracy is None:
+            self.accuracy = 0
 
     @property
     def is_default(self):

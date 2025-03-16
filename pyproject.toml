@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "at-krl"
-version = "1.0.17"
+version = "1.0.18"
 description = ""
 authors = ["grigadnal625 <grigandal625@gmail.com>"]
 readme = "README.md"
