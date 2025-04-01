@@ -37,9 +37,9 @@ def kb_to_xml(kb: KnowledgeBase, output: str = None, allen: str = None, legacy: 
     output_path = output
     allen_path = allen
 
-    with_allen = False
+    with_allen = True
     if allen_path:
-        with_allen = True
+        with_allen = False
         legacy = True
 
     kb_xml = kb.get_xml(with_allen=with_allen, legacy=legacy)

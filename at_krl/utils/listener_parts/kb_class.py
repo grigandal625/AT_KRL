@@ -8,22 +8,34 @@ from at_krl.grammar.at_krl_parser import at_krl_parser
 
 class ListenerForKBClassMixin:
     def exitTemporal_attribute_condition(self, ctx: at_krl_parser.Temporal_attribute_conditionContext):
-        ctx.content = self.search_context_by_type(ctx.children, at_krl_parser.Simple_evaluatableContext).content
+        child = self.search_context_by_type(ctx.children, at_krl_parser.Simple_evaluatableContext)
+        if not hasattr(child, "content") or not child.content:
+            parent = ctx.parentCtx
+            name = parent.children[0].getText()
+            cls = parent.parentCtx.parentCtx.parentCtx.children[1].getText()
+            raise ValueError(f"Bad attribute {name} in {cls}")
+        ctx.content = child.content
 
     def exitOpen(self, ctx: at_krl_parser.OpenContext):
-        ctx.content = self.search_context_by_type(
-            ctx.children, at_krl_parser.Temporal_attribute_conditionContext
-        ).content
+        child = self.search_context_by_type(ctx.children, at_krl_parser.Temporal_attribute_conditionContext)
+        if not hasattr(child, "content") or not child.content:
+            cls = ctx.parentCtx.parentCtx.parentCtx.children[1].getText()
+            raise ValueError(f"Expected correct attribute УслНач in {cls}")
+        ctx.content = child.content
 
     def exitClose(self, ctx: at_krl_parser.CloseContext):
-        ctx.content = self.search_context_by_type(
-            ctx.children, at_krl_parser.Temporal_attribute_conditionContext
-        ).content
+        child = self.search_context_by_type(ctx.children, at_krl_parser.Temporal_attribute_conditionContext)
+        if not hasattr(child, "content") or not child.content:
+            cls = ctx.parentCtx.parentCtx.parentCtx.children[1].getText()
+            raise ValueError(f"Expected correct attribute УслОконч in {cls}")
+        ctx.content = child.content
 
     def exitOccurance_condition(self, ctx: at_krl_parser.Occurance_conditionContext):
-        ctx.content = self.search_context_by_type(
-            ctx.children, at_krl_parser.Temporal_attribute_conditionContext
-        ).content
+        child = self.search_context_by_type(ctx.children, at_krl_parser.Temporal_attribute_conditionContext)
+        if not hasattr(child, "content") or not child.content:
+            cls = ctx.parentCtx.parentCtx.parentCtx.children[1].getText()
+            raise ValueError(f"Expected correct attribute УслВозн in {cls}")
+        ctx.content = child.content
 
     def exitInterval_body(self, ctx: at_krl_parser.Interval_bodyContext):
         ctx.content = {
@@ -101,6 +113,10 @@ class ListenerForKBClassMixin:
         }
 
     def exitKb_class_body(self, ctx):
+        if not ctx.children:
+            parent = ctx.parentCtx
+            name = parent.children[1].getText()
+            raise ValueError(f"Bad class body definition for {name}")
         object_body_child = self.search_context_by_type(ctx.children, at_krl_parser.Object_bodyContext)
         event_body_child = self.search_context_by_type(ctx.children, at_krl_parser.Event_bodyContext)
         interval_body_child = self.search_context_by_type(ctx.children, at_krl_parser.Interval_bodyContext)
