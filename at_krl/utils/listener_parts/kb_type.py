@@ -54,6 +54,10 @@ class ListenerForKBTypeMixin:
         ctx.content = [from_value, to_value]
 
     def exitKb_type_body(self, ctx: at_krl_parser.Kb_type_bodyContext):
+        if not ctx.children:
+            parent = ctx.parentCtx
+            name = parent.children[1].getText()
+            raise ValueError(f"Bad type body definition for {name}")
         fuzzy_context = self.search_context_by_type(ctx.children, at_krl_parser.Fuzzy_type_bodyContext)
         numeric_context = self.search_context_by_type(ctx.children, at_krl_parser.Numeric_type_bodyContext)
         symbolic_context = self.search_context_by_type(ctx.children, at_krl_parser.Symbolic_type_bodyContext)
@@ -65,7 +69,9 @@ class ListenerForKBTypeMixin:
         elif symbolic_context is not None:
             ctx.content = {"meta": "symbolic", "values": symbolic_context.content}
         else:
-            raise ValueError("No type body found in KB_type_body")
+            parent = ctx.parentCtx
+            name = parent.children[1].getText()
+            raise ValueError(f"No type body found for {name}")
 
     def exitKb_type(self, ctx: at_krl_parser.Kb_typeContext):
         name = ctx.children[1].getText()
