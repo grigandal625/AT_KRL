@@ -45,12 +45,12 @@ def kb_to_xml(kb: KnowledgeBase, output: str = None, allen: str = None, legacy: 
     kb_xml = kb.get_xml(with_allen=with_allen, legacy=legacy)
 
     if output_path is not None:
-        with open(output_path, "w") as xml_file:
+        with open(output_path, "w", encoding="utf-8") as xml_file:
             parsed = minidom.parseString(tostring(kb_xml, encoding="unicode"))
             xml_file.write(parsed.toprettyxml(indent="    "))
 
         if allen_path is not None:
-            with open(allen_path, "w") as allen_file:
+            with open(allen_path, "w", encoding="utf-8") as allen_file:
                 allen_xml = kb.get_allen_xml(legacy=True)
                 parsed = minidom.parseString(tostring(allen_xml, encoding="unicode"))
                 allen_file.write(parsed.toprettyxml(indent="    "))
@@ -65,22 +65,22 @@ def kb_to_krl(kb: KnowledgeBase, output: str = None, *args, **kwargs):
         print(kb.krl)
     else:
         krl_text = kb.krl
-        with open(output_path, "w") as kb_file:
+        with open(output_path, "w", encoding="utf-8") as kb_file:
             kb_file.write(krl_text)
 
 
 def kb_from_krl(input: str, *args, **kwargs):
-    with open(input, "r") as krl_file:
+    with open(input, "r", encoding="utf-8") as krl_file:
         krl_text = krl_file.read()
         return KnowledgeBase.from_krl(krl_text)
 
 
 def kb_from_xml(input: str, allen: str = None, legacy: bool = False, *args, **kwargs):
-    with open(input, "r") as xml_file:
+    with open(input, "r", encoding="utf-8") as xml_file:
         kb_xml = xml_file.read()
         allen_xml = None
         if allen is not None:
-            with open(allen, "r") as allen_file:
+            with open(allen, "r", encoding="utf-8") as allen_file:
                 allen_xml = allen_file.read()
                 legacy = True
         return KnowledgeBase.from_xml(kb_xml, allen_xml=allen_xml, legacy=legacy)
@@ -89,14 +89,14 @@ def kb_from_xml(input: str, allen: str = None, legacy: bool = False, *args, **kw
 def kb_to_json(kb: KnowledgeBase, output: str = None, *args, **kwargs):
     d = kb.to_representation()
     if output is not None:
-        with open(output, "w") as kb_file:
+        with open(output, "w", encoding="utf-8") as kb_file:
             kb_file.write(json.dumps(d, indent=4, ensure_ascii=False))
     else:
         print(json.dumps(d, indent=4, ensure_ascii=False))
 
 
 def kb_from_json(input, *args, **kwargs):
-    with open(input, "r") as f:
+    with open(input, "r", encoding="utf-8") as f:
         d = json.loads(f.read())
         kb = KnowledgeBase.from_json(d)
         return kb
