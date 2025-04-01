@@ -38,18 +38,28 @@ class ListenerForKBClassMixin:
         ctx.content = child.content
 
     def exitInterval_body(self, ctx: at_krl_parser.Interval_bodyContext):
+        open_child = self.search_context_by_type(ctx.children, at_krl_parser.OpenContext)
+        close_child = self.search_context_by_type(ctx.children, at_krl_parser.CloseContext)
+        if not hasattr(open_child, "content") or not open_child.content:
+            cls = ctx.parentCtx.parentCtx.children[1].getText()
+            raise ValueError(f"Check correctness УслНач and УслОконч in {cls}")
+        if not hasattr(close_child, "content") or not close_child.content:
+            cls = ctx.parentCtx.parentCtx.children[1].getText()
+            raise ValueError(f"Check correctness УслНач and УслОконч in {cls}")
         ctx.content = {
             "meta": "interval",
-            "open": self.search_context_by_type(ctx.children, at_krl_parser.OpenContext).content,
-            "close": self.search_context_by_type(ctx.children, at_krl_parser.CloseContext).content,
+            "open": open_child.content,
+            "close": close_child.content,
         }
 
     def exitEvent_body(self, ctx: at_krl_parser.Event_bodyContext):
+        occ_child = self.search_context_by_type(ctx.children, at_krl_parser.Occurance_conditionContext)
+        if not hasattr(occ_child, "content") or not occ_child.content:
+            cls = ctx.parentCtx.parentCtx.children[1].getText()
+            raise ValueError(f"Check correcntess УслОконч in {cls}")
         ctx.content = {
             "meta": "event",
-            "occurance_condition": self.search_context_by_type(
-                ctx.children, at_krl_parser.Occurance_conditionContext
-            ).content,
+            "occurance_condition": occ_child.content,
         }
 
     def exitLong_attribute(self, ctx: at_krl_parser.Long_attributeContext):
