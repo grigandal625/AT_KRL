@@ -48,7 +48,15 @@ class ListenerForKBRuleMixin:
             raise ValueError(f"Bad rule №{ctx.parentCtx.children.index(ctx) + 1} - can't get name")
 
         id = ctx.children[1].getText()
+
+        if not hasattr(condition_child, "content"):
+            raise ValueError(f"Bad condition ЕСЛИ of rule {id}")
+
         condition = condition_child.content
+
+        if not hasattr(instructions_child, "content"):
+            raise ValueError(f"Bad instructions ТО of rule {id}")
+
         instructions = instructions_child.content
         else_instructions = else_instructions_child.content if else_instructions_child else None
         period = type_child.content.get("period") if type_child else None
