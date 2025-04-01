@@ -44,6 +44,9 @@ class ListenerForKBRuleMixin:
         )
         commentary_child = self.search_context_by_type(ctx.children, at_krl_parser.CommentaryContext)
 
+        if len(ctx.children) < 2:
+            raise ValueError(f"Bad rule №{ctx.parentCtx.children.index(ctx) + 1} - can't get name")
+
         id = ctx.children[1].getText()
         condition = condition_child.content
         instructions = instructions_child.content
